@@ -24,7 +24,7 @@ public class BoardController {
 	
 	// 전체 글 목록
 	@GetMapping("/")
-	public String noticeArticleList(Model model) {
+	public String noticeArticleList(Model model) throws Exception {
 		List<BoardDTO> boardList = boardService.noticeArticleList();
 		model.addAttribute("boardList", boardList);
 		
@@ -33,7 +33,9 @@ public class BoardController {
 	
 	// 게시글 상세 보기
 	@GetMapping
-	public String noticeArticleDetail(@RequestParam("id") Long id, @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String noticeArticleDetail(@RequestParam("id") Long id, 
+													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+													Model model) throws Exception {
 //		boardService.updateHits(id);
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
 		model.addAttribute("board", boardDTO);
@@ -44,7 +46,8 @@ public class BoardController {
 	
 	// 페이징 포함 목록
 	@GetMapping("/paging")
-	public String noticePagingList(Model model, @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+	public String noticePagingList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+												Model model) throws Exception  {
 		List<BoardDTO> pagingList = boardService.noticePagingList(page);
 		PageDTO pageDTO = boardService.pagingParam(page);
 		model.addAttribute("pagingList", pagingList);
@@ -55,7 +58,8 @@ public class BoardController {
 	
 	// 게시글 저장 화면 이동
 	@GetMapping("/save")
-	public String saveNoticeArticleForm(@RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String saveNoticeArticleForm(@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+														Model model) throws Exception {
 		model.addAttribute("page", page);
 		
 		return "saveBoard";
@@ -63,7 +67,9 @@ public class BoardController {
 	
 	// 게시글 저장
 	@PostMapping("/save")
-	public String saveNoticeArticle(@ModelAttribute BoardDTO boardDTO, @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String saveNoticeArticle(@ModelAttribute BoardDTO boardDTO, 
+													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+													Model model) throws Exception {
 		int saveResult = boardService.saveNoticeArticle(boardDTO);
 		model.addAttribute("page", page);
 
@@ -76,7 +82,9 @@ public class BoardController {
 	
 	// 게시글 수정 화면 이동
 	@GetMapping("/update")
-	public String updateNoticeArticleForm(@RequestParam("id") Long id, @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
+															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+															Model model) throws Exception {
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
@@ -86,7 +94,9 @@ public class BoardController {
 	
 	// 게시글 수정
 	@PostMapping("/update")
-	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO, @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO, 
+													@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+													Model model) throws Exception {
 		boardService.updateNoticeArticle(boardDTO);
 		BoardDTO dto = boardService.noticeArticleDetail(boardDTO.getId());
 		model.addAttribute("board", dto);
@@ -97,7 +107,9 @@ public class BoardController {
 	
 	// 게시글 삭제
 	@GetMapping("/delete")
-	public String deleteNoticeArticle(@RequestParam("id") Long id, @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model) {
+	public String deleteNoticeArticle(@RequestParam("id") Long id, 
+													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+													Model model) throws Exception {
 		boardService.deleteNoticeArticle(id);
 		model.addAttribute("page", page);
 		
