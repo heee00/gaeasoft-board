@@ -3,41 +3,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Board">
-    <insert id="save" parameterType="board">
-        INSERT INTO board(writer, password, title, content)
-        VALUES (#{writer}, #{password}, #{title}, #{content})
-    </insert>
     
-    <select id="findAll" resultType="board">
+   	<!-- 전체 글 목록 -->
+    <select id="articleList" resultType="board">
     	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
     				id, writer, password, title, content, writeTime, views
 		FROM board 
 		ORDER BY id DESC
     </select>
     
-    <select id="findById" parameterType="Long" resultType="board">
+   	<!-- 게시글 상세 보기 -->
+    <select id="articleDetail" parameterType="Long" resultType="board">
     	SELECT id, writer, password, title, content, writeTime, views
     	FROM board 
     	WHERE id=#{id}
     </select>
     
-    <update id="updateHits" parameterType="Long">
-    	UPDATE board 
-    	SET views = views + 1 
-    	WHERE id=#{id}
-    </update>
+   	<!-- 전체 글 갯수 조회 -->
+    <select id="articleCount" resultType="Integer">
+    	SELECT COUNT(id) 
+    	FROM board
+    </select>
     
-    <delete id="delete" parameterType="Long">
-    	DELETE FROM board 
-    	WHERE id=#{id}
-    </delete>
-    
-    <update id="update" parameterType="board">
-    	UPDATE board 
-    	SET title=#{title}, content=#{content}
-    	WHERE id=#{id}
-    </update>
-    
+    <!-- 페이징 포함 목록 -->
     <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
     	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
     				id, writer, password, title, content, writeTime, views
@@ -46,8 +34,30 @@
     	LIMIT #{start}, #{limit}
     </select>
     
-    <select id="boardCount" resultType="Integer">
-    	SELECT COUNT(id) 
-    	FROM board
-    </select>
+    <!-- 게시글 조회수 증가 -->
+    <update id="updateViews" parameterType="Long">
+    	UPDATE board 
+    	SET views = views + 1 
+    	WHERE id=#{id}
+    </update>
+    
+    <!-- 게시글 저장 -->
+    <insert id="saveArticle" parameterType="board">
+        INSERT INTO board(writer, password, title, content)
+        VALUES (#{writer}, #{password}, #{title}, #{content})
+    </insert>
+    
+   	<!-- 게시글 수정 -->
+    <update id="updateArticle" parameterType="board">
+    	UPDATE board 
+    	SET title=#{title}, content=#{content}
+    	WHERE id=#{id}
+    </update>
+    
+    <!-- 게시글 삭제 -->
+    <delete id="deleteArticle" parameterType="Long">
+    	DELETE FROM board 
+    	WHERE id=#{id}
+    </delete>
+    
  </mapper>
