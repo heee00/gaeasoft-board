@@ -1,0 +1,79 @@
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #000000;
+    text-align: center;
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 17px;
+    text-align: left;
+}
+
+.board-table th, 
+.board-table td {
+	padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.board-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.board-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.board-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.link-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+textarea {
+	font-family: Arial, sans-serif;
+	border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 17px;
+    text-align: left;
+	background-color: #f9f9f9;
+	width: 100%;
+    resize: vertical;
+    border: 0;
+}
+
+textarea:hover {
+	background-color: #f1f1f1;
+}
+
+.link-button:hover {
+    background-color: #45a049;
+}
+
+tfoot td {
+    text-align: center;
+}

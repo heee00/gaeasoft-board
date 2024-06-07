@@ -1,0 +1,106 @@
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #000000;
+    text-align: center;
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+    text-align: center;
+}
+
+.board-table th, 
+.board-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.board-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.board-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.board-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.board-table a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.board-table a:hover {
+    text-decoration: underline;
+}
+
+.link-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button.link-button {
+	float: right;
+}
+
+.link-button:hover {
+    background-color: #45a049;
+}
+
+tfoot td {
+    text-align: center;
+}
+
+.paging-navigation {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.paging-navigation a,
+.paging-navigation span {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #333;
+  margin: 0 5px;
+}
+
+.paging-navigation a:hover,
+.paging-navigation span:hover {
+  	background-color: #f1f1f1;
+}
+
+.paging-navigation .currentPage {
+	background-color: #4CAF50;
+  	font-weight: bold;
+}
+
+.paging-navigation .disabled {
+	opacity: 0.5;
+	cursor: default;
+}

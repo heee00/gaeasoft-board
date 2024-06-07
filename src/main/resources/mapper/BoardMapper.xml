@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+    <insert id="save" parameterType="board">
+        INSERT INTO board(boardWriter, boardPassword, boardTitle, boardContent)
+        VALUES (#{boardWriter}, #{boardPassword}, #{boardTitle}, #{boardContent})
+    </insert>
+    
+    <select id="findAll" resultType="board">
+    	SELECT board.*,
+    				ROW_NUMBER() OVER (ORDER BY board.id) AS boardRowNum
+		FROM board 
+		ORDER BY board.id DESC
+    </select>
+    
+    <select id="findById" parameterType="Long" resultType="board">
+    	SELECT * FROM board WHERE id=#{id}
+    </select>
+    
+    <update id="updateHits" parameterType="Long">
+    	UPDATE board SET boardHits = boardHits + 1 WHERE id=#{id}
+    </update>
+    
+    <delete id="delete" parameterType="Long">
+    	DELETE FROM board WHERE id=#{id}
+    </delete>
+    
+    <update id="update" parameterType="board">
+    	UPDATE board 
+    	SET boardTitle=#{boardTitle}, boardContent=#{boardContent}
+    	WHERE id=#{id}
+    </update>
+    
+    <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
+    	SELECT board.*,
+    				ROW_NUMBER() OVER (ORDER BY board.id) AS boardRowNum
+    	FROM board ORDER BY id DESC 
+    	LIMIT #{start}, #{limit}
+    </select>
+    
+    <select id="boardCount" resultType="Integer">
+    	SELECT COUNT(id) FROM board
+    </select>
+ </mapper>
