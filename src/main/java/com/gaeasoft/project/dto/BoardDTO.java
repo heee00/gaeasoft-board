@@ -12,13 +12,13 @@ import lombok.ToString;
 public class BoardDTO {
 	
 	private Long id;
-	private String boardWriter;
-	private String boardPassword;
-	private String boardTitle;
-	private String boardContent;
-	private int boardHits;
-	private Timestamp boardWriteTime;
-	private int boardRowNum;
+	private String writer;
+	private String password;
+	private String title;
+	private String content;
+	private Timestamp writeTime;
+	private int views;
+	private int rowNum;
 	
 	public Long getId() {
 		return id;
@@ -26,47 +26,47 @@ public class BoardDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getBoardWriter() {
-		return boardWriter;
+	public String getWriter() {
+		return writer;
 	}
-	public void setBoardWriter(String boardWriter) {
-		this.boardWriter = boardWriter;
+	public void setWriter(String writer) {
+		this.writer = writer;
 	}
-	public String getBoardPassword() {
-		return boardPassword;
+	public String getPassword() {
+		return password;
 	}
-	public void setBoardPassword(String boardPassword) {
-		this.boardPassword = boardPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public String getBoardTitle() {
-		return boardTitle;
+	public String getTitle() {
+		return title;
 	}
-	public void setBoardTitle(String boardTitle) {
-		this.boardTitle = boardTitle;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getBoardContent() {
-		return boardContent;
+	public String getContent() {
+		return content;
 	}
-	public void setBoardContent(String boardContent) {
-		this.boardContent = boardContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
-	public int getBoardHits() {
-		return boardHits;
+	public Timestamp getWriteTime() {
+		return writeTime;
 	}
-	public void setBoardHits(int boardHits) {
-		this.boardHits = boardHits;
+	public void setWriteTime(Timestamp writeTime) {
+		this.writeTime = writeTime;
 	}
-	public Timestamp getBoardWriteTime() {
-		return boardWriteTime;
+	public int getViews() {
+		return views;
 	}
-	public void setBoardWriteTime(Timestamp boardWriteTime) {
-		this.boardWriteTime = boardWriteTime;
+	public void setViews(int views) {
+		this.views = views;
 	}
-	public int getBoardRowNum() {
-		return boardRowNum;
+	public int getRowNum() {
+		return rowNum;
 	}
-	public void setBoardRowNum(int boardRowNum) {
-		this.boardRowNum = boardRowNum;
+	public void setRowNum(int rowNum) {
+		this.rowNum = rowNum;
 	}
 	
 }

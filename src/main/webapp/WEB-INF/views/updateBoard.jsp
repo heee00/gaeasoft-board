@@ -10,10 +10,10 @@
 <h2>게시글 수정</h2>
 	<form action="/board/update?id=${board.id}&page=${page}" method="post" name="update">
 		<input type="hidden" name="id" value="${board.id}" readonly>
-		<input type="text" name="boardWriter" value="${board.boardWriter}" placeholder="작성자" readonly>
-		<input type="password" name="boardPassword" id="boardPassword" placeholder="비밀번호" required>
-		<input type="text" name="boardTitle" value="${board.boardTitle}" required>
-        <textarea name="boardContent" cols="30" rows="10" required>${board.boardContent}</textarea>
+		<input type="text" name="writer" value="${board.writer}" placeholder="작성자" readonly>
+		<input type="password" name="password" id="password" placeholder="비밀번호" required>
+		<input type="text" name="title" value="${board.title}" required>
+        <textarea name="content" cols="30" rows="10" required>${board.content}</textarea>
 		<input type="button" value="수정📝" onclick="updateFn()">
 		<input type="button" value="취소❎" onclick="cancelFn()">
 	</form>
@@ -23,8 +23,8 @@
     	const form = document.forms['update'];
         
     	if (form.reportValidity()) {
-            const passwordInput = document.getElementById("boardPassword").value;
-            const passwordDB = '${board.boardPassword}';
+            const passwordInput = document.getElementById("password").value;
+            const passwordDB = '${board.password}';
             
             if (passwordInput == passwordDB) {
                 form.submit();

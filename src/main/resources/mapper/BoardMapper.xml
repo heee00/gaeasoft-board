@@ -4,43 +4,50 @@
 
 <mapper namespace="Board">
     <insert id="save" parameterType="board">
-        INSERT INTO board(boardWriter, boardPassword, boardTitle, boardContent)
-        VALUES (#{boardWriter}, #{boardPassword}, #{boardTitle}, #{boardContent})
+        INSERT INTO board(writer, password, title, content)
+        VALUES (#{writer}, #{password}, #{title}, #{content})
     </insert>
     
     <select id="findAll" resultType="board">
-    	SELECT board.*,
-    				ROW_NUMBER() OVER (ORDER BY board.id) AS boardRowNum
+    	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
+    				id, writer, password, title, content, writeTime, views
 		FROM board 
-		ORDER BY board.id DESC
+		ORDER BY id DESC
     </select>
     
     <select id="findById" parameterType="Long" resultType="board">
-    	SELECT * FROM board WHERE id=#{id}
+    	SELECT id, writer, password, title, content, writeTime, views
+    	FROM board 
+    	WHERE id=#{id}
     </select>
     
     <update id="updateHits" parameterType="Long">
-    	UPDATE board SET boardHits = boardHits + 1 WHERE id=#{id}
+    	UPDATE board 
+    	SET views = views + 1 
+    	WHERE id=#{id}
     </update>
     
     <delete id="delete" parameterType="Long">
-    	DELETE FROM board WHERE id=#{id}
+    	DELETE FROM board 
+    	WHERE id=#{id}
     </delete>
     
     <update id="update" parameterType="board">
     	UPDATE board 
-    	SET boardTitle=#{boardTitle}, boardContent=#{boardContent}
+    	SET title=#{title}, content=#{content}
     	WHERE id=#{id}
     </update>
     
     <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
-    	SELECT board.*,
-    				ROW_NUMBER() OVER (ORDER BY board.id) AS boardRowNum
-    	FROM board ORDER BY id DESC 
+    	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
+    				id, writer, password, title, content, writeTime, views
+    	FROM board 
+    	ORDER BY id DESC 
     	LIMIT #{start}, #{limit}
     </select>
     
     <select id="boardCount" resultType="Integer">
-    	SELECT COUNT(id) FROM board
+    	SELECT COUNT(id) 
+    	FROM board
     </select>
  </mapper>

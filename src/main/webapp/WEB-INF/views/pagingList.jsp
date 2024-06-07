@@ -22,15 +22,15 @@
 		        </tr>
 		    </thead>
 	        <tbody>
-		        <c:forEach items="${pagingList}" var="board">
+		        <c:forEach items="${pagingList}" var="pagingList">
 		            <tr>
-		                <td>${board.boardRowNum}</td>
+		                <td>${pagingList.rowNum}</td>
 		                <td>
-	                    	<a href="/board?id=${board.id}&page=${paging.page}">${board.boardTitle}</a>
+	                    	<a href="/board?id=${pagingList.id}&page=${paging.page}">${pagingList.title}</a>
 		                </td>
-		                <td>${board.boardWriter}</td>
-	    				<td><fmt:formatDate value="${board.boardWriteTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-		                <td>${board.boardHits}</td>
+		                <td>${pagingList.writer}</td>
+	    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+		                <td>${pagingList.views}</td>
 		            </tr>
 		        </c:forEach>
 		    </tbody>

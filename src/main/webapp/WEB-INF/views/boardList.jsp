@@ -21,15 +21,15 @@
 	        </tr>
 	    </thead>
         <tbody>
-	        <c:forEach items="${boardList}" var="board">
+	        <c:forEach items="${boardList}" var="boardList">
 	            <tr>
-	                <td>${board.boardRowNum}</td>
+	                <td>${boardList.rowNum}</td>
 	                <td>
-	                    <a href="/board?id=${board.id}">${board.boardTitle}</a>
+	                    <a href="/board?id=${boardList.id}">${boardList.title}</a>
 	                </td>
-	                <td>${board.boardWriter}</td>
-    				<td><fmt:formatDate value="${board.boardWriteTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-	                <td>${board.boardHits}</td>
+	                <td>${boardListwriter}</td>
+    				<td><fmt:formatDate value="${boardList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+	                <td>${boardList.views}</td>
 	            </tr>
 	        </c:forEach>
 	    </tbody>

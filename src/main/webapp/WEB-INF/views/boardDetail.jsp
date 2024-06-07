@@ -16,23 +16,23 @@
 	   </tr>
 	   <tr>
 	       <th class="board-writer">작성자</th>
-	       <td>${board.boardWriter}</td>
+	       <td>${board.writer}</td>
 	   </tr>
 	   <tr>
 	       <th class="board-writetime">작성일</th>
-	       <td>${board.boardWriteTime}</td>
+	       <td>${board.writeTime}</td>
 	   </tr>
 	   <tr>
 	       <th class="board-hits">조회수</th>
-	       <td>${board.boardHits}</td>
+	       <td>${board.views}</td>
 	   </tr>
 	   <tr>
 	       <th class="board-title">제목</th>
-	       <td>${board.boardTitle}</td>
+	       <td>${board.title}</td>
 	   </tr>
 	   <tr>
 	       <th class="board-content">내용</th>
-	       <td><textarea cols="30" rows="10" readonly>${board.boardContent}</textarea></td>
+	       <td><textarea cols="30" rows="10" readonly>${board.content}</textarea></td>
 	    </tr>
 	    <tfoot>
 	        <tr>
