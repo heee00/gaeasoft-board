@@ -1,7 +1,7 @@
 HELP.md
 target/
 !**/src/main/**/target/
-!**/src/test/**/target/
+!**/src/test/
 
 # Compiled class file
 *.class
