@@ -1,4 +1,4 @@
-package com.gaeasoft.project.repository;
+package com.gaeasoft.project.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -7,11 +7,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gaeasoft.project.dao.BoardDAO;
 import com.gaeasoft.project.dto.BoardDTO;
 
 @Repository
-public class BoardRepository implements BoardDAO {
+public class BoardDAOImpl implements BoardDAO {
 	
 	@Autowired
 	private SqlSessionTemplate sql;

@@ -7,18 +7,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
-import com.gaeasoft.project.repository.BoardRepository;
 
 @Service
 public class BoardService {
 	
 	@Autowired
-	private BoardRepository boardRepository;
+	private BoardDAOImpl boardDAOImpl;
 
 	public List<BoardDTO> findAll() {
-		return boardRepository.findAll();
+		return boardDAOImpl.findAll();
 	}
 	
 	int pageLimit = 10;		// 한 페이지당 보여줄 글 갯수
@@ -29,13 +29,13 @@ public class BoardService {
 		Map<String, Integer> pagingParams = new HashMap<>();
 		pagingParams.put("start", pageStart);
 		pagingParams.put("limit", pageLimit);
-		List<BoardDTO> pagingList = boardRepository.pagingList(pagingParams);
+		List<BoardDTO> pagingList = boardDAOImpl.pagingList(pagingParams);
 		
 		return pagingList;
 	}
 
 	public PageDTO pagingParam(int page) {
-        int boardCount = boardRepository.boardCount();														// 전체 글 갯수 조회
+        int boardCount = boardDAOImpl.boardCount();														// 전체 글 갯수 조회
         int maxPage = (int) (Math.ceil((double) boardCount / pageLimit));							// 전체 페이지 갯수 계산
         int startPage = (((int)(Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;	// 시작 페이지 값 계산
         int endPage = startPage + blockLimit - 1;																  	// 끝 페이지 값 계산
@@ -54,23 +54,23 @@ public class BoardService {
 	}
 
 	public BoardDTO findById(Long id) {
-		return boardRepository.findById(id);
+		return boardDAOImpl.findById(id);
 	}
 
 	public void updateHits(Long id) {
-		boardRepository.updateHits(id);
+		boardDAOImpl.updateHits(id);
 	}
 
 	public int save(BoardDTO boardDTO) {
-		return boardRepository.save(boardDTO);
+		return boardDAOImpl.save(boardDTO);
 	}
 	
 	public void delete(Long id) {
-		boardRepository.delete(id);
+		boardDAOImpl.delete(id);
 	}
 
 	public void update(BoardDTO boardDTO) {
-		boardRepository.update(boardDTO);
+		boardDAOImpl.update(boardDTO);
 	}
 
 }
