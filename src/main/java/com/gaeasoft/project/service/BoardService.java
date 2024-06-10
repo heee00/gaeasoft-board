@@ -33,8 +33,7 @@ public class BoardService {
 	
 	// 페이징 변수 설정
 	public PageDTO pagingParam(int page) {
-		// 전체 글 갯수 조회
-		int boardCount = boardDAOImpl.articleCount();														// 전체 글 갯수 조회
+		int boardCount = boardDAOImpl.articleCount();															// 전체 글 갯수 조회
 		int maxPage = (int) (Math.ceil((double) boardCount / pageLimit));							// 전체 페이지 갯수 계산
 		int startPage = (((int)(Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;	// 시작 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;																  	// 끝 페이지 값 계산
