@@ -1,8 +1,12 @@
 package com.gaeasoft.project.service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +27,18 @@ public class BoardService {
 	}
 	
 	// 게시글 상세 보기
-	public BoardDTO noticeArticleDetail(Long id) {
-//		updateHits(id);
+	public BoardDTO noticeArticleDetail(Long id, HttpSession session) {
+		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
+	    
+	    if (viewedArticle == null) {
+	    	viewedArticle = new HashSet<>();
+	    	session.setAttribute("viewedArticle", viewedArticle);
+	    }
+	    
+	    if (!viewedArticle.contains(id)) {
+	        updateViews(id);
+	        viewedArticle.add(id);
+	    }
 		return boardDAOImpl.articleDetail(id);
 	}
 	
