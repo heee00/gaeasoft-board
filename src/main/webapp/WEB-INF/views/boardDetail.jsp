@@ -64,6 +64,7 @@
           });
 
           $('#deleteButton').on('click', function(e) {
+	      	  var rowNum = '${rowNum}';
               var id = '${board.id}';
               var page = '${page}';
               var isConfirmed = confirm("정말로 삭제하시겠습니까?");
@@ -71,7 +72,7 @@
               if (isConfirmed) {
                   window.location.href = '/board/delete?id=' + id;
               } else {
-                  window.location.href = '/board?id=' + id + '&page=' + page;
+                  window.location.href = '/board?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
               }
           });
       });
