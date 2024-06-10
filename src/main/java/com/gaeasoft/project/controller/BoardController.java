@@ -35,11 +35,13 @@ public class BoardController {
 	@GetMapping
 	public String noticeArticleDetail(@RequestParam("id") Long id, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+													@RequestParam(value = "rowNum", required = false) int rowNum,
 													Model model) throws Exception {
 //		boardService.updateHits(id);
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
+		model.addAttribute("rowNum", rowNum);
 		
 		return "boardDetail";
 	}
@@ -84,10 +86,12 @@ public class BoardController {
 	@GetMapping("/update")
 	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
 															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+															@RequestParam(value = "rowNum", required = false) int rowNum,
 															Model model) throws Exception {
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
+		model.addAttribute("rowNum", rowNum);
 		
 		return "updateBoard";
 	}
@@ -96,13 +100,15 @@ public class BoardController {
 	@PostMapping("/update")
 	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+													@RequestParam(value = "rowNum", required = false) int rowNum,
 													Model model) throws Exception {
+		BoardDTO board = boardService.noticeArticleDetail(boardDTO.getId());
 		boardService.updateNoticeArticle(boardDTO);
-		BoardDTO dto = boardService.noticeArticleDetail(boardDTO.getId());
-		model.addAttribute("board", dto);
-		model.addAttribute("page", page);
-		
-		return "boardDetail";
+	    model.addAttribute("board", board);
+	    model.addAttribute("page", page);
+	    model.addAttribute("rowNum", rowNum);
+		    
+	    return "boardDetail";
 	}
 	
 	// 게시글 삭제
