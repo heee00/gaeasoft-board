@@ -2,6 +2,8 @@ package com.gaeasoft.project.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,9 +38,9 @@ public class BoardController {
 	public String noticeArticleDetail(@RequestParam("id") Long id, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													@RequestParam(value = "rowNum", required = false) int rowNum,
+													HttpSession session, 
 													Model model) throws Exception {
-//		boardService.updateHits(id);
-		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
+		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
@@ -87,8 +89,9 @@ public class BoardController {
 	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
 															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 															@RequestParam(value = "rowNum", required = false) int rowNum,
+															HttpSession session, 
 															Model model) throws Exception {
-		BoardDTO boardDTO = boardService.noticeArticleDetail(id);
+		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
@@ -98,15 +101,8 @@ public class BoardController {
 	
 	// 게시글 수정
 	@PostMapping("/update")
-	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO, 
-													@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-													@RequestParam(value = "rowNum", required = false) int rowNum,
-													Model model) throws Exception {
-		BoardDTO board = boardService.noticeArticleDetail(boardDTO.getId());
+	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO) throws Exception {
 		boardService.updateNoticeArticle(boardDTO);
-	    model.addAttribute("board", board);
-	    model.addAttribute("page", page);
-	    model.addAttribute("rowNum", rowNum);
 		    
 	    return "boardDetail";
 	}
