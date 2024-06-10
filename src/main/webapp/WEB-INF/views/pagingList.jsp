@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>PagingList</title>
 <link rel="stylesheet" type="text/css" href="/resources/css/pagingList.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<div>
@@ -37,7 +38,7 @@
 		    <tfoot>
 		        <tr>
 		            <td colspan="5">
-		                <button class="link-button" onclick="location.href='/board/save'">작성✍🏻</button>
+		                <button class="link-button" id="writeButton">작성✍🏻</button>
 		            </td>
 		        </tr>
 		    </tfoot>
@@ -77,5 +78,13 @@
 	        </c:otherwise>
 	    </c:choose>
 	</div>
+	
+	<script>
+	    $(document).ready(function() {
+	        $('#writeButton').on('click', function(e) {
+	            window.location.href = '/board/save';
+	        });
+	    });
+	</script>
 </body>
 </html>

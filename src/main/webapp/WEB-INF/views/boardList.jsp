@@ -36,10 +36,18 @@
 	    <tfoot>
 	        <tr>
 	            <td colspan="5">
-	                <button class="link-button" onclick="location.href='/board/save'">작성✍🏻</button>
+	                <button class="link-button" id="writeButton">작성✍🏻</button>
 	            </td>
 	        </tr>
 	    </tfoot>
     </table>
+    
+    <script>
+	    $(document).ready(function() {
+	        $('#writeButton').on('click', function(e) {
+	            window.location.href = '/board/save';
+	        });
+	    });
+	</script>
 </body>
 </html>

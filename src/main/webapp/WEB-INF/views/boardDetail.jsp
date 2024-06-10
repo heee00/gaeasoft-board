@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>BoardDetail</title>
 <link rel="stylesheet" type="text/css" href="/resources/css/boardDetail.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h2>게시글 상세보기</h2>
@@ -37,34 +38,39 @@
 	    <tfoot>
 	        <tr>
 	            <td colspan="5">
-					<button class="link-button" onclick="listFn()">목록🏠</button>
-					<button class="link-button" onclick="updateFn()">수정📝</button>
-					<button class="link-button" onclick="deleteFn()">삭제🗑️</button>
+					<button class="link-button" id="listButton">목록🏠</button>
+					<button class="link-button" id="updateButton">수정📝</button>
+					<button class="link-button" id="deleteButton">삭제🗑️</button>
 				</td>
 	        </tr>
 		</tfoot>
 	</table>
+	
+	<script>
+	  $(document).ready(function() {
+          $('#listButton').on('click', function(e) {
+              var page = "${page}";
+              window.location.href = '/board/paging?page=' + page;
+          });
+
+          $('#updateButton').on('click', function(e) {
+              var id = '${board.id}';
+              var page = "${page}";
+              window.location.href = '/board/update?id=' + id + '&page=' + page;
+          });
+
+          $('#deleteButton').on('click', function(e) {
+              var id = '${board.id}';
+              var page = "${page}";
+              var isConfirmed = confirm("정말로 삭제하시겠습니까?");
+              
+              if (isConfirmed) {
+                  window.location.href = '/board/delete?id=' + id;
+              } else {
+                  window.location.href = '/board?id=' + id + '&page=' + page;
+              }
+          });
+      });
+	</script>
 </body>
-<script>
-    const listFn = () => {
-    	const page = '${page}';
-        location.href = "/board/paging?page=" + page;
-    }
-    const updateFn = () => {
-    	const page = '${page}';
-        const id = '${board.id}';
-        location.href = "/board/update?id=" + id + "&page=" + page;
-    }
-    const deleteFn = () => {
-	    const page = '${page}'
-    	const id = '${board.id}';
-    	const isConfirmed = confirm("정말로 삭제하시겠습니까?");
-    		
-    	if (isConfirmed) {
-   			location.href = "/board/delete?id=" + id;
-   	    } else {
-   	        location.href = "/board?id=" + id + "&page=" + page;
-   	    }
-    }
-</script>
 </html>
