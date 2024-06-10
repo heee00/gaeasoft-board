@@ -27,7 +27,7 @@
 		            <tr>
 		                <td>${pagingList.rowNum}</td>
 		                <td>
-	                    	<a href="/board?id=${pagingList.id}&page=${paging.page}">${pagingList.title}</a>
+	                    	<a href="/board?id=${pagingList.id}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
 		                </td>
 		                <td>${pagingList.writer}</td>
 	    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
