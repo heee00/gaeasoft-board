@@ -4,10 +4,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>BoardDetail</title>
-<link rel="stylesheet" type="text/css" href="/resources/css/boardDetail.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<meta charset="UTF-8">
+	<title>BoardDetail</title>
+	<link rel="stylesheet" type="text/css" href="/resources/css/boardDetail.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h2>게시글 상세보기</h2>
@@ -42,8 +42,10 @@
 	        <tr>
 	            <td colspan="5">
 					<button class="link-button" id="listButton">목록🏠</button>
-					<button class="link-button" id="updateButton">수정📝</button>
-					<button class="link-button" id="deleteButton">삭제🗑️</button>
+					<c:if test="${board.writer eq sessionScope.loginId}">
+	                    <button class="link-button" id="updateButton">수정📝</button>
+	                    <button class="link-button" id="deleteButton">삭제🗑️</button>
+	                </c:if>
 				</td>
 	        </tr>
 		</tfoot>
@@ -57,16 +59,16 @@
           });
 
           $('#updateButton').on('click', function(e) {
-	      	  var rowNum = '${rowNum}';
               var id = '${board.id}';
               var page = '${page}';
+	      	  var rowNum = '${rowNum}';
               window.location.href = '/board/update?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
           });
 
           $('#deleteButton').on('click', function(e) {
-	      	  var rowNum = '${rowNum}';
               var id = '${board.id}';
               var page = '${page}';
+	      	  var rowNum = '${rowNum}';
               var isConfirmed = confirm("정말로 삭제하시겠습니까?");
               
               if (isConfirmed) {
