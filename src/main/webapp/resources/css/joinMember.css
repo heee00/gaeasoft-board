@@ -24,8 +24,7 @@ form {
 
 /* Input Fields */
 input[type="text"],
-input[type="password"],
-textarea {
+input[type="password"] {
 	font-family: Arial, sans-serif;
     width: 100%;
     padding: 10px;
@@ -35,8 +34,7 @@ textarea {
     box-sizing: border-box;
 }
 
-input[type="submit"],
-input[type="button"] {
+input[type="submit"] {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -50,15 +48,8 @@ input[type="button"] {
     border-radius: 3px;
 }
 
-input[type="submit"]:hover,
-input[type="button"]:hover {
+input[type="submit"]:hover {
     background-color: #45a049;
-}
-
-
-/* Textarea */
-textarea {
-    resize: none;
 }
 
 /* Button Container */

@@ -57,7 +57,7 @@ input[type="button"]:hover {
 
 /* Textarea */
 textarea {
-    resize: vertical;
+    resize: none;
 }
 
 /* Button Container */

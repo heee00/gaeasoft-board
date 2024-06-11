@@ -62,7 +62,7 @@ textarea {
     text-align: left;
 	background-color: #f9f9f9;
 	width: 100%;
-    resize: vertical;
+    resize: none;
     border: 0;
 }
 
