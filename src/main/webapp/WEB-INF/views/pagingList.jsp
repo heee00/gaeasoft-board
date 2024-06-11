@@ -4,14 +4,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>PagingList</title>
-<link rel="stylesheet" type="text/css" href="/resources/css/pagingList.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<meta charset="UTF-8">
+	<title>PagingList</title>
+	<link rel="stylesheet" type="text/css" href="/resources/css/pagingList.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<div>
 		<h2>게시판</h2>
+		<button class="link-button" id="logoutButton">로그아웃🚪</button>
 		<table class="board-table">
 	        <thead>
 		        <tr>
@@ -81,6 +82,17 @@
 	
 	<script>
 	    $(document).ready(function() {
+	    	$('#logoutButton').on('click', function(e) {
+	            var page = '${paging.page}';
+	    		var isConfirmed = confirm("정말 로그아웃하시겠습니까?");
+				
+	    		if (isConfirmed) {
+		            window.location.href = '/member/logout';
+	    		} else {
+	                window.location.href = '/board/paging?page=' + page;
+	    		}
+	        });
+	    	
 	        $('#writeButton').on('click', function(e) {
 	            window.location.href = '/board/save';
 	        });
