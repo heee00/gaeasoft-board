@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
     <title>JoinMember</title>
+    <link rel="stylesheet" type="text/css" href="/resources/css/loginMember.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -12,7 +13,7 @@
 	        <input type="text" name="name" placeholder="이름" required>
     	</div>
     	<div class="form-group">
-	        <input type="email" name="email" placeholder="이메일" id="email" onblur="emailCheck()" required>
+	        <input type="text" name="email" placeholder="example@example.com" id="email" onblur="emailCheck()" required>
 	        <span id="emailCheckResult"></span>
     	</div>
     	<div class="form-group">
@@ -28,8 +29,15 @@
     <script>
 	   	var emailCheck = () => {
 	   		var email = document.getElementById("email").value;
+	   		var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 	   		var checkResult = document.getElementById("emailCheckResult");
-	           
+	        
+		   		if (!emailPattern.test(email)) {
+		   			checkResult.style.color = "red";
+		   			checkResult.innerHTML = "유효한 이메일 형식이 아닙니다";
+		   	        return;
+		   	    }
+	   		
 	           $.ajax({
 	           	type: "post",
 	               url: "/member/emailCheck",
@@ -38,11 +46,11 @@
 	               },
 	               success: function(response) {
 	                   if (response == "true") {
-	                       emailCheckResult.style.color = "green";
-	                       emailCheckResult.innerHTML = "사용 가능한 이메일입니다";
+	                	   checkResult.style.color = "green";
+	                	   checkResult.innerHTML = "사용 가능한 이메일입니다";
 	                   } else {
-	                       emailCheckResult.style.color = "red";
-	                       emailCheckResult.innerHTML = "이미 사용중인 이메일입니다";
+	                	   checkResult.style.color = "red";
+	                	   checkResult.innerHTML = "이미 사용중인 이메일입니다";
 	                   }
 	               },
 	               error: function(xhr, status, err) {
@@ -63,11 +71,11 @@
                 },
                 success: function(response) {
                     if (response == "true") {
-                        idCheckResult.style.color = "green";
-                        idCheckResult.innerHTML = "사용 가능한 아이디입니다";
+                    	checkResult.style.color = "green";
+                    	checkResult.innerHTML = "사용 가능한 아이디입니다";
                     } else {
-                        idCheckResult.style.color = "red";
-                        idCheckResult.innerHTML = "이미 사용중인 아이디입니다";
+                    	checkResult.style.color = "red";
+                    	checkResult.innerHTML = "이미 사용중인 아이디입니다";
                     }
                 },
                 error: function(xhr, status, err) {

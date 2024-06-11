@@ -4,9 +4,11 @@
 <head>
 	<meta charset="UTF-8">
     <title>LoginMember</title>
+    <link rel="stylesheet" type="text/css" href="/resources/css/loginMember.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<h2>로그인</h2>
     <form id="loginMemberForm">
     	<div class="form-group">
 	    	<input type="text" name="id" placeholder="아이디" required>
