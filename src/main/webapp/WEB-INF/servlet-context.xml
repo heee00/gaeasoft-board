@@ -17,6 +17,9 @@
         <beans:property name="prefix" value="/WEB-INF/views/" />
         <beans:property name="suffix" value=".jsp" />
     </beans:bean>
+    
+    <!-- Spring MVC 설정 -->
+    <annotation-driven validator="validator"/>
 
     <!-- 프로젝트 패키지이름 확인 -->
     <context:component-scan base-package="com.gaeasoft.project" />

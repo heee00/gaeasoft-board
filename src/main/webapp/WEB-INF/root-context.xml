@@ -36,5 +36,7 @@
         <property name="maxUploadSize" value="10000000" />
     </bean>
 
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
     <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
