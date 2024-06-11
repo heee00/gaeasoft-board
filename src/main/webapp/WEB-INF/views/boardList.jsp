@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>BoardList</title>
-<link rel="stylesheet" type="text/css" href="/resources/css/boardList.css">
+	<meta charset="UTF-8">
+	<title>BoardList</title>
+	<link rel="stylesheet" type="text/css" href="/resources/css/boardList.css">
 </head>
 <body>
 <h2>게시판</h2>
