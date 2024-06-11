@@ -1,6 +1,7 @@
 package com.gaeasoft.project.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -61,6 +62,7 @@ public class MemberController {
 		
 	    if (loginResult) {
 	        session.setAttribute("loginId", memberDTO.getId());
+	        session.setAttribute("viewedArticle", new HashSet<Long>()); // 빈 세트 생성
 	        response.put("status", "success");
 	        response.put("message", "로그인되었습니다.");
 	    } else {
