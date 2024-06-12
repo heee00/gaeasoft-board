@@ -3,10 +3,13 @@ package com.gaeasoft.project.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +41,7 @@ public class BoardController {
 	public String noticeArticleDetail(@RequestParam("id") Long id, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													@RequestParam(value = "rowNum", required = false) int rowNum,
-													HttpSession session, 
-													Model model) throws Exception {
+													HttpSession session, Model model) throws Exception {
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
@@ -60,23 +62,34 @@ public class BoardController {
 		return "pagingList";
 	}
 	
+	// 세션에 저장된 아이디 정보 호출
+	@ModelAttribute("loginId")
+	public String getLoginId(HttpSession session) {
+		return (String) session.getAttribute("loginId");
+	}
+	
 	// 게시글 저장 화면 이동
 	@GetMapping("/save")
 	public String saveNoticeArticleForm(@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 														Model model) throws Exception {
 		model.addAttribute("page", page);
-		
 		return "saveBoard";
 	}
 	
 	// 게시글 저장
 	@PostMapping("/save")
-	public String saveNoticeArticle(@ModelAttribute BoardDTO boardDTO, 
-													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
-													Model model) throws Exception {
+	public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO, 
+													@ModelAttribute("loginId") String loginId,
+													BindingResult result, Model model) throws Exception {
+        boardDTO.setWriter(loginId);
+        if (result.hasErrors()) {
+        	for (FieldError error : result.getFieldErrors()) {
+                model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
+            }
+            return "saveBoard";
+        }
+        
 		int saveResult = boardService.saveNoticeArticle(boardDTO);
-		model.addAttribute("page", page);
-
 		if (saveResult > 0) {
 			return "redirect:/board/paging";
 		} else {
@@ -89,8 +102,7 @@ public class BoardController {
 	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
 															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 															@RequestParam(value = "rowNum", required = false) int rowNum,
-															HttpSession session, 
-															Model model) throws Exception {
+															HttpSession session, Model model) throws Exception {
 		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
@@ -103,7 +115,6 @@ public class BoardController {
 	@PostMapping("/update")
 	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO) throws Exception {
 		boardService.updateNoticeArticle(boardDTO);
-		    
 	    return "boardDetail";
 	}
 	
@@ -114,7 +125,6 @@ public class BoardController {
 													Model model) throws Exception {
 		boardService.deleteNoticeArticle(id);
 		model.addAttribute("page", page);
-		
 		return "redirect:/board/paging";
 	}
 	
