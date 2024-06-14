@@ -21,13 +21,15 @@ public class BoardDTO {
 	public Long id;
 	public String writer;
 	
-	@Size(min = 1, max = 20, message = "비밀번호는 1글자 이상, 20글자 이하입니다.")
+    @Size(min = 1, max = 20, message = "비밀번호는 20자 이하이어야 합니다.")
 	public String password;
 	
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{1,100}$", message = "제목은 특수문자를 제외한 100자 이하여야 합니다.")
+	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$", message = "제목에는 특수 문자를 사용할 수 없습니다.")
+    @Size(max = 100, message = "제목은 100자 이하이어야 합니다.")
 	public String title;
 	
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{1,1000}$", message = "내용은 특수문자를 제외한 1000자 이하여야 합니다.")
+	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$", message = "내용에는 특수 문자를 사용할 수 없습니다.")
+	@Size(max = 1000, message = "내용은 1000자 이하이어야 합니다.")
 	public String content;
 	
 	public Timestamp writeTime;
