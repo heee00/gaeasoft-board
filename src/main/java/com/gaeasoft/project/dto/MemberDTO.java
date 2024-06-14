@@ -6,11 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDTO {
@@ -21,5 +19,10 @@ public class MemberDTO {
 	public String password;
 	public String email;
 	public Timestamp joinTime;
-
+	
+	@Override
+	public String toString() {
+		return "MemberDTO [name=" + name + ", id=" + id + ", password=" + password + ", email=" + email + "]";
+	}
+	
 }
