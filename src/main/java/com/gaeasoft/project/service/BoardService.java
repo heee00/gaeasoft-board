@@ -27,7 +27,7 @@ public class BoardService {
 	}
 	
 	// 게시글 상세 보기
-	public BoardDTO noticeArticleDetail(Long id, HttpSession session) {
+	public BoardDTO viewNoticeArticleDetail(Long id, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
 	    
 	    if (viewedArticle == null) {
@@ -35,18 +35,34 @@ public class BoardService {
 	    	session.setAttribute("viewedArticle", viewedArticle);
 	    }
 	    
-	    if (!viewedArticle.contains(id)) {
-	        updateViews(id);
-	        viewedArticle.add(id);
+	    try {
+	    	boolean viewed = false;
+	    	for (Long viewedId : viewedArticle) {
+	    		if (viewedId.equals(id)) {
+	    			viewed = true;
+	    			break;
+	    		}
+	    	}
+	    		
+	    	if (!viewed) {
+	    		// 예외 발생을 유도하기 위해 임의로 에러를 발생시킴
+	    		// throw new RuntimeException("조회수 업데이트 중 에러 발생");
+	    		updateViews(id);
+	    		viewedArticle.add(id);
+	    	}
+	        return boardDAOImpl.articleDetail(id);
+	        
+	    } catch (Exception e) {
+	        System.err.println("에러 발생: " + e.getMessage());
+	        return boardDAOImpl.articleDetail(id);
 	    }
-		return boardDAOImpl.articleDetail(id);
 	}
 	
 	int pageLimit = 10;		// 한 페이지당 보여줄 글 갯수
 	int blockLimit = 5;		// 하단에 보여줄 페이지 번호 갯수
 	
 	// 페이징 변수 설정
-	public PageDTO pagingParam(int page) {
+	public PageDTO setPagingParam(int page) {
 		int boardCount = boardDAOImpl.articleCount();															// 전체 글 갯수 조회
 		int maxPage = (int) (Math.ceil((double) boardCount / pageLimit));							// 전체 페이지 갯수 계산
 		int startPage = (((int)(Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;	// 시작 페이지 값 계산
