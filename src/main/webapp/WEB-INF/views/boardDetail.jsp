@@ -55,14 +55,14 @@
 	  $(document).ready(function() {
           $('#listButton').on('click', function(e) {
               var page = '${page}';
-              window.location.href = '/board/paging?page=' + page;
+              window.location.href = '/board/pagingList?page=' + page;
           });
 
           $('#updateButton').on('click', function(e) {
               var id = '${board.id}';
               var page = '${page}';
 	      	  var rowNum = '${rowNum}';
-              window.location.href = '/board/update?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+              window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
           });
 
           $('#deleteButton').on('click', function(e) {
@@ -72,9 +72,9 @@
               var isConfirmed = confirm("정말로 삭제하시겠습니까?");
               
               if (isConfirmed) {
-                  window.location.href = '/board/delete?id=' + id;
+                  window.location.href = '/board/deleteArticle?id=' + id;
               } else {
-                  window.location.href = '/board?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+                  window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
               }
           });
       });

@@ -32,7 +32,7 @@
 	                data: formData,
 	                success: function(response) {
 	                	 if (response.status === 'success') {
-	                         window.location.href = '/board/paging?page=1';
+	                         window.location.href = '/board/pagingList?page=1';
 	                     } else {
 	                         alert(response.message);
 	                     }
@@ -44,7 +44,7 @@
 	    	});
 	    	
 	    	$('#joinButton').on('click', function(e) {
-	       		window.location.href = '/member/join';
+	       		window.location.href = '/member/joinForm';
 		    });
 		});
     </script>

@@ -45,7 +45,7 @@
     <script>
 	    $(document).ready(function() {
 	        $('#writeButton').on('click', function(e) {
-	            window.location.href = '/board/save';
+	            window.location.href = '/board/saveArticleForm';
 	        });
 	    });
 	</script>

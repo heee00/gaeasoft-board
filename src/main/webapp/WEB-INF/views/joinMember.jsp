@@ -46,7 +46,7 @@
 
 	    	    if (name.length > 50) {
 	    	    	nameError.style.color = "red";
-	    	    	nameError.innerHTML = "이름은 50자 미만이어야 합니다.";
+	    	    	nameError.innerHTML = "이름은 50자 이하이어야 합니다.";
 		            return;
 		        }
 	    	});
@@ -69,7 +69,7 @@
 		   	    
 		   	 	if (email.length > 100) {
 			   	 	emailError.style.color = "red";
-			   		emailError.innerHTML = "이메일은 100자 미만이어야 합니다.";
+			   		emailError.innerHTML = "이메일은 100자 이하이어야 합니다.";
 		            return;
 		        }
 	   		
@@ -80,12 +80,12 @@
 	                   "email": email
 	               },
 	               success: function(response) {
-	                   if (response == "true") {
-	                	   emailError.style.color = "green";
-	                	   emailError.innerHTML = "사용 가능한 이메일입니다";
+	                   if (response == "false") {
+	                	  emailError.style.color = "red";
+	                	  emailError.innerHTML = "이미 사용중인 이메일입니다";
 	                   } else {
-	                	   emailError.style.color = "red";
-	                	   emailError.innerHTML = "이미 사용중인 이메일입니다";
+	                	   emailError.innerHTML = '';
+	   		   	        	return;
 	                   }
 	               },
 	               error: function(xhr, status, err) {
@@ -112,7 +112,7 @@
 		   	    
 		   		if (id.length > 50) {
 		   			idError.style.color = "red";
-		   			idError.innerHTML = "아이디는 50자 미만이어야 합니다.";
+		   			idError.innerHTML = "아이디는 50자 이하이어야 합니다.";
 		            return;
 		        }
 
@@ -123,13 +123,13 @@
 	                    "id": id
 	                },
 	                success: function(response) {
-	                    if (response == "true") {
-	                    	idError.style.color = "green";
-	                    	idError.innerHTML = "사용 가능한 아이디입니다";
-	                    } else {
+	                    if (response == "false") {
 	                    	idError.style.color = "red";
 	                    	idError.innerHTML = "이미 사용중인 아이디입니다";
-	                    }
+	                    } else {
+	                    	idError.innerHTML = '';
+	   		   	        	return;
+	                   }
 	                },
 	                error: function(xhr, status, err) {
 	                    console.error('AJAX Error: ' + status + err);
@@ -148,7 +148,7 @@
 	            
 				if (password.length > 20) {
 					passwordError.style.color = "red";
-					passwordError.innerHTML = "비밀번호는 20자 미만이어야 합니다.";
+					passwordError.innerHTML = "비밀번호는 20자 이하이어야 합니다.";
 		            return;
 		        }
 			});
@@ -173,6 +173,17 @@
 	    	$('#joinMemberForm').on('submit', function(e) {
 	    		e.preventDefault();
 	            var formData = $(this).serialize();
+	            
+	            var nameError = document.getElementById("nameError").innerHTML;
+	            var emailError = document.getElementById("emailError").innerHTML;
+	            var idError = document.getElementById("idError").innerHTML;
+	            var passwordError = document.getElementById("passwordError").innerHTML;
+	            var passwordCheckError = document.getElementById("passwordCheckError").innerHTML;
+
+	            if (nameError !== '' || emailError !== '' || idError !== '' || passwordError !== '' || passwordCheckError !== '') {
+	                alert("에러 메세지를 확인해 주세요.");
+	                return;
+	            }
 	
 	    		$.ajax({
 	    			url: '/member/join',
@@ -180,7 +191,7 @@
 	                data: formData,
 	                success: function(response) {
 	                	alert("회원이 되신 것을 환영합니다.");
-	                    window.location.href = '/member/login';
+	                    window.location.href = '/member/loginForm';
 	                },
 	                error: function(xhr, status, err) {
 	                    console.error('AJAX Error: ' + status + err);
@@ -189,7 +200,7 @@
 	    	});
 	    	
 	    	$('#cancelButton').on('click', function(e) {
-	       		window.location.href = '/member/login';
+	       		window.location.href = '/member/loginForm';
 		    });
 	    });
     </script>

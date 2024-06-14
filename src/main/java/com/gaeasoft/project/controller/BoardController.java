@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,13 +22,14 @@ import com.gaeasoft.project.service.BoardService;
 
 @Controller
 @RequestMapping("/board")
+@Validated
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
 	
 	// 전체 글 목록
-	@GetMapping("/")
+	@GetMapping("/List")
 	public String noticeArticleList(Model model) throws Exception {
 		List<BoardDTO> boardList = boardService.noticeArticleList();
 		model.addAttribute("boardList", boardList);
@@ -37,12 +38,13 @@ public class BoardController {
 	}
 	
 	// 게시글 상세 보기
-	@GetMapping
-	public String noticeArticleDetail(@RequestParam("id") Long id, 
+	@GetMapping("/viewDetail")
+	public String viewNoticeArticleDetail(@RequestParam("id") Long id, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													@RequestParam(value = "rowNum", required = false) int rowNum,
 													HttpSession session, Model model) throws Exception {
-		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
+		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(id, session);
+		session.setAttribute("boardPassword", boardDTO.getPassword());
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
@@ -51,11 +53,11 @@ public class BoardController {
 	}
 	
 	// 페이징 포함 목록
-	@GetMapping("/paging")
+	@GetMapping("/pagingList")
 	public String noticePagingList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 												Model model) throws Exception  {
 		List<BoardDTO> pagingList = boardService.noticePagingList(page);
-		PageDTO pageDTO = boardService.pagingParam(page);
+		PageDTO pageDTO = boardService.setPagingParam(page);
 		model.addAttribute("pagingList", pagingList);
 		model.addAttribute("paging", pageDTO);
 		
@@ -69,7 +71,7 @@ public class BoardController {
 	}
 	
 	// 게시글 저장 화면 이동
-	@GetMapping("/save")
+	@GetMapping("/saveArticleForm")
 	public String saveNoticeArticleForm(@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 														Model model) throws Exception {
 		model.addAttribute("page", page);
@@ -77,33 +79,30 @@ public class BoardController {
 	}
 	
 	// 게시글 저장
-	@PostMapping("/save")
+	@PostMapping("/saveArticle")
 	public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO, 
 													@ModelAttribute("loginId") String loginId,
 													BindingResult result, Model model) throws Exception {
         boardDTO.setWriter(loginId);
         if (result.hasErrors()) {
-        	for (FieldError error : result.getFieldErrors()) {
-                model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
-            }
             return "saveBoard";
         }
         
 		int saveResult = boardService.saveNoticeArticle(boardDTO);
 		if (saveResult > 0) {
-			return "redirect:/board/paging";
+			return "redirect:/board/pagingList";
 		} else {
 			return "saveBoard";
 		}
 	}
 	
 	// 게시글 수정 화면 이동
-	@GetMapping("/update")
+	@GetMapping("/updateArticleForm")
 	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
 															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 															@RequestParam(value = "rowNum", required = false) int rowNum,
 															HttpSession session, Model model) throws Exception {
-		BoardDTO boardDTO = boardService.noticeArticleDetail(id, session);
+		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(id, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
@@ -112,20 +111,25 @@ public class BoardController {
 	}
 	
 	// 게시글 수정
-	@PostMapping("/update")
-	public String updateNoticeArticle(@ModelAttribute BoardDTO boardDTO) throws Exception {
+	@PostMapping("/updateArticle")
+	public String updateNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
+													BindingResult result, Model model) throws Exception {
+		
+		if (result.hasErrors()) {
+            return "updateBoard";
+        }
 		boardService.updateNoticeArticle(boardDTO);
 	    return "boardDetail";
 	}
 	
 	// 게시글 삭제
-	@GetMapping("/delete")
+	@GetMapping("/deleteArticle")
 	public String deleteNoticeArticle(@RequestParam("id") Long id, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													Model model) throws Exception {
 		boardService.deleteNoticeArticle(id);
 		model.addAttribute("page", page);
-		return "redirect:/board/paging";
+		return "redirect:/board/pagingList";
 	}
 	
 }

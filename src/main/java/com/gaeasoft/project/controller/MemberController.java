@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +29,10 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+    private static final Logger log = LoggerFactory.getLogger(BoardController.class);
 	
 	// 회원가입 화면 이동
-	@GetMapping("/join")
+	@GetMapping("/joinForm")
 	public String joinMemberForm() throws Exception {
 		return "joinMember";
 	}
@@ -38,6 +41,7 @@ public class MemberController {
 	@PostMapping("/join")
 	public String joinMember(@ModelAttribute MemberDTO memberDTO) throws Exception {
 		int saveResult = memberService.joinMember(memberDTO);
+		log.info(memberDTO.toString());
 		
 		if (saveResult > 0) {
 			return "loginMember";
@@ -47,7 +51,7 @@ public class MemberController {
 	}
 	
 	// 로그인 화면 이동
-	@GetMapping("/login")
+	@GetMapping("/loginForm")
 	public String loginMemberForm() {
 		return "loginMember";
 	}
@@ -62,7 +66,7 @@ public class MemberController {
 		
 	    if (loginResult) {
 	        session.setAttribute("loginId", memberDTO.getId());
-	        session.setAttribute("viewedArticle", new HashSet<Long>()); // 빈 세트 생성
+	        session.setAttribute("viewedArticle", new HashSet<Long>());
 	        response.put("status", "success");
 	        response.put("message", "로그인되었습니다.");
 	    } else {
@@ -95,7 +99,7 @@ public class MemberController {
 	    session.removeAttribute("viewedArticle");
 	    session.invalidate();
 	    
-	    return "redirect:/member/login";
+	    return "redirect:/member/loginForm";
 	}
 	
 }

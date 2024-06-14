@@ -28,7 +28,7 @@
 		            <tr>
 		                <td>${pagingList.rowNum}</td>
 		                <td>
-	                    	<a href="/board?id=${pagingList.id}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
+	                    	<a href="/board/viewDetail?id=${pagingList.id}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
 		                </td>
 		                <td>${pagingList.writer}</td>
 	    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -53,7 +53,7 @@
 	            <span class="beforePage">[◀️이전]</span>
 	        </c:when>
 	        <c:otherwise>
-	            <a href="/board/paging?page=${paging.page-1}">[◀️이전]</a>
+	            <a href="/board/pagingList?page=${paging.page-1}">[◀️이전]</a>
 	        </c:otherwise>
 	    </c:choose>
 	
@@ -65,7 +65,7 @@
 	                <span class="currentPage">${i}</span>
 	            </c:when>
 	            <c:otherwise>
-	                <a href="/board/paging?page=${i}">${i}</a>
+	                <a href="/board/pagingList?page=${i}">${i}</a>
 	            </c:otherwise>
 	        </c:choose>
 	    </c:forEach>
@@ -75,7 +75,7 @@
 	            <span class="nextPage">[다음▶️]</span>
 	        </c:when>
 	        <c:otherwise>
-	                <a href="/board/paging?page=${paging.page+1}">[다음▶️]</a>
+	                <a href="/board/pagingList?page=${paging.page+1}">[다음▶️]</a>
 	        </c:otherwise>
 	    </c:choose>
 	</div>
@@ -89,12 +89,12 @@
 	    		if (isConfirmed) {
 		            window.location.href = '/member/logout';
 	    		} else {
-	                window.location.href = '/board/paging?page=' + page;
+	                window.location.href = '/board/pagingList?page=' + page;
 	    		}
 	        });
 	    	
 	        $('#writeButton').on('click', function(e) {
-	            window.location.href = '/board/save';
+	            window.location.href = '/board/saveArticleForm';
 	        });
 	    });
 	</script>

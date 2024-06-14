@@ -54,7 +54,7 @@
 		
 		        if (title.length > 100) {
 		            titleError.style.color = "red";
-		            titleError.innerHTML = "제목은 100자 미만이어야 합니다.";
+		            titleError.innerHTML = "제목은 100자 이하이어야 합니다.";
 		            return;
 		        }
 			});
@@ -70,30 +70,29 @@
 		        
 		        if (content.length > 1000) {
 		            contentError.style.color = "red";
-		            contentError.innerHTML = "내용은 1000자 미만이어야 합니다.";
+		            contentError.innerHTML = "내용은 1000자 이하이어야 합니다.";
 		            return false;
 		        }
 			});
 			
 			$('#updateArticleForm').on('submit', function(e) {
 		        e.preventDefault();
-	        	var rowNum = '${rowNum}';
-	        	var errorMessage = '${errorMessage}';
 		        var id = '${board.id}';
 		        var page = '${page}';
+	        	var rowNum = '${rowNum}';
 		        var formData = $(this).serialize();
             	var isConfirmed = confirm("수정하시겠습니까?");
 		
 		        $.ajax({
-		            url: '/board/update?id=' + id + '&page=' + page,
+		            url: '/board/updateArticle?id=' + id + '&page=' + page,
 		            method: 'post',
 		            data: formData,
 		            success: function(response) {
 		            	
 		                if (isConfirmed) {
-		                    window.location.href = '/board?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+		                    window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
 		                } else {
-		                    window.location.href = '/board/update?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+		                    window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
 		                }
 		            },
 		            error: function(xhr, status, err) {
@@ -108,10 +107,10 @@
 		    	var page = '${page}';
 		    	
 		    	 $.ajax({
-		             url: '/board?id=' + id + '&page=' + page + '&rowNum=' + rowNum,
+		             url: '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum,
 		             method: 'get',
 		             success: function(response) {
-		                window.location.href = '/board?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+		                window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
 		             },
 		             error: function(xhr, status, err) {
 		                 console.error('AJAX Error: ' + status + err);

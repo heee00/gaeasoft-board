@@ -20,11 +20,11 @@
 		</div>
 		<div class="form-group">
 			<input type="text" name="title" id="title" placeholder="제목" required>
-        	<span id="titleError"></span>
+        	<span id="titleError" ></span>
 	    </div>
 	    <div class="form-group">
 			<textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required></textarea>
-        	<span id="contentError"></span>
+        	<span id="contentError" ></span>
 		</div>
 		<input type="submit" value="저장💾">
 		<input type="button" id="cancelButton" value="취소❎">
@@ -43,7 +43,7 @@
 
 		        if (password.length > 20) {
 		            passwordError.style.color = "red";
-		            passwordError.innerHTML = "비밀번호는 20자 미만이어야 합니다.";
+		            passwordError.innerHTML = "비밀번호는 20자 이하이어야 합니다.";
 		            return;
 		        }
 			});
@@ -66,7 +66,7 @@
 		
 		        if (title.length > 100) {
 		            titleError.style.color = "red";
-		            titleError.innerHTML = "제목은 100자 미만이어야 합니다.";
+		            titleError.innerHTML = "제목은 100자 이하이어야 합니다.";
 		            return;
 		        }
 			});
@@ -82,7 +82,7 @@
 		        
 		        if (content.length > 1000) {
 		            contentError.style.color = "red";
-		            contentError.innerHTML = "내용은 1000자 미만이어야 합니다.";
+		            contentError.innerHTML = "내용은 1000자 이하이어야 합니다.";
 		            return;
 		        }
 			});
@@ -95,24 +95,24 @@
 
 	            if (isConfirmed) {
 	                $.ajax({
-	                    url: '/board/save',
+	                    url: '/board/saveArticle',
 	                    method: 'post',
 	                    data: formData,
 	                    success: function(response) {
-	                        window.location.href = '/board/paging?page=' + page;
+	                        window.location.href = '/board/pagingList?page=' + page;
 	                    },
 	                    error: function(xhr, status, err) {
 	                        console.error('AJAX Error: ' + status + err);
 	                    }
 	                });
 	            } else {
-	                window.location.href = '/board/save';
+	                window.location.href = '/board/saveArticleForm';
 	            }
 	        });
 			
 		    $('#cancelButton').on('click', function(e) {
 	            var page = "${page}";
-		        window.location.href = '/board/paging?page=' + page;
+		        window.location.href = '/board/pagingList?page=' + page;
 		    });
 		});
 	</script>
