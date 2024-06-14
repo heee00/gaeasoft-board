@@ -58,6 +58,7 @@
     <delete id="deleteArticle" parameterType="Long">
     	DELETE FROM board 
     	WHERE id=#{id}
+    	AND id = #{loginId}
     </delete>
     
  </mapper>
