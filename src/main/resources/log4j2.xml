@@ -7,13 +7,15 @@
          <RollingFile name="File" fileName="D:/workspace/sts3-workspace/Board/logs/application.log" filePattern="D:/workspace/sts3-workspace/Board/logs/application-%d{yyyyMMdd}.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}] - %m%n" charset="UTF-8"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <DefaultRolloverStrategy fileIndex="max" max="7"/>
-             <Delete basePath="D:/workspace/sts3-workspace/Board/logs" maxDepth="1">
-                <IfFileName glob="application-*.log"/>
-                <IfLastModified age="7d"/>
-            </Delete>
+             <DefaultRolloverStrategy>
+                <Delete basePath="D:/workspace/sts3-workspace/Board/logs" maxDepth="1">
+                    <IfFileName glob="application-*.log">
+                        <IfLastModified age="7d"/>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
     <Loggers>
