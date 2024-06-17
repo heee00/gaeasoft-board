@@ -23,57 +23,28 @@
 			<input type="password" name="password" value="${board.password}" readonly>
 		</div>
 		<div class="form-group">
-			<input type="text" name="title" id="title" value="${board.title}" placeholder="제목" required>
-	        <span id="titleError"></span>
+			<input type="text" name="title" id="title" value="${board.title}" placeholder="제목">
+        	<span id="titleError"  class="error"></span>
 		</div>
 		<div class="form-group">
-	        <textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required>${board.content}</textarea>
-			<span id="contentError"></span>
+	        <textarea name="content" id="content" cols="30" rows="10" placeholder="내용">${board.content}</textarea>
+        	<span id="contentError"  class="error"></span>
 		</div>
-		<input type="submit" value="수정📝" >
+		<input type="submit" id="updateButton" value="수정📝" >
 		<input type="button" id="cancelButton" value="취소❎">
 	</form>
 	
 	<script>
 		$(document).ready(function() {
-			$('#title').on('blur', function(e) {
-				var title = document.getElementById("title").value;
-		        var titlePattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
-		        var titleError = document.getElementById("titleError");
-		        
-		        if (title === '' || (titlePattern.test(title)) && title.length <= 100) {
-		        	titleError.innerHTML = '';
-		   	        return;
-		   	    }
-		
-		        if (!titlePattern.test(title)) {
-		            titleError.style.color = "red";
-		            titleError.innerHTML = "제목에는 특수 문자를 사용할 수 없습니다.";
-		            return;
-		        }
-		
-		        if (title.length > 100) {
-		            titleError.style.color = "red";
-		            titleError.innerHTML = "제목은 100자 이하이어야 합니다.";
-		            return;
-		        }
-			});
-			
-			$('#content').on('blur', function(e) {
-				var content = document.getElementById("content").value;
-		        var contentError = document.getElementById("contentError");
-		        
-		        if (content === '' || content.length <= 1000) {
-		        	contentError.innerHTML = '';
-		   	        return;
-		   	    }
-		        
-		        if (content.length > 1000) {
-		            contentError.style.color = "red";
-		            contentError.innerHTML = "내용은 1000자 이하이어야 합니다.";
-		            return false;
-		        }
-			});
+            $('#updateButton').prop('disabled', true);
+
+			$('#title').on('blur', function() {
+		        validateField('title', $(this).val());
+		    });
+
+		    $('#content').on('blur', function() {
+		        validateField('content', $(this).val());
+		    });
 			
 			$('#updateArticleForm').on('submit', function(e) {
 		        e.preventDefault();
@@ -82,40 +53,87 @@
 	        	var rowNum = '${rowNum}';
 		        var formData = $(this).serialize();
             	var isConfirmed = confirm("수정하시겠습니까?");
-		
-		        $.ajax({
-		            url: '/board/updateArticle?id=' + id + '&page=' + page,
-		            method: 'post',
-		            data: formData,
-		            success: function(response) {
-		            	
-		                if (isConfirmed) {
-		                    window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
-		                } else {
-		                    window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+
+	            if (isConfirmed) {
+	                $.ajax({
+	                    url: '/board/updateArticle',
+	                    method: 'post',
+	                    data: formData,
+	                    success: function(response) {
+               				window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+	                    },
+	                    error: function(xhr) {
+		                    if (xhr.status === 400) {
+		                        var errors = xhr.responseJSON;
+		                        displayErrors(errors);
+		                    } else {
+		                        console.error('AJAX Error: ' + xhr.statusText);
+		                    }
 		                }
-		            },
-		            error: function(xhr, status, err) {
-		                console.error('AJAX Error: ' + status + err);
-		            }
-		        }); 
-			});
+					});
+	            } else {
+	            	window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+	            }
+           });
+
+		 	// 유효성 검사 함수
+		    function validateField(fieldName, fieldValue) {
+	            $.ajax({
+	                type: 'POST',
+	                url: '/board/validateField',
+	                contentType: 'application/json',
+	                data: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
+	                success: function(errors) {
+	                    displayFieldError(fieldName, errors);
+		                validateForm();
+	                },
+	                error: function(xhr) {
+	                    console.error('Validation Error: ' + xhr.statusText);
+	                }
+	            });
+	        }
+		 	
+		 	// 전체 폼의 유효성 검사
+	    	function validateForm() {
+	            var titleError = $('#titleError').text().trim();
+	            var contentError = $('#contentError').text().trim();
+
+	            if (titleError === '' && contentError === '') {
+	                $('#updateButton').prop('disabled', false);
+	            } else {
+	                $('#updateButton').prop('disabled', true);
+	            }
+	        }
+
+		    // 개별 필드 에러 메시지 표시 함수
+		    function displayFieldError(fieldName, errors) {
+		        if (errors[fieldName]) {
+		            $('#' + fieldName + 'Error').html('<div>' + errors[fieldName][0] + '</div>').css('color', 'red');
+		        } else {
+		            $('#' + fieldName + 'Error').empty();
+		        }
+		    }
+
+		    // 전체 에러 메시지 표시 함수
+		    function displayErrors(errors) {
+		        if (errors.title) {
+		            $('#titleError').html('<div>' + errors.title[0] + '</div>').css('color', 'red');
+		        } else {
+		            $('#titleError').empty();
+		        }
+		        if (errors.content) {
+		            $('#contentError').html('<div>' + errors.content[0] + '</div>').css('color', 'red');
+		        } else {
+		            $('#contentError').empty();
+		        }
+		    }
 		        
 	        $('#cancelButton').on('click', function(e) {
-	        	var rowNum = '${rowNum}';
 		    	var id = '${board.id}';
 		    	var page = '${page}';
+	        	var rowNum = '${rowNum}';
 		    	
-		    	 $.ajax({
-		             url: '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum,
-		             method: 'get',
-		             success: function(response) {
-		                window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
-		             },
-		             error: function(xhr, status, err) {
-		                 console.error('AJAX Error: ' + status + err);
-		             }
-		         });
+		     	window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
 		    });
 	    });
 	</script>

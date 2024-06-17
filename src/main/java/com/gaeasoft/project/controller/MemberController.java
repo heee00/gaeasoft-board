@@ -2,19 +2,24 @@ package com.gaeasoft.project.controller;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gaeasoft.project.dto.MemberDTO;
@@ -25,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@Validated
 public class MemberController {
 	
 	@Autowired
@@ -39,16 +45,35 @@ public class MemberController {
 	
 	// 회원가입
 	@PostMapping("/join")
-	public String joinMember(@ModelAttribute MemberDTO memberDTO) throws Exception {
-		int saveResult = memberService.joinMember(memberDTO);
+	public String joinMember(@Valid @ModelAttribute MemberDTO memberDTO,
+											BindingResult result) throws Exception {
 		log.info(memberDTO.toString());
 		
+		if (result.hasErrors()) {
+			memberService.getFieldErrors(result);
+            return "joinMember";
+        }
+		
+		int saveResult = memberService.joinMember(memberDTO);
+		
 		if (saveResult > 0) {
-			return "loginMember";
+			return "redirect:/member/loginForm";
 		} else {
 			return "joinMember";
 		}
 	}
+	
+	// 유효성 검사
+	@PostMapping("/validateField")
+    @ResponseBody
+    public ResponseEntity<Map<String, List<String>>> validateField(@RequestBody Map<String, String> requestParams) {
+        String fieldName = requestParams.get("fieldName");
+        String fieldValue = requestParams.get("fieldValue");
+        MemberDTO memberDTO = new MemberDTO();
+        
+        Map<String, List<String>> errors = memberService.validateField(memberDTO, fieldName, fieldValue);
+        return ResponseEntity.ok(errors);
+    }
 	
 	// 로그인 화면 이동
 	@GetMapping("/loginForm")
@@ -75,22 +100,6 @@ public class MemberController {
 	    }
 
 	    return response;
-	}
-	
-	// 이메일 중복 검사
-	@PostMapping("/emailCheck")
-	@ResponseBody
-	public String emailCheck(@RequestParam("email") String email) {
-		String checkResult = memberService.emailCheck(email);
-		return checkResult;
-	}
-	
-	// 아이디 중복 검사
-	@PostMapping("/idCheck")
-	@ResponseBody
-	public String idCheck(@RequestParam("id") String id) {
-		String checkResult = memberService.idCheck(id);
-		return checkResult;
 	}
 	
 	// 로그아웃

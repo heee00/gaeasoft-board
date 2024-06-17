@@ -1,11 +1,13 @@
 package com.gaeasoft.project.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +15,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
@@ -80,22 +84,36 @@ public class BoardController {
 	
 	// 게시글 저장
 	@PostMapping("/saveArticle")
-	public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO, 
-													@ModelAttribute("loginId") String loginId,
-													BindingResult result, Model model) throws Exception {
+    public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
+                                               @ModelAttribute("loginId") String loginId,
+                                               BindingResult result) throws Exception {
         boardDTO.setWriter(loginId);
+
         if (result.hasErrors()) {
+            boardService.getFieldErrors(result);
             return "saveBoard";
         }
-        
-		int saveResult = boardService.saveNoticeArticle(boardDTO);
+
+        int saveResult = boardService.saveNoticeArticle(boardDTO);
 		if (saveResult > 0) {
 			return "redirect:/board/pagingList";
 		} else {
 			return "saveBoard";
 		}
-	}
+    }
 	
+	// 유효성 검사
+	@PostMapping("/validateField")
+    @ResponseBody
+    public ResponseEntity<Map<String, List<String>>> validateField(@RequestBody Map<String, String> requestParams) {
+        String fieldName = requestParams.get("fieldName");
+        String fieldValue = requestParams.get("fieldValue");
+        BoardDTO boardDTO = new BoardDTO();
+        
+        Map<String, List<String>> errors = boardService.validateField(boardDTO, fieldName, fieldValue);
+        return ResponseEntity.ok(errors);
+    }
+
 	// 게시글 수정 화면 이동
 	@GetMapping("/updateArticleForm")
 	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
@@ -113,13 +131,15 @@ public class BoardController {
 	// 게시글 수정
 	@PostMapping("/updateArticle")
 	public String updateNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
-													BindingResult result, Model model) throws Exception {
+													BindingResult result) throws Exception {
 		
 		if (result.hasErrors()) {
+            boardService.getFieldErrors(result);
             return "updateBoard";
+        } else {
+			boardService.updateNoticeArticle(boardDTO);
+		    return "boardDetail";
         }
-		boardService.updateNoticeArticle(boardDTO);
-	    return "boardDetail";
 	}
 	
 	// 게시글 삭제

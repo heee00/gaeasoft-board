@@ -1,5 +1,7 @@
 package com.gaeasoft.project.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +12,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
@@ -20,6 +26,8 @@ public class BoardService {
 	
 	@Autowired
 	private BoardDAOImpl boardDAOImpl;
+	@Autowired
+	private Validator validator;
 
 	// 전체 글 목록
 	public List<BoardDTO> noticeArticleList() {
@@ -91,6 +99,41 @@ public class BoardService {
 		
 		return pagingList;
 	}
+	
+	// 유효성 검사
+	public Map<String, List<String>> validateField(BoardDTO boardDTO, String fieldName, String fieldValue) {
+        switch (fieldName) {
+            case "password":
+                boardDTO.setPassword(fieldValue);
+                break;
+            case "title":
+                boardDTO.setTitle(fieldValue);
+                break;
+            case "content":
+                boardDTO.setContent(fieldValue);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid field name");
+        }
+
+        BindingResult result = new BeanPropertyBindingResult(boardDTO, "boardDTO");
+        validator.validate(boardDTO, result);
+
+        if (result.hasErrors()) {
+            return getFieldErrors(result);
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
+	// 유효성 검사 메세지 호출
+    public Map<String, List<String>> getFieldErrors(BindingResult result) {
+        Map<String, List<String>> errors = new HashMap<>();
+        for (FieldError error : result.getFieldErrors()) {
+            errors.computeIfAbsent(error.getField(), key -> new ArrayList<>()).add(error.getDefaultMessage());
+        }
+        return errors;
+    }
 
 	// 게시글 조회수 증가
 	public void updateViews(Long id) {
