@@ -35,4 +35,9 @@ public class MemberDAOImpl implements MemberDAO {
 		return sql.selectOne("Member.findById", loginId);
 	}
 
+	// 회원 수정
+	public void updateInfo(MemberDTO memberDTO) {
+		sql.update("Member.updateInfo", memberDTO);
+	}
+
 }

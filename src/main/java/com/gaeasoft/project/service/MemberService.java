@@ -103,4 +103,8 @@ public class MemberService {
         return errors;
     }
 	
+    // 회원 수정
+ 	public void updatePersonalInfo(MemberDTO memberDTO) {
+ 		memberDAOImpl.updateInfo(memberDTO);
+ 	}
 }

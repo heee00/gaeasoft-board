@@ -20,6 +20,7 @@ public class MemberDTO {
 	public Long seq;
 	
 	@NotBlank(message = "이름을 입력해 주세요.")
+	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$", message = "이름에는 특수 문자를 사용할 수 없습니다.")
     @Size(max = 50, message = "이름은 50자 이하이어야 합니다.")
 	public String name;
     

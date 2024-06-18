@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gaeasoft.project.dto.MemberDTO;
@@ -66,7 +68,7 @@ public class MemberController {
 	// 유효성 검사
 	@PostMapping("/validateField")
     @ResponseBody
-    public ResponseEntity<Map<String, List<String>>> validateField(@RequestBody Map<String, String> requestParams) {
+    public ResponseEntity<Map<String, List<String>>> validateField(@RequestBody Map<String, String> requestParams) throws Exception {
         String fieldName = requestParams.get("fieldName");
         String fieldValue = requestParams.get("fieldValue");
         MemberDTO memberDTO = new MemberDTO();
@@ -77,7 +79,7 @@ public class MemberController {
 	
 	// 로그인 화면 이동
 	@GetMapping("/loginForm")
-	public String loginMemberForm() {
+	public String loginMemberForm() throws Exception {
 		return "loginMember";
 	}
 	
@@ -104,11 +106,49 @@ public class MemberController {
 	
 	// 로그아웃
 	@GetMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session) throws Exception {
 	    session.removeAttribute("viewedArticle");
 	    session.invalidate();
 	    
 	    return "redirect:/member/loginForm";
+	}
+	
+	// 회원 정보 보기
+	@GetMapping("/viewPersonalInfo")
+	public String viewPersonalInfo(@RequestParam("id") String id,
+															HttpSession session, Model model) throws Exception {
+		
+		id = (String) session.getAttribute("loginId");
+		MemberDTO memberDTO = memberService.findById(id);
+		model.addAttribute("member", memberDTO);
+		
+		return "memberDetail";
+	}
+	
+	// 회원 정보 수정 화면 이동
+	@GetMapping("/updatePersonalInfoForm")
+	public String updatePersonalInfoForm(@RequestParam("id") String id,
+															HttpSession session, Model model) throws Exception {
+		id = (String) session.getAttribute("loginId");
+		MemberDTO memberDTO = memberService.findById(id);
+		model.addAttribute("member", memberDTO);
+		
+		return "updateMember";
+	}
+	
+	// 회원 정보 수정
+	@PostMapping("/updatePersonalInfo")
+	public String updatePersonalInfo(@Valid @ModelAttribute MemberDTO memberDTO,
+													HttpSession session, BindingResult result) throws Exception {
+		if(result.hasErrors()) {
+			memberService.getFieldErrors(result);
+			return "updateMember";
+		} else {
+			String loginId = (String) session.getAttribute("loginId");
+			memberDTO.setId(loginId);
+			memberService.updatePersonalInfo(memberDTO);
+			return "memberDetail";
+		}
 	}
 	
 }

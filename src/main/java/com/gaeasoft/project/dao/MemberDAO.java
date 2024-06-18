@@ -15,5 +15,7 @@ public interface MemberDAO {
 	public MemberDTO findByEmail(String loginEmail);
 	// 회원 로그인 아이디 조회
 	public MemberDTO findById(String loginId);
+	// 회원 수정
+	public void updateInfo(MemberDTO memberDTO);
 
 }

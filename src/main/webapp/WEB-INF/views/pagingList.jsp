@@ -13,6 +13,7 @@
 	<div>
 		<h2>게시판</h2>
 		<button class="link-button" id="logoutButton">로그아웃🚪</button>
+		<button class="link-button" id="infoButton">회원 정보🔦</button>
 		<table class="board-table">
 	        <thead>
 		        <tr>
@@ -82,6 +83,11 @@
 	
 	<script>
 	    $(document).ready(function() {
+	    	$('#infoButton').on('click', function(e) {
+	    		var id = '${loginId}';
+	            window.location.href = '/member/viewPersonalInfo?id=' + id;
+	        });
+	    	
 	    	$('#logoutButton').on('click', function(e) {
 	            var page = '${paging.page}';
 	    		var isConfirmed = confirm("정말 로그아웃하시겠습니까?");

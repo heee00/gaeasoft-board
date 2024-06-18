@@ -14,7 +14,8 @@
     <select id="loginMember" parameterType="member" resultType="member">
     	SELECT name, id, password, email
     	FROM member
-    	WHERE id = #{id} AND password = #{password}
+    	WHERE id = #{id} 
+    	AND password = #{password}
     </select>
 	
 	<!-- 회원 로그인 이메일 조회 -->
@@ -26,8 +27,16 @@
 	
 	<!-- 회원 로그인 아이디 조회 -->
 	<select id="findById" parameterType="String" resultType="member">
-		SELECT name, id, password, email
+		SELECT name, id, password, email, joinTime
 		FROM member
 		WHERE id = #{loginId}
 	</select>
+	
+	<!-- 회원 수정 -->
+    <update id="updateInfo" parameterType="member">
+    	UPDATE member 
+    	SET name = #{name}, password = #{password}
+    	WHERE id = #{id}
+    </update>
+	
 </mapper>
