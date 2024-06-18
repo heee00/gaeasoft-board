@@ -1,5 +1,6 @@
 package com.gaeasoft.project.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -153,6 +154,11 @@ public class BoardService {
 	// 게시글 삭제
 	public void deleteNoticeArticle(Long id) {
 		boardDAOImpl.deleteArticle(id);
+	}
+
+	// 게시글 삭제 배치
+	public void deleteBatchedNoticeArticle(LocalDateTime deleteDay) {
+		boardDAOImpl.deleteBatchedArticle(deleteDay);
 	}
 
 }

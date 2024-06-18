@@ -30,13 +30,43 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
-
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="defaultEncoding" value="UTF-8" />
-        <property name="maxUploadSize" value="10000000" />
-    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+	
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+	    <property name="dataSource" ref="dataSource"/>
+	    <property name="transactionManager" ref="transactionManager"/>
+	    <property name="databaseType" value="mysql"/>
+	</bean>
+	
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	    <property name="jobRepository" ref="jobRepository"/>
+	</bean>
+	
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	    <property name="jobClass" value="com.gaeasoft.project.batch.QuartzJob"/>
+	    <property name="durability" value="true"/>
+	</bean>
+	
+	<bean id="trigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+	    <property name="jobDetail" ref="jobDetail"/>
+	    <property name="repeatInterval" value="86400000"/> <!-- 24 hours in milliseconds -->
+	    <property name="repeatCount" value="0"/>
+	</bean>
+	
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	    <property name="jobDetails">
+	        <list>
+	            <ref bean="jobDetail"/>
+	        </list>
+	    </property>
+	    <property name="triggers">
+	        <list>
+	            <ref bean="trigger"/>
+	        </list>
+	    </property>
+	</bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

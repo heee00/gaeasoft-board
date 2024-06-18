@@ -1,5 +1,6 @@
 package com.gaeasoft.project.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -26,5 +27,7 @@ public interface BoardDAO {
 	public void updateArticle(BoardDTO boardDTO);
 	// 게시글 삭제
 	public void deleteArticle(Long id) ;
+	// 게시글 삭제 배치
+	public void deleteBatchedArticle(LocalDateTime deleteDay);
 	
 }

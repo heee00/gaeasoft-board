@@ -1,11 +1,13 @@
 package com.gaeasoft.project.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gaeasoft.project.dto.BoardDTO;
 
@@ -53,6 +55,13 @@ public class BoardDAOImpl implements BoardDAO {
 	// 게시글 삭제
 	public void deleteArticle(Long id) {
 		sql.delete("Board.deleteArticle", id);
+	}
+
+	// 게시글 삭제 배치
+    @Override
+    @Transactional
+	public void deleteBatchedArticle(LocalDateTime deleteDay) {
+		sql.delete("Board.deleteBatchedArticle", deleteDay);
 	}
 
 }

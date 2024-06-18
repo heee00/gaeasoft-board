@@ -61,4 +61,10 @@
     	AND id = #{loginId}
     </delete>
     
+    <!-- 게시글 삭제 배치 -->
+    <delete id="deleteBatchedArticle" parameterType="java.time.LocalDateTime">
+		 DELETE FROM board 
+       	 WHERE writeTime &lt;= #{deleteDay}
+    </delete>
+    
  </mapper>

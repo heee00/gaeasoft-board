@@ -26,5 +26,8 @@
         <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="org.quartz" level="info">
+            <AppenderRef ref="Console" />
+        </Logger>
     </Loggers>
 </Configuration>
