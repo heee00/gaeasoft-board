@@ -58,10 +58,12 @@
 		        var passwordCheck = $(this).val();
 		        var passwordCheckError = $('#passwordCheckError');
 
-		        if (passwordCheck === '' || password === passwordCheck) {
-		            passwordCheckError.empty();
-		        } else {
+		        if (passwordCheck === '') {
+		            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+		        } else if (password !== passwordCheck) {
 		            passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
+		        } else {
+		            passwordCheckError.empty();
 		        }
                 validateForm();
 			});
