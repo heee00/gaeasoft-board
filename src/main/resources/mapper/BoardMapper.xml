@@ -57,8 +57,7 @@
     <!-- 게시글 삭제 -->
     <delete id="deleteArticle" parameterType="Long">
     	DELETE FROM board 
-    	WHERE id=#{id}
-    	AND id = #{loginId}
+    	WHERE id = #{loginId}
     </delete>
     
     <!-- 게시글 삭제 배치 -->
