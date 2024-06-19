@@ -10,23 +10,23 @@
 <body>
     <form id="joinMemberForm">
     	<div class="form-group">
-	        <input type="text" name="name" id="name" placeholder="이름">
+	        <input type="text" name="name" id="name" placeholder="이름" required>
 	         <span id="nameError"  class="error"></span>
     	</div>
     	<div class="form-group">
-	        <input type="text" name="email" id="email" placeholder="example@example.com">
+	        <input type="text" name="email" id="email" placeholder="example@example.com" required>
 	        <span id="emailError"  class="error"></span>
     	</div>
     	<div class="form-group">
-	        <input type="text" name="id" id="id" placeholder="아이디">
+	        <input type="text" name="id" id="id" placeholder="아이디" required>
 	        <span id="idError"  class="error"></span>
     	</div>
     	<div class="form-group">
-	        <input type="password" name="password" id="password" placeholder="비밀번호">
+	        <input type="password" name="password" id="password" placeholder="비밀번호" required>
 	        <span id="passwordError"  class="error"></span>
     	</div>
     	<div class="form-group">
-	        <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인">
+	        <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" required>
        		<span id="passwordCheckError" class="error"></span>
     	</div>
         <input type="submit" id="joinButton" value="회원가입">
@@ -58,12 +58,14 @@
 		        var passwordCheck = $(this).val();
 		        var passwordCheckError = $('#passwordCheckError');
 
-		        if (passwordCheck === '') {
-		            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
-		        } else if (password !== passwordCheck) {
-		            passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
-		        } else {
+		        if (passwordCheck.length > 0 && password === passwordCheck) {
 		            passwordCheckError.empty();
+		        } else {
+		        	if (passwordCheck.length == 0) {
+			            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+		        	} else {
+		            	passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
+		       		}
 		        }
                 validateForm();
 			});
