@@ -25,7 +25,7 @@
 		       <td>${member.email}</td>
 		   </tr>
 		   <tr>
-		       <th class="member-joinTime">가입 시간</th>
+		       <th class="member-joinTime">가입일</th>
 		       <td><fmt:formatDate value="${member.joinTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 		   </tr>
 		</tbody>
