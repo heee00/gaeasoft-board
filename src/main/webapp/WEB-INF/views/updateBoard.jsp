@@ -23,11 +23,11 @@
 			<input type="password" name="password" value="${board.password}" readonly>
 		</div>
 		<div class="form-group">
-			<input type="text" name="title" id="title" value="${board.title}" placeholder="제목">
+			<input type="text" name="title" id="title" value="${board.title}" placeholder="제목" required>
         	<span id="titleError"  class="error"></span>
 		</div>
 		<div class="form-group">
-	        <textarea name="content" id="content" cols="30" rows="10" placeholder="내용">${board.content}</textarea>
+	        <textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required>${board.content}</textarea>
         	<span id="contentError"  class="error"></span>
 		</div>
 		<input type="submit" id="updateButton" value="수정📝" >

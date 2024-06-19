@@ -16,15 +16,15 @@
 			<input type="text" name="writer" placeholder="작성자"   value="${sessionScope.loginId}" readonly>
 		</div>
 		<div class="form-group">
-			<input type="password" name="password" id="password" placeholder="비밀번호">
+			<input type="password" name="password" id="password" placeholder="비밀번호" required>
 			<span id="passwordError"  class="error"></span>
 		</div>
 		<div class="form-group">
-			<input type="text" name="title" id="title" placeholder="제목">
+			<input type="text" name="title" id="title" placeholder="제목" required>
         	<span id="titleError"  class="error"></span>
 	    </div>
 	    <div class="form-group">
-			<textarea name="content" id="content" cols="30" rows="10" placeholder="내용"></textarea>
+			<textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required></textarea>
         	<span id="contentError"  class="error"></span>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
