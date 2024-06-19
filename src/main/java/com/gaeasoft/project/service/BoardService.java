@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,30 +37,16 @@ public class BoardService {
 	// 게시글 상세 보기
 	public BoardDTO viewNoticeArticleDetail(Long id, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
-	    
-	    if (viewedArticle == null) {
-	    	viewedArticle = new HashSet<>();
-	    	session.setAttribute("viewedArticle", viewedArticle);
-	    }
-	    
-	    try {
-	    	boolean viewed = false;
-	    	for (Long viewedId : viewedArticle) {
-	    		if (viewedId.equals(id)) {
-	    			viewed = true;
-	    			break;
-	    		}
-	    	}
-	    		
-	    	if (!viewed) {
-	    		// 예외 발생을 유도하기 위해 임의로 에러를 발생시킴
-	    		// throw new RuntimeException("조회수 업데이트 중 에러 발생");
-	    		updateViews(id);
-	    		viewedArticle.add(id);
-	    	}
+
+		try {
+	        if (!viewedArticleCheck(id, viewedArticle)) {
+		    	session.setAttribute("viewedArticle", viewedArticle);
+	        	updateViews(id);
+	            viewedArticle.add(id);
+	        }
 	        return boardDAOImpl.articleDetail(id);
-	        
-	    } catch (Exception e) {
+	    
+		} catch (Exception e) {
 	        System.err.println("에러 발생: " + e.getMessage());
 	        return boardDAOImpl.articleDetail(id);
 	    }
@@ -135,6 +120,17 @@ public class BoardService {
         }
         return errors;
     }
+    
+    // 게시글 조회 확인
+    private boolean viewedArticleCheck(Long id, Set<Long> viewedArticle) {
+    	// 내가 봤던 게시글 List에 board id가 있는지 비교
+        for (Long viewedId : viewedArticle) {
+            if (viewedId.equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	// 게시글 조회수 증가
 	public void updateViews(Long id) {
@@ -155,7 +151,7 @@ public class BoardService {
 	public void deleteNoticeArticle(Long id) {
 		boardDAOImpl.deleteArticle(id);
 	}
-
+	
 	// 게시글 삭제 배치
 	public void deleteBatchedNoticeArticle(LocalDateTime deleteDay) {
 		boardDAOImpl.deleteBatchedArticle(deleteDay);
