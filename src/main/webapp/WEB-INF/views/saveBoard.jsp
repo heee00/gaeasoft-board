@@ -8,6 +8,7 @@
 	<title>SaveBoard</title>
 	<link rel="stylesheet" type="text/css" href="/resources/css/saveBoard.css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="/resources/js/validation.js"></script>
 </head>
 <body>
 <h2>게시글 작성</h2>
@@ -35,17 +36,17 @@
 		$(document).ready(function() {
             $('#saveButton').prop('disabled', true);
 
-			$('#password').on('blur', function() {
-		        validateField('password', $(this).val());
-		    });
+            $('#password').on('blur', function() {
+                validateField('password', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
+            });
 
-		    $('#title').on('blur', function() {
-		        validateField('title', $(this).val());
-		    });
+            $('#title').on('blur', function() {
+                validateField('title', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
+            });
 
-		    $('#content').on('blur', function() {
-		        validateField('content', $(this).val());
-		    });
+            $('#content').on('blur', function() {
+                validateField('content', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
+            });
 		    
 			$('#saveArticleForm').on('submit', function(e) {
 		        e.preventDefault();
@@ -75,64 +76,6 @@
 	            }
  	        });
 			
-		 	// 유효성 검사 함수
-		    function validateField(fieldName, fieldValue) {
-	            $.ajax({
-	                type: 'POST',
-	                url: '/board/validateField',
-	                contentType: 'application/json',
-	                data: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
-	                success: function(errors) {
-	                    displayFieldError(fieldName, errors);
-		                validateForm();
-	                },
-	                error: function(xhr) {
-	                    console.error('Validation Error: ' + xhr.statusText);
-	                }
-	            });
-	        }
-		 	
-		 	// 전체 폼의 유효성 검사
-	    	function validateForm() {
-	            var passwordError = $('#passwordError').text().trim();
-	            var titleError = $('#titleError').text().trim();
-	            var contentError = $('#contentError').text().trim();
-
-	            if (passwordError === '' && titleError === '' && contentError === '') {
-	                $('#saveButton').prop('disabled', false);
-	            } else {
-	                $('#saveButton').prop('disabled', true);
-	            }
-	        }
-
-		    // 개별 필드 에러 메시지 표시 함수
-		    function displayFieldError(fieldName, errors) {
-		        if (errors[fieldName]) {
-		            $('#' + fieldName + 'Error').html('<div>' + errors[fieldName][0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#' + fieldName + 'Error').empty();
-		        }
-		    }
-
-		    // 전체 에러 메시지 표시 함수
-		    function displayErrors(errors) {
-		        if (errors.password) {
-		            $('#passwordError').html('<div>' + errors.password[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#passwordError').empty();
-		        }
-		        if (errors.title) {
-		            $('#titleError').html('<div>' + errors.title[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#titleError').empty();
-		        }
-		        if (errors.content) {
-		            $('#contentError').html('<div>' + errors.content[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#contentError').empty();
-		        }
-		    }
-		    
 		    $('#cancelButton').on('click', function(e) {
 	            var page = "${page}";
 		        window.location.href = '/board/pagingList?page=' + page;

@@ -6,6 +6,7 @@
     <title>UpdateMember</title>
     <link rel="stylesheet" type="text/css" href="/resources/css/updateMember.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="/resources/js/validation.js"></script>
 </head>
 <body>
 <h2>회원 수정</h2>
@@ -36,29 +37,31 @@
 	    $(document).ready(function() {
             $('#updateButton').prop('disabled', true);
 
-	    	$('#name').on('blur', function() {
-	            validateField('name', $(this).val());
+            $('#name').on('blur', function() {
+                validateField('name', $(this).val(), '/member/validateField', displayFieldError, 'updateMemberForm', 'updateButton');
 	    	});
 			
-			$('#password').on('blur', function() {
-		        validateField('password', $(this).val());
+            $('#password').on('blur', function() {
+                validateField('password', $(this).val(), '/member/validateField', displayFieldError, 'updateMemberForm', 'updateButton');
 			});
 
 			$('#passwordCheck').on('blur', function(e) {
 				var password = $('#password').val();
 		        var passwordCheck = $(this).val();
 		        var passwordCheckError = $('#passwordCheckError');
-		        
+
 		        if (passwordCheck.length > 0 && password === passwordCheck) {
 		            passwordCheckError.empty();
+                    $('#updateButton').prop('disabled', false);
 		        } else {
 		        	if (passwordCheck.length == 0) {
 			            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+	                    $('#updateButton').prop('disabled', true);
 		        	} else {
 		            	passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
+	                    $('#updateButton').prop('disabled', true);
 		       		}
 		        }
-                validateForm();
 			});
 			
 	    	$('#updateMemberForm').on('submit', function(e) {
@@ -86,59 +89,6 @@
 	   	            });
 	   	        }
 	    	});
-	    	
-	    	// 전체 유효성 검사
-	    	function validateForm() {
-	            var nameError = $('#nameError').text().trim();
-	            var passwordError = $('#passwordError').text().trim();
-	            var passwordCheckError = $('#passwordCheckError').text().trim();
-
-	            if (nameError === '' && passwordError === '' && passwordCheckError === '') {
-	                $('#updateButton').prop('disabled', false);
-	            } else {
-	                $('#updateButton').prop('disabled', true);
-	            }
-	        }
-	    	
-	    	// 유효성 검사 함수
-		    function validateField(fieldName, fieldValue) {
-		    	$.ajax({
-		            type: 'POST',
-		            url: '/member/validateField',
-		            contentType: 'application/json',
-		            data: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
-		            success: function(errors) {
-		                displayFieldError(fieldName, errors);
-		                validateForm();
-		            },
-		            error: function(xhr) {
-		                console.error('Validation Error: ' + xhr.statusText);
-		            }
-		        });
-		    }
-
-		    // 개별 필드 에러 메시지 표시 함수
-		    function displayFieldError(fieldName, errors) {
-		    	if (errors[fieldName]) {
-		            $('#' + fieldName + 'Error').html('<div>' + errors[fieldName][0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#' + fieldName + 'Error').empty();
-		        }
-		    }
-
-		    // 전체 에러 메시지 표시 함수
-		    function displayErrors(errors) {
-		    	if (errors.name) {
-		            $('#nameError').html('<div>' + errors.name[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#nameError').empty();
-		        }
-		        if (errors.password) {
-		            $('#passwordError').html('<div>' + errors.password[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#passwordError').empty();
-		        }
-		    }
 	    	
 	    	$('#cancelButton').on('click', function(e) {
 	    		var id = '${loginId}';

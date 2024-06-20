@@ -6,6 +6,7 @@
     <title>JoinMember</title>
     <link rel="stylesheet" type="text/css" href="/resources/css/joinMember.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   	<script src="/resources/js/validation.js"></script>
 </head>
 <body>
     <form id="joinMemberForm">
@@ -38,19 +39,19 @@
             $('#joinButton').prop('disabled', true);
 
 	    	$('#name').on('blur', function() {
-	            validateField('name', $(this).val());
+                validateField('name', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 	    	});
 	    	
 			$('#email').on('blur', function() {
-		        validateField('email', $(this).val());
+                validateField('email', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 			});
 			
 			$('#id').on('blur', function() {
-		        validateField('id', $(this).val());
+                validateField('id', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 			});
 			
 			$('#password').on('blur', function() {
-		        validateField('password', $(this).val());
+                validateField('password', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 			});
 
 			$('#passwordCheck').on('blur', function(e) {
@@ -60,14 +61,16 @@
 
 		        if (passwordCheck.length > 0 && password === passwordCheck) {
 		            passwordCheckError.empty();
+                    $('#joinButton').prop('disabled', false);
 		        } else {
 		        	if (passwordCheck.length == 0) {
 			            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+	                    $('#joinButton').prop('disabled', true);
 		        	} else {
 		            	passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
+	                    $('#joinButton').prop('disabled', true);
 		       		}
 		        }
-                validateForm();
 			});
 			
 	    	$('#joinMemberForm').on('submit', function(e) {
@@ -94,71 +97,6 @@
 	   	            });
 	   	        }
 	    	});
-	    	
-	    	// 전체 유효성 검사
-	    	function validateForm() {
-	            var emailError = $('#emailError').text().trim();
-	            var idError = $('#idError').text().trim();
-	            var nameError = $('#nameError').text().trim();
-	            var passwordError = $('#passwordError').text().trim();
-	            var passwordCheckError = $('#passwordCheckError').text().trim();
-
-	            if (emailError === '' && idError === '' && nameError === '' && passwordError === '' && passwordCheckError === '') {
-	                $('#joinButton').prop('disabled', false);
-	            } else {
-	                $('#joinButton').prop('disabled', true);
-	            }
-	        }
-	    	
-	    	// 유효성 검사 함수
-		    function validateField(fieldName, fieldValue) {
-		    	$.ajax({
-		            type: 'POST',
-		            url: '/member/validateField',
-		            contentType: 'application/json',
-		            data: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
-		            success: function(errors) {
-		                displayFieldError(fieldName, errors);
-		                validateForm();
-		            },
-		            error: function(xhr) {
-		                console.error('Validation Error: ' + xhr.statusText);
-		            }
-		        });
-		    }
-
-		    // 개별 필드 에러 메시지 표시 함수
-		    function displayFieldError(fieldName, errors) {
-		    	if (errors[fieldName]) {
-		            $('#' + fieldName + 'Error').html('<div>' + errors[fieldName][0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#' + fieldName + 'Error').empty();
-		        }
-		    }
-
-		    // 전체 에러 메시지 표시 함수
-		    function displayErrors(errors) {
-		    	if (errors.name) {
-		            $('#nameError').html('<div>' + errors.name[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#nameError').empty();
-		        }
-		        if (errors.email) {
-		            $('#emailError').html('<div>' + errors.email[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#emailError').empty();
-		        }
-		        if (errors.id) {
-		            $('#idError').html('<div>' + errors.id[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#idError').empty();
-		        }
-		        if (errors.password) {
-		            $('#passwordError').html('<div>' + errors.password[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#passwordError').empty();
-		        }
-		    }
 	    	
 	    	$('#cancelButton').on('click', function(e) {
 	       		window.location.href = '/member/loginForm';

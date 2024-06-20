@@ -6,6 +6,7 @@
 	<title>UpdateBoard</title>
 	<link rel="stylesheet" type="text/css" href="/resources/css/updateBoard.css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="/resources/js/validation.js"></script>
 </head>
 <body>
 <h2>게시글 수정</h2>
@@ -38,14 +39,14 @@
 		$(document).ready(function() {
             $('#updateButton').prop('disabled', true);
 
-			$('#title').on('blur', function() {
-		        validateField('title', $(this).val());
-		    });
+            $('#title').on('blur', function() {
+                validateField('title', $(this).val(), '/board/validateField', displayFieldError, 'updateArticleForm', 'updateButton');
+            });
 
-		    $('#content').on('blur', function() {
-		        validateField('content', $(this).val());
-		    });
-			
+            $('#content').on('blur', function() {
+                validateField('content', $(this).val(), '/board/validateField', displayFieldError, 'updateArticleForm', 'updateButton');
+            });
+            
 			$('#updateArticleForm').on('submit', function(e) {
 		        e.preventDefault();
 		        var id = '${board.id}';
@@ -76,58 +77,6 @@
 	            }
            });
 
-		 	// 유효성 검사 함수
-		    function validateField(fieldName, fieldValue) {
-	            $.ajax({
-	                type: 'POST',
-	                url: '/board/validateField',
-	                contentType: 'application/json',
-	                data: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
-	                success: function(errors) {
-	                    displayFieldError(fieldName, errors);
-		                validateForm();
-	                },
-	                error: function(xhr) {
-	                    console.error('Validation Error: ' + xhr.statusText);
-	                }
-	            });
-	        }
-		 	
-		 	// 전체 폼의 유효성 검사
-	    	function validateForm() {
-	            var titleError = $('#titleError').text().trim();
-	            var contentError = $('#contentError').text().trim();
-
-	            if (titleError === '' && contentError === '') {
-	                $('#updateButton').prop('disabled', false);
-	            } else {
-	                $('#updateButton').prop('disabled', true);
-	            }
-	        }
-
-		    // 개별 필드 에러 메시지 표시 함수
-		    function displayFieldError(fieldName, errors) {
-		        if (errors[fieldName]) {
-		            $('#' + fieldName + 'Error').html('<div>' + errors[fieldName][0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#' + fieldName + 'Error').empty();
-		        }
-		    }
-
-		    // 전체 에러 메시지 표시 함수
-		    function displayErrors(errors) {
-		        if (errors.title) {
-		            $('#titleError').html('<div>' + errors.title[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#titleError').empty();
-		        }
-		        if (errors.content) {
-		            $('#contentError').html('<div>' + errors.content[0] + '</div>').css('color', 'red');
-		        } else {
-		            $('#contentError').empty();
-		        }
-		    }
-		        
 	        $('#cancelButton').on('click', function(e) {
 		    	var id = '${board.id}';
 		    	var page = '${page}';
