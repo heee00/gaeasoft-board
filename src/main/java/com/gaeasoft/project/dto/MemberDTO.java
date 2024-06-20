@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MemberDTO {
 	
-	public Long seq;
+	public Long memberSeq;
 	
 	@NotBlank(message = "이름을 입력해 주세요.")
 	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$", message = "이름에는 특수 문자를 사용할 수 없습니다.")
@@ -27,7 +27,7 @@ public class MemberDTO {
 	@NotBlank(message = "아이디를 입력해 주세요.")
 	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$", message = "아이디에는 특수 문자를 사용할 수 없습니다.")
     @Size(max = 50, message = "아이디는 50자 이하이어야 합니다.")
-	public String id;
+	public String memberId;
     
 	@NotBlank(message = "비밀번호를 입력해 주세요.")
     @Size(max = 20, message = "비밀번호는 20자 이하이어야 합니다.")
@@ -42,7 +42,7 @@ public class MemberDTO {
 	
 	@Override
 	public String toString() {
-		return "MemberDTO [name=" + name + ", id=" + id + ", password=" + password + ", email=" + email + "]";
+		return "MemberDTO [name=" + name + ", id=" + memberId + ", password=" + password + ", email=" + email + "]";
 	}
 	
 }

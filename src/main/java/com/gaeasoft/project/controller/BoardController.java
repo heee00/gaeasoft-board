@@ -43,11 +43,11 @@ public class BoardController {
 	
 	// 게시글 상세 보기
 	@GetMapping("/viewDetail")
-	public String viewNoticeArticleDetail(@RequestParam("id") Long id, 
+	public String viewNoticeArticleDetail(@RequestParam("noticeSeq") Long noticeSeq, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													@RequestParam(value = "rowNum", required = false) int rowNum,
 													HttpSession session, Model model) throws Exception {
-		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(id, session);
+		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(noticeSeq, session);
 		session.setAttribute("boardPassword", boardDTO.getPassword());
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
@@ -87,7 +87,7 @@ public class BoardController {
     public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
                                                @ModelAttribute("loginId") String loginId,
                                                BindingResult result) throws Exception {
-        boardDTO.setWriter(loginId);
+        boardDTO.setMemberId(loginId);
 
         if (result.hasErrors()) {
             boardService.getFieldErrors(result);
@@ -116,11 +116,11 @@ public class BoardController {
 
 	// 게시글 수정 화면 이동
 	@GetMapping("/updateArticleForm")
-	public String updateNoticeArticleForm(@RequestParam("id") Long id, 
+	public String updateNoticeArticleForm(@RequestParam("noticeSeq") Long noticeSeq, 
 															@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 															@RequestParam(value = "rowNum", required = false) int rowNum,
 															HttpSession session, Model model) throws Exception {
-		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(id, session);
+		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(noticeSeq, session);
 		model.addAttribute("board", boardDTO);
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
@@ -144,10 +144,10 @@ public class BoardController {
 	
 	// 게시글 삭제
 	@GetMapping("/deleteArticle")
-	public String deleteNoticeArticle(@RequestParam("id") Long id, 
+	public String deleteNoticeArticle(@RequestParam("noticeSeq") Long noticeSeq, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 													Model model) throws Exception {
-		boardService.deleteNoticeArticle(id);
+		boardService.deleteNoticeArticle(noticeSeq);
 		model.addAttribute("page", page);
 		return "redirect:/board/pagingList";
 	}

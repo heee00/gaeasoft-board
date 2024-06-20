@@ -6,37 +6,37 @@
 
 	<!-- 회원가입 -->
 	 <insert id="joinMember" parameterType="member">
-        INSERT INTO member(name,  id, password, email)
-        VALUES (#{name}, #{id}, #{password}, #{email})
+        INSERT INTO member(name,  member_id, password, email)
+        VALUES (#{name}, #{memberId}, #{password}, #{email})
     </insert>
     
     <!-- 로그인 -->
     <select id="loginMember" parameterType="member" resultType="member">
-    	SELECT name, id, password, email
+    	SELECT name, member_id, password, email
     	FROM member
-    	WHERE id = #{id} 
+    	WHERE member_id = #{memberId} 
     	AND password = #{password}
     </select>
 	
 	<!-- 회원 로그인 이메일 조회 -->
 	<select id="findByEmail" parameterType="String" resultType="member">
-		SELECT name, id, password, email
+		SELECT name, member_id AS memberId, password, email
 		FROM member
 		WHERE email = #{loginEmail}
 	</select>
 	
 	<!-- 회원 로그인 아이디 조회 -->
 	<select id="findById" parameterType="String" resultType="member">
-		SELECT name, id, password, email, joinTime
+		SELECT name, member_id AS memberId, password, email, joinTime
 		FROM member
-		WHERE id = #{loginId}
+		WHERE member_id = #{loginId}
 	</select>
 	
 	<!-- 회원 수정 -->
     <update id="updateInfo" parameterType="member">
     	UPDATE member 
     	SET name = #{name}, password = #{password}
-    	WHERE id = #{id}
+    	WHERE member_id = #{memberId}
     </update>
 	
 </mapper>

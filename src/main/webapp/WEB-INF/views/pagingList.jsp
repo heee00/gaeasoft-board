@@ -29,9 +29,9 @@
 		            <tr>
 		                <td>${pagingList.rowNum}</td>
 		                <td>
-	                    	<a href="/board/viewDetail?id=${pagingList.id}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
+	                    	<a href="/board/viewDetail?noticeSeq=${pagingList.noticeSeq}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
 		                </td>
-		                <td>${pagingList.writer}</td>
+		                <td>${pagingList.memberId}</td>
 	    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 		                <td>${pagingList.views}</td>
 		            </tr>
@@ -85,7 +85,7 @@
 	    $(document).ready(function() {
 	    	$('#infoButton').on('click', function(e) {
 	    		var id = '${loginId}';
-	            window.location.href = '/member/viewPersonalInfo?id=' + id;
+	            window.location.href = '/member/viewPersonalInfo?memberId=' + id;
 	        });
 	    	
 	    	$('#logoutButton').on('click', function(e) {

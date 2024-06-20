@@ -19,7 +19,7 @@
 		   </tr>
 		   <tr>
 		       <th class="board-writer">작성자</th>
-		       <td>${board.writer}</td>
+		       <td>${board.memberId}</td>
 		   </tr>
 		   <tr>
 		       <th class="board-writetime">작성일</th>
@@ -42,7 +42,7 @@
 	        <tr>
 	            <td colspan="5">
 					<button class="link-button" id="listButton">목록🏠</button>
-					<c:if test="${board.writer eq sessionScope.loginId}">
+					<c:if test="${board.memberId eq sessionScope.loginId}">
 	                    <button class="link-button" id="updateButton">수정📝</button>
 	                    <button class="link-button" id="deleteButton">삭제🗑️</button>
 	                </c:if>
@@ -59,22 +59,22 @@
           });
 
           $('#updateButton').on('click', function(e) {
-              var id = '${board.id}';
+              var noticeSeq = '${board.noticeSeq}';
               var page = '${page}';
 	      	  var rowNum = '${rowNum}';
-              window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+              window.location.href = '/board/updateArticleForm?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
           });
 
           $('#deleteButton').on('click', function(e) {
-              var id = '${board.id}';
+              var noticeSeq = '${board.noticeSeq}';
               var page = '${page}';
 	      	  var rowNum = '${rowNum}';
               var isConfirmed = confirm("정말로 삭제하시겠습니까?");
               
               if (isConfirmed) {
-                  window.location.href = '/board/deleteArticle?id=' + id;
+                  window.location.href = '/board/deleteArticle?noticeSeq=' + noticeSeq;
               } else {
-                  window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+                  window.location.href = '/board/viewDetail?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
               }
           });
       });

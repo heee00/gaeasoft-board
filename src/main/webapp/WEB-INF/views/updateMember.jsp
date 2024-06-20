@@ -19,7 +19,7 @@
 	        <input type="text" name="email" id="email"  value="${member.email}" readonly>
     	</div>
     	<div class="form-group">
-	        <input type="text" name="id" id="id" value="${member.id}" readonly>
+	        <input type="text" name="memberId" id="memberId" value="${member.memberId}" readonly>
     	</div>
     	<div class="form-group">
 	        <input type="password" name="password" id="password" value="${member.password}" required>
@@ -76,7 +76,7 @@
 	   	                method: 'post',
 	   	                data: formData,
 	   	                success: function(response) {
-	   	                    window.location.href = '/member/viewPersonalInfo?id=' + id;
+	   	                    window.location.href = '/member/viewPersonalInfo?memberId=' + id;
 	   	                },
 	   	                error: function(xhr) {
 	   	                    if (xhr.status === 400) {
@@ -92,7 +92,7 @@
 	    	
 	    	$('#cancelButton').on('click', function(e) {
 	    		var id = '${loginId}';
-	            window.location.href = '/member/viewPersonalInfo?id=' + id;
+	            window.location.href = '/member/viewPersonalInfo?memberId=' + id;
 		    });
 	    });
     </script>

@@ -49,8 +49,8 @@ public class MemberService {
 	}
 	
 	// 회원 로그인 아이디 조회
-	public MemberDTO findById(String id) {
-		return memberDAOImpl.findById(id);
+	public MemberDTO findById(String memberId) {
+		return memberDAOImpl.findById(memberId);
 	}
 
 	// 유효성 검사
@@ -59,8 +59,8 @@ public class MemberService {
 	        case "name":
 	        	memberDTO.setName(fieldValue);
                 break;
-            case "id":
-            	memberDTO.setId(fieldValue);
+            case "memberId":
+            	memberDTO.setMemberId(fieldValue);
                 break;
             case "password":
             	memberDTO.setPassword(fieldValue);
@@ -82,11 +82,11 @@ public class MemberService {
             if (emailExists) {
                 errors.put("email", Collections.singletonList("이미 사용 중인 이메일입니다."));
             }
-        } else if ("id".equals(fieldName)) {
-            String id = fieldValue;
-            boolean idExists = memberDAOImpl.findById(id) != null;
+        } else if ("memberId".equals(fieldName)) {
+            String memberId = fieldValue;
+            boolean idExists = memberDAOImpl.findById(memberId) != null;
             if (idExists) {
-                errors.put("id", Collections.singletonList("이미 사용 중인 아이디입니다."));
+                errors.put("memberId", Collections.singletonList("이미 사용 중인 아이디입니다."));
             }
         }
         return errors;

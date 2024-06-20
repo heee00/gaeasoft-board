@@ -15,10 +15,10 @@
 			<input type="hidden" name="rowNum" value="${rowNum}">
 		</div>
 		<div class="form-group">
-			<input type="hidden" name="id" value="${board.id}" readonly>
+			<input type="hidden" name="noticeSeq" value="${board.noticeSeq}" readonly>
 		</div>
 		<div class="form-group">
-			<input type="text" name="writer" value="${board.writer}" readonly>
+			<input type="text" name="memberId" value="${board.memberId}" readonly>
 		</div>
 		<div class="form-group">
 			<input type="password" name="password" value="${board.password}" readonly>
@@ -49,7 +49,7 @@
             
 			$('#updateArticleForm').on('submit', function(e) {
 		        e.preventDefault();
-		        var id = '${board.id}';
+		        var noticeSeq = '${board.noticeSeq}';
 		        var page = '${page}';
 	        	var rowNum = '${rowNum}';
 		        var formData = $(this).serialize();
@@ -61,7 +61,7 @@
 	                    method: 'post',
 	                    data: formData,
 	                    success: function(response) {
-               				window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+               				window.location.href = '/board/viewDetail?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
 	                    },
 	                    error: function(xhr) {
 		                    if (xhr.status === 400) {
@@ -73,16 +73,16 @@
 		                }
 					});
 	            } else {
-	            	window.location.href = '/board/updateArticleForm?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+	            	window.location.href = '/board/updateArticleForm?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
 	            }
            });
 
 	        $('#cancelButton').on('click', function(e) {
-		    	var id = '${board.id}';
+		    	var noticeSeq = '${board.noticeSeq}';
 		    	var page = '${page}';
 	        	var rowNum = '${rowNum}';
 		    	
-		     	window.location.href = '/board/viewDetail?id=' + id + '&page=' + page + '&rowNum=' + rowNum;
+		     	window.location.href = '/board/viewDetail?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
 		    });
 	    });
 	</script>

@@ -25,9 +25,9 @@
 	            <tr>
 	                <td>${boardList.rowNum}</td>
 	                <td>
-	                    <a href="/board?id=${boardList.id}">${boardList.title}</a>
+	                    <a href="/board?id=${boardList.noticeSeq}">${boardList.title}</a>
 	                </td>
-	                <td>${boardListwriter}</td>
+	                <td>${boardList.memberId}</td>
     				<td><fmt:formatDate value="${boardList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 	                <td>${boardList.views}</td>
 	            </tr>

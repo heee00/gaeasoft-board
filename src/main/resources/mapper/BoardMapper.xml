@@ -6,63 +6,63 @@
     
    	<!-- 전체 글 목록 -->
     <select id="articleList" resultType="board">
-    	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
-    				id, writer, password, title, content, writeTime, views
-		FROM board 
-		ORDER BY id DESC
+    	SELECT ROW_NUMBER() OVER (ORDER BY notice_seq) AS rowNum,
+    				notice_seq, member_id, password, title, content, writeTime, views
+		FROM notice 
+		ORDER BY notice_seq DESC
     </select>
     
    	<!-- 게시글 상세 보기 -->
     <select id="articleDetail" parameterType="Long" resultType="board">
-    	SELECT id, writer, password, title, content, writeTime, views
-    	FROM board 
-    	WHERE id=#{id}
+    	SELECT notice_seq AS noticeSeq, member_id AS memberId, password, title, content, writeTime, views
+    	FROM notice 
+    	WHERE notice_seq=#{noticeSeq}
     </select>
     
    	<!-- 전체 글 갯수 조회 -->
     <select id="articleCount" resultType="Integer">
-    	SELECT COUNT(id) 
-    	FROM board
+    	SELECT COUNT(notice_seq) 
+    	FROM notice
     </select>
     
     <!-- 페이징 포함 목록 -->
     <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
-    	SELECT ROW_NUMBER() OVER (ORDER BY id) AS rowNum,
-    				id, writer, password, title, content, writeTime, views
-    	FROM board 
-    	ORDER BY id DESC 
+    	SELECT ROW_NUMBER() OVER (ORDER BY notice_seq) AS rowNum,
+    				notice_seq AS noticeSeq, member_id AS memberId, title, content, writeTime, views
+    	FROM notice 
+    	ORDER BY notice_seq DESC 
     	LIMIT #{start}, #{limit}
     </select>
     
     <!-- 게시글 조회수 증가 -->
     <update id="updateViews" parameterType="Long">
-    	UPDATE board 
+    	UPDATE notice 
     	SET views = views + 1 
-    	WHERE id=#{id}
+    	WHERE notice_seq=#{noticeSeq}
     </update>
     
     <!-- 게시글 저장 -->
     <insert id="saveArticle" parameterType="board">
-        INSERT INTO board(writer, password, title, content)
-        VALUES (#{writer}, #{password}, #{title}, #{content})
+        INSERT INTO notice(member_id, password, title, content)
+        VALUES (#{memberId}, #{password}, #{title}, #{content})
     </insert>
     
    	<!-- 게시글 수정 -->
     <update id="updateArticle" parameterType="board">
-    	UPDATE board 
+    	UPDATE notice 
     	SET title=#{title}, content=#{content}
-    	WHERE id=#{id}
+    	WHERE notice_seq=#{noticeSeq}
     </update>
     
     <!-- 게시글 삭제 -->
     <delete id="deleteArticle" parameterType="Long">
-    	DELETE FROM board 
-    	WHERE id = #{loginId}
+    	DELETE FROM notice 
+    	WHERE notice_seq = #{loginId}
     </delete>
     
     <!-- 게시글 삭제 배치 -->
     <delete id="deleteBatchedArticle" parameterType="java.time.LocalDateTime">
-		 DELETE FROM board 
+		 DELETE FROM notice 
        	 WHERE writeTime &lt;= #{deleteDay}
     </delete>
     

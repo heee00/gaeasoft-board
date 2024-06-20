@@ -35,20 +35,20 @@ public class BoardService {
 	}
 	
 	// 게시글 상세 보기
-	public BoardDTO viewNoticeArticleDetail(Long id, HttpSession session) {
+	public BoardDTO viewNoticeArticleDetail(Long noticeSeq, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
 
 		try {
-	        if (!viewedArticleCheck(id, viewedArticle)) {
+	        if (!viewedArticleCheck(noticeSeq, viewedArticle)) {
 		    	session.setAttribute("viewedArticle", viewedArticle);
-	        	updateViews(id);
-	            viewedArticle.add(id);
+	        	updateViews(noticeSeq);
+	            viewedArticle.add(noticeSeq);
 	        }
-	        return boardDAOImpl.articleDetail(id);
+	        return boardDAOImpl.articleDetail(noticeSeq);
 	    
 		} catch (Exception e) {
 	        System.err.println("에러 발생: " + e.getMessage());
-	        return boardDAOImpl.articleDetail(id);
+	        return boardDAOImpl.articleDetail(noticeSeq);
 	    }
 	}
 	
@@ -122,10 +122,10 @@ public class BoardService {
     }
     
     // 게시글 조회 확인
-    private boolean viewedArticleCheck(Long id, Set<Long> viewedArticle) {
+    private boolean viewedArticleCheck(Long noticeSeq, Set<Long> viewedArticle) {
     	// 내가 봤던 게시글 List에 board id가 있는지 비교
-        for (Long viewedId : viewedArticle) {
-            if (viewedId.equals(id)) {
+        for (Long viewedNoticeSeq : viewedArticle) {
+            if (viewedNoticeSeq.equals(noticeSeq)) {
                 return true;
             }
         }
@@ -133,8 +133,8 @@ public class BoardService {
     }
 
 	// 게시글 조회수 증가
-	public void updateViews(Long id) {
-		boardDAOImpl.updateViews(id);
+	public void updateViews(Long noticeSeq) {
+		boardDAOImpl.updateViews(noticeSeq);
 	}
 	
 	// 게시글 저장
@@ -148,8 +148,8 @@ public class BoardService {
 	}
 	
 	// 게시글 삭제
-	public void deleteNoticeArticle(Long id) {
-		boardDAOImpl.deleteArticle(id);
+	public void deleteNoticeArticle(Long noticeSeq) {
+		boardDAOImpl.deleteArticle(noticeSeq);
 	}
 	
 	// 게시글 삭제 배치

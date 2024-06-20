@@ -94,7 +94,7 @@ public class MemberController {
 	    Map<String, String> response = new HashMap<>();
 		
 	    if (loginResult) {
-	        session.setAttribute("loginId", memberDTO.getId());
+	        session.setAttribute("loginId", memberDTO.getMemberId());
 	        session.setAttribute("viewedArticle", new HashSet<Long>());
 	        response.put("status", "success");
 	        response.put("message", "로그인되었습니다.");
@@ -117,11 +117,11 @@ public class MemberController {
 	
 	// 회원 정보 보기
 	@GetMapping("/viewPersonalInfo")
-	public String viewPersonalInfo(@RequestParam("id") String id,
+	public String viewPersonalInfo(@RequestParam("memberId") String memberId,
 															HttpSession session, Model model) throws Exception {
 		
-		id = (String) session.getAttribute("loginId");
-		MemberDTO memberDTO = memberService.findById(id);
+		memberId = (String) session.getAttribute("loginId");
+		MemberDTO memberDTO = memberService.findById(memberId);
 		model.addAttribute("member", memberDTO);
 		
 		return "memberDetail";
@@ -129,10 +129,10 @@ public class MemberController {
 	
 	// 회원 정보 수정 화면 이동
 	@GetMapping("/updatePersonalInfoForm")
-	public String updatePersonalInfoForm(@RequestParam("id") String id,
+	public String updatePersonalInfoForm(@RequestParam("memberId") String memberId,
 															HttpSession session, Model model) throws Exception {
-		id = (String) session.getAttribute("loginId");
-		MemberDTO memberDTO = memberService.findById(id);
+		memberId = (String) session.getAttribute("loginId");
+		MemberDTO memberDTO = memberService.findById(memberId);
 		model.addAttribute("member", memberDTO);
 		
 		return "updateMember";
@@ -147,7 +147,7 @@ public class MemberController {
 			return "updateMember";
 		} else {
 			String loginId = (String) session.getAttribute("loginId");
-			memberDTO.setId(loginId);
+			memberDTO.setMemberId(loginId);
 			memberService.updatePersonalInfo(memberDTO);
 			return "memberDetail";
 		}

@@ -18,7 +18,7 @@
 		   </tr>
 		   <tr>
 		       <th class="member-id">아이디</th>
-		       <td>${member.id}</td>
+		       <td>${member.memberId}</td>
 		   </tr>
 		   <tr>
 		       <th class="member-id">이메일</th>
@@ -43,7 +43,7 @@
 	    $(document).ready(function() {
 	    	 $('#updateButton').on('click', function(e) {
 	    		 var id = '${loginId}';
-		         window.location.href = '/member/updatePersonalInfoForm?id=' + id;
+		         window.location.href = '/member/updatePersonalInfoForm?memberId=' + id;
 	          });
 	    	
 	    	$('#cancelButton').on('click', function(e) {

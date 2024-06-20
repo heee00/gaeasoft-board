@@ -19,8 +19,8 @@
 	        <span id="emailError"  class="error"></span>
     	</div>
     	<div class="form-group">
-	        <input type="text" name="id" id="id" placeholder="아이디" required>
-	        <span id="idError"  class="error"></span>
+	        <input type="text" name="memberId" id="memberId" placeholder="아이디" required>
+	        <span id="memberIdError"  class="error"></span>
     	</div>
     	<div class="form-group">
 	        <input type="password" name="password" id="password" placeholder="비밀번호" required>
@@ -46,8 +46,8 @@
                 validateField('email', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 			});
 			
-			$('#id').on('blur', function() {
-                validateField('id', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
+			$('#memberId').on('blur', function() {
+                validateField('memberId', $(this).val(), '/member/validateField', displayFieldError, 'joinMemberForm', 'joinButton');
 			});
 			
 			$('#password').on('blur', function() {

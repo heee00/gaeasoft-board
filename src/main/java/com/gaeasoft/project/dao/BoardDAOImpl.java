@@ -23,8 +23,8 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	// 게시글 상세 보기
-	public BoardDTO articleDetail(Long id) {
-		return sql.selectOne("Board.articleDetail", id);
+	public BoardDTO articleDetail(Long noticeSeq) {
+		return sql.selectOne("Board.articleDetail", noticeSeq);
 	}
 	
 	// 전체 글 갯수 조회
@@ -38,8 +38,8 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	// 게시글 조회수 증가
-	public void updateViews(Long id) {
-		sql.update("Board.updateViews", id);
+	public void updateViews(Long noticeSeq) {
+		sql.update("Board.updateViews", noticeSeq);
 	}
 	
 	// 게시글 저장
@@ -53,8 +53,8 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	// 게시글 삭제
-	public void deleteArticle(Long id) {
-		sql.delete("Board.deleteArticle", id);
+	public void deleteArticle(Long noticeSeq) {
+		sql.delete("Board.deleteArticle", noticeSeq);
 	}
 
 	// 게시글 삭제 배치

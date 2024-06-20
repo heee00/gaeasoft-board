@@ -19,8 +19,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BoardDTO {
 	
-	public Long id;
-	public String writer;
+	public Long noticeSeq;
+	public String memberId;
 	
 	@NotBlank(message = "비밀번호를 입력해 주세요.")
     @Size(max = 20, message = "비밀번호는 20자 이하이어야 합니다.")
