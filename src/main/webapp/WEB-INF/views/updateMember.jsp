@@ -22,7 +22,7 @@
 	        <input type="text" name="memberId" id="memberId" value="${member.memberId}" readonly>
     	</div>
     	<div class="form-group">
-	        <input type="password" name="password" id="password" value="${member.password}" required>
+	        <input type="password" name="password" id="password" placeholder="새로운 비밀번호" required>
 	        <span id="passwordError"  class="error"></span>
     	</div>
     	<div class="form-group">
