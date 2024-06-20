@@ -68,8 +68,6 @@ public class MemberService {
             case "email":
             	memberDTO.setEmail(fieldValue);
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid field name");
         }
 
         BindingResult result = new BeanPropertyBindingResult(memberDTO, "memberDTO");
