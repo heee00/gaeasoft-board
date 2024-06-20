@@ -29,7 +29,7 @@ public class BatchJobLauncher  {
     	String className = this.getClass().getSimpleName();
  		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
     	LocalDateTime deleteDay = LocalDateTime.now().minusDays(7);
-        log.info("다음 날짜보다 오래된 게시글 삭제 배치 작업 실행 중: {}", deleteDay);
+        log.info(className + "-" + methodName + ": 해당 날짜 기준 삭제 배치 작업 실행[" + deleteDay + "]");
         try {
             boardService.deleteBatchedNoticeArticle(deleteDay);
             log.info(className + "-" + methodName + ": 배치 작업 완료.");
