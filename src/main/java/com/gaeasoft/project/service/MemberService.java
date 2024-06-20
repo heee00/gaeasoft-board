@@ -15,6 +15,7 @@ import org.springframework.validation.Validator;
 
 import com.gaeasoft.project.dao.MemberDAOImpl;
 import com.gaeasoft.project.dto.MemberDTO;
+import com.gaeasoft.project.util.EncodePassword;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,18 +30,26 @@ public class MemberService {
 
 	// 회원가입
 	public int joinMember(MemberDTO memberDTO) {
+	    String encodePassword = EncodePassword.encrypt(memberDTO.getPassword().trim());
+        memberDTO.setPassword(encodePassword);
 		return memberDAOImpl.joinMember(memberDTO);
 	}
 
 	// 로그인
 	public boolean loginMember(MemberDTO memberDTO) {
-		MemberDTO loginMember = memberDAOImpl.loginMember(memberDTO);
+		String password = memberDTO.getPassword().trim();
+	    String encodePassword = EncodePassword.encrypt(password);
+	    
+		MemberDTO loginMember = memberDAOImpl.loginMember(memberDTO.getMemberId());
 		
-		if (loginMember != null && memberDTO.getPassword().equals(loginMember.getPassword())) {
-			return true;
-		} else {
-			return false;
-		}
+		if (loginMember != null) {
+			String loginPassword = loginMember.getPassword().trim();
+			
+			if (encodePassword.equals(loginPassword)) {
+	            return true;
+	        }
+	    } 
+	    return false;
 	}
 	
 	// 회원 로그인 이메일 조회
@@ -103,6 +112,12 @@ public class MemberService {
 	
     // 회원 수정
  	public void updatePersonalInfo(MemberDTO memberDTO) {
- 		memberDAOImpl.updateInfo(memberDTO);
+		String password = memberDTO.getPassword().trim();
+
+        if (memberDTO.getPassword() != null && !password.isEmpty()) {
+        	String encodePassword = EncodePassword.encrypt(password);
+		    memberDTO.setPassword(encodePassword);
+        }
+        memberDAOImpl.updateInfo(memberDTO);
  	}
 }

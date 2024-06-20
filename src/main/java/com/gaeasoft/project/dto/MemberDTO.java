@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.gaeasoft.project.util.EncodePassword;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +32,7 @@ public class MemberDTO {
 	public String memberId;
     
 	@NotBlank(message = "비밀번호를 입력해 주세요.")
-    @Size(max = 20, message = "비밀번호는 20자 이하이어야 합니다.")
+    @Size(max = 64, message = "비밀번호는 64자 이하이어야 합니다.")
 	public String password;
 	
 	@NotBlank(message = "이메일을 입력해 주세요.")
@@ -42,7 +44,8 @@ public class MemberDTO {
 	
 	@Override
 	public String toString() {
-		return "MemberDTO [name=" + name + ", id=" + memberId + ", password=" + password + ", email=" + email + "]";
+		String encodePassword = EncodePassword.encrypt(password);
+		return "MemberDTO [name=" + name + ", id=" + memberId + ", password=" + encodePassword + ", email=" + email + "]";
 	}
 	
 }
