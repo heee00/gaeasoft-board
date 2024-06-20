@@ -23,6 +23,9 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Logger>
+        <Logger name="com.gaeasoft.project.batch" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
