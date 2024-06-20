@@ -21,8 +21,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	// 로그인
-	public MemberDTO loginMember(MemberDTO memberDTO) {
-		return sql.selectOne("Member.loginMember", memberDTO);
+	public MemberDTO loginMember(String memberId) {
+		return sql.selectOne("Member.loginMember", memberId);
 	}
 
 	// 회원 로그인 이메일 조회
