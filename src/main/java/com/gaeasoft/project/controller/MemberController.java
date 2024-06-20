@@ -49,7 +49,9 @@ public class MemberController {
 	@PostMapping("/join")
 	public String joinMember(@Valid @ModelAttribute MemberDTO memberDTO,
 											BindingResult result) throws Exception {
-		log.info(memberDTO.toString());
+	    String className = this.getClass().getSimpleName();
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		log.info(className + "-" + methodName + ": " + memberDTO.toString());
 		
 		if (result.hasErrors()) {
 			memberService.getFieldErrors(result);
