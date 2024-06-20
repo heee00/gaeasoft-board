@@ -11,11 +11,10 @@
     </insert>
     
     <!-- 로그인 -->
-    <select id="loginMember" parameterType="member" resultType="member">
-    	SELECT name, member_id, password, email
+    <select id="loginMember" parameterType="String" resultType="member">
+    	SELECT member_id, password
     	FROM member
     	WHERE member_id = #{memberId} 
-    	AND password = #{password}
     </select>
 	
 	<!-- 회원 로그인 이메일 조회 -->
