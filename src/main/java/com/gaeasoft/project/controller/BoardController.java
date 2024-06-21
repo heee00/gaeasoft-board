@@ -59,9 +59,23 @@ public class BoardController {
 	// 페이징 포함 목록
 	@GetMapping("/pagingList")
 	public String noticePagingList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+												 @RequestParam(value = "keyword", required = false) String keyword,
+									             @RequestParam(value = "option", required = false) String option,
 												Model model) throws Exception  {
-		List<BoardDTO> pagingList = boardService.noticePagingList(page);
-		PageDTO pageDTO = boardService.setPagingParam(page);
+	    List<BoardDTO> pagingList = boardService.noticePagingList(page, keyword, option);
+	    PageDTO pageDTO = boardService.setPagingParam(page, keyword, option);
+	    int boardCount = boardService.articleCount(keyword, option);
+	    
+	    if (boardCount > 0) {
+	        if (boardCount <= page * 10) {
+	            pageDTO.setEndPage(page);
+	        } else {
+	            pageDTO.setEndPage(pageDTO.getMaxPage());
+	        }
+	    } else {
+	        pageDTO.setEndPage(1);
+	    }
+
 		model.addAttribute("pagingList", pagingList);
 		model.addAttribute("paging", pageDTO);
 		

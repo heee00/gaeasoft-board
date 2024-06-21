@@ -21,8 +21,21 @@
     
    	<!-- 전체 글 갯수 조회 -->
     <select id="articleCount" resultType="Integer">
-    	SELECT COUNT(notice_seq) 
+    	SELECT COUNT(notice_seq)
     	FROM notice
+		<where>
+	        <if test="keyword != null and keyword != ''">
+	            <choose>
+	                <when test="option == 'Title'">
+	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <when test="option == 'All'">
+	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                    OR content LIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
     </select>
     
     <!-- 페이징 포함 목록 -->
@@ -30,6 +43,19 @@
     	SELECT ROW_NUMBER() OVER (ORDER BY notice_seq) AS rowNum,
     				notice_seq AS noticeSeq, member_id AS memberId, title, content, writeTime, views
     	FROM notice 
+    	<where>
+	        <if test="keyword != null and keyword != ''">
+	            <choose>
+	                <when test="option == 'Title'">
+	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <when test="option == 'All'">
+	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                    OR content LIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
     	ORDER BY notice_seq DESC 
     	LIMIT #{start}, #{limit}
     </select>

@@ -1,6 +1,7 @@
 package com.gaeasoft.project.dao;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,15 +29,23 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	// 전체 글 갯수 조회
-	public int articleCount() {
-		return sql.selectOne("Board.articleCount");
+	public int articleCount(String keyword, String option) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("keyword", keyword);
+	    params.put("option", option);
+		return sql.selectOne("Board.articleCount", params);
 	}
 	
 	// 페이징 포함 목록
-	public List<BoardDTO> pagingList(Map<String, Integer> pagingParams) {
+	public List<BoardDTO> pagingList(Map<String, Object> pagingParams) {
 		return sql.selectList("Board.pagingList", pagingParams);
 	}
 
+	// 검색 포함 목록
+	public List<BoardDTO> searchList(Map<String, Object> pagingParams) {
+		return sql.selectList("Board.searchList", pagingParams);
+	}
+	
 	// 게시글 조회수 증가
 	public void updateViews(Long noticeSeq) {
 		sql.update("Board.updateViews", noticeSeq);

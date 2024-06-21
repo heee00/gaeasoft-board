@@ -14,6 +14,7 @@
 		<h2>게시판</h2>
 		<button class="link-button" id="logoutButton">로그아웃🚪</button>
 		<button class="link-button" id="infoButton">회원 정보🔦</button>
+
 		<table class="board-table">
 	        <thead>
 		        <tr>
@@ -25,6 +26,11 @@
 		        </tr>
 		    </thead>
 	        <tbody>
+	        	<c:if test="${empty pagingList}">
+			        <tr>
+			            <td colspan="5">일치하는 글이 없습니다.</td>
+			        </tr>
+			    </c:if>
 		        <c:forEach items="${pagingList}" var="pagingList">
 		            <tr>
 		                <td>${pagingList.rowNum}</td>
@@ -41,6 +47,15 @@
 		        <tr>
 		            <td colspan="5">
 		                <button class="link-button" id="writeButton">작성✍🏻</button>
+				        
+				        <form id="searchForm">
+				            <input type="text" name="keyword" placeholder="검색어를 입력하세요" value="${param.keyword}">
+				            <select name="option">
+				                <option value="Title" ${param.option == 'Title' ? 'selected' : ''}>제목</option>
+				                <option value="All" ${param.option == 'All' ? 'selected' : ''}>제목+내용</option>
+				            </select>
+		            		<input type="submit"  id="searchButton" value="검색🔍">
+				        </form>
 		            </td>
 		        </tr>
 		    </tfoot>
@@ -48,37 +63,34 @@
 	</div>
 	
 	<div class="paging-navigation">
-	    <c:choose>
-	        <%-- 현재 페이지가 1페이지면 이전 글자만 보여줌 --%>
-	        <c:when test="${paging.page<=1}">
-	            <span class="beforePage">[◀️이전]</span>
-	        </c:when>
-	        <c:otherwise>
-	            <a href="/board/pagingList?page=${paging.page-1}">[◀️이전]</a>
-	        </c:otherwise>
-	    </c:choose>
-	
-	    <%--  for(int i=startPage; i<=endPage; i++)      --%>
-	    <c:forEach begin="${paging.startPage}" end="${paging.endPage}" var="i" step="1">
-	        <c:choose>
-	            <%-- 요청한 페이지에 있는 경우 현재 페이지 번호는 텍스트만 보이게 --%>
-	            <c:when test="${i eq paging.page}">
-	                <span class="currentPage">${i}</span>
-	            </c:when>
-	            <c:otherwise>
-	                <a href="/board/pagingList?page=${i}">${i}</a>
-	            </c:otherwise>
-	        </c:choose>
-	    </c:forEach>
-	
-	    <c:choose>
-	        <c:when test="${paging.page>=paging.maxPage}">
-	            <span class="nextPage">[다음▶️]</span>
-	        </c:when>
-	        <c:otherwise>
-	                <a href="/board/pagingList?page=${paging.page+1}">[다음▶️]</a>
-	        </c:otherwise>
-	    </c:choose>
+        <c:choose>
+            <c:when test="${paging.page <= 1}">
+                <span class="beforePage">[◀️이전]</span>
+            </c:when>
+            <c:otherwise>
+                <a href="/board/pagingList?page=${paging.page - 1}&keyword=${param.keyword}&option=${param.option}">[◀️이전]</a>
+            </c:otherwise>
+        </c:choose>
+    
+        <c:forEach begin="${paging.startPage}" end="${paging.endPage}" var="i" step="1">
+            <c:choose>
+                <c:when test="${i eq paging.page}">
+                    <span class="currentPage">${i}</span>
+                </c:when>
+                <c:otherwise>
+                    <a href="/board/pagingList?page=${i}&keyword=${param.keyword}&option=${param.option}">${i}</a>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    
+        <c:choose>
+            <c:when test="${paging.page >= paging.maxPage}">
+                <span class="nextPage">[다음▶️]</span>
+            </c:when>
+            <c:otherwise>
+                <a href="/board/pagingList?page=${paging.page + 1}&keyword=${param.keyword}&option=${param.option}">[다음▶️]</a>
+            </c:otherwise>
+        </c:choose>
 	</div>
 	
 	<script>
@@ -101,6 +113,35 @@
 	    	
 	        $('#writeButton').on('click', function(e) {
 	            window.location.href = '/board/saveArticleForm';
+	        });
+	        
+	    	$('#searchForm').on('submit', function(e) {
+	    		e.preventDefault();
+	    		
+    			var page = '${paging.page}';
+	            var keyword = $('input[name="keyword"]').val();
+	            var option = $('select[name="option"]').val();
+
+                $.ajax({
+                    url: '/board/pagingList',
+                    method: 'get',
+                    data: {
+                        page: page,
+                        keyword: keyword,
+                        option: option
+                    },
+                    success: function(response) {
+                        window.location.href = '/board/pagingList?page=' + page + '&keyword=' + keyword + '&option=' + option;
+                    },
+                    error: function(xhr) {
+                    	if (xhr.status === 400) {
+                            var errors = xhr.responseJSON;
+                            displayErrors(errors);
+                        } else {
+                            console.error('AJAX Error: ' + status + err);
+                        }
+                    }
+                });
 	        });
 	    });
 	</script>
