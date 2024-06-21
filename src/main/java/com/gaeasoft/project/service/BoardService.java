@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -22,6 +23,7 @@ import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
 
 @Service
+@Transactional
 public class BoardService {
 	
 	@Autowired
@@ -34,6 +36,17 @@ public class BoardService {
 		return boardDAOImpl.articleList();
 	}
 	
+   // 게시글 조회 확인
+    private boolean viewedArticleCheck(Long noticeSeq, Set<Long> viewedArticle) {
+    	// 내가 봤던 게시글 List에 해당 seq가 일치한지 비교
+        for (Long viewedNoticeSeq : viewedArticle) {
+            if (viewedNoticeSeq.equals(noticeSeq)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 	// 게시글 상세 보기
 	public BoardDTO viewNoticeArticleDetail(Long noticeSeq, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
@@ -98,8 +111,6 @@ public class BoardService {
             case "content":
                 boardDTO.setContent(fieldValue);
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid field name");
         }
 
         BindingResult result = new BeanPropertyBindingResult(boardDTO, "boardDTO");
@@ -121,17 +132,6 @@ public class BoardService {
         return errors;
     }
     
-    // 게시글 조회 확인
-    private boolean viewedArticleCheck(Long noticeSeq, Set<Long> viewedArticle) {
-    	// 내가 봤던 게시글 List에 board id가 있는지 비교
-        for (Long viewedNoticeSeq : viewedArticle) {
-            if (viewedNoticeSeq.equals(noticeSeq)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 	// 게시글 조회수 증가
 	public void updateViews(Long noticeSeq) {
 		boardDAOImpl.updateViews(noticeSeq);
