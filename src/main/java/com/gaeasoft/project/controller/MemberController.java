@@ -51,7 +51,7 @@ public class MemberController {
 											BindingResult result) throws Exception {
 	    String className = this.getClass().getSimpleName();
 		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
-		log.info(className + "-" + methodName + ": " + memberDTO.toString());
+		log.info("회원가입: " + className + "-" + methodName + "[" + memberDTO.toString() + "]");
 		
 		if (result.hasErrors()) {
 			memberService.getFieldErrors(result);
