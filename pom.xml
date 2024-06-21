@@ -41,6 +41,13 @@
 	      <artifactId>spring-webmvc</artifactId>
 	      <version>${org.springframework-version}</version>
 	    </dependency>
+	    
+		<!-- AspectJ Weaver dependency -->
+	    <dependency>
+	        <groupId>org.aspectj</groupId>
+	        <artifactId>aspectjweaver</artifactId>
+	        <version>1.9.7</version>
+	    </dependency>
 
 	   	 <!-- SLF4J API -->
 	    <dependency>

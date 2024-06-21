@@ -23,7 +23,6 @@ import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
 
 @Service
-@Transactional
 public class BoardService {
 	
 	@Autowired
@@ -48,6 +47,7 @@ public class BoardService {
     }
 
 	// 게시글 상세 보기
+    @Transactional
 	public BoardDTO viewNoticeArticleDetail(Long noticeSeq, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
 
@@ -89,6 +89,7 @@ public class BoardService {
 	}
 	
 	// 페이징 포함 목록
+    @Transactional(readOnly = true)
 	public List<BoardDTO> noticePagingList(int page) {
 		int pageStart = (page - 1) * pageLimit;
 		Map<String, Integer> pagingParams = new HashMap<>();
@@ -133,21 +134,25 @@ public class BoardService {
     }
     
 	// 게시글 조회수 증가
+    @Transactional
 	public void updateViews(Long noticeSeq) {
 		boardDAOImpl.updateViews(noticeSeq);
 	}
 	
 	// 게시글 저장
+    @Transactional
 	public int saveNoticeArticle(BoardDTO boardDTO) {
 		return boardDAOImpl.saveArticle(boardDTO);
 	}
 	
 	// 게시글 수정
+    @Transactional
 	public void updateNoticeArticle(BoardDTO boardDTO) {
 		boardDAOImpl.updateArticle(boardDTO);
 	}
 	
 	// 게시글 삭제
+    @Transactional
 	public void deleteNoticeArticle(Long noticeSeq) {
 		boardDAOImpl.deleteArticle(noticeSeq);
 	}

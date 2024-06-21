@@ -26,11 +26,15 @@
         <Logger name="com.gaeasoft.project.batch" level="error" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Root level="warn">
-            <AppenderRef ref="Console"/>
-        </Root>
         <Logger name="org.quartz" level="info">
             <AppenderRef ref="Console" />
         </Logger>
+        <Logger name="com.gaeasoft.project.util" level="info"  additivity="false">
+	        <AppenderRef ref="Console" />
+	       	<AppenderRef ref="File"/>
+        </Logger>
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+        </Root>
     </Loggers>
 </Configuration>

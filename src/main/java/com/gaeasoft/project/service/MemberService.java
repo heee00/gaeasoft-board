@@ -21,7 +21,6 @@ import com.gaeasoft.project.util.EncodePassword;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 	
@@ -31,6 +30,7 @@ public class MemberService {
 	private Validator validator;
 
 	// 회원가입
+    @Transactional
 	public int joinMember(MemberDTO memberDTO) {
 	    String encodePassword = EncodePassword.encrypt(memberDTO.getPassword().trim());
         memberDTO.setPassword(encodePassword);
@@ -38,6 +38,7 @@ public class MemberService {
 	}
 
 	// 로그인
+    @Transactional(readOnly = true)
 	public boolean loginMember(MemberDTO memberDTO) {
 		String password = memberDTO.getPassword().trim();
 	    String encodePassword = EncodePassword.encrypt(password);
@@ -113,6 +114,7 @@ public class MemberService {
     }
 	
     // 회원 수정
+    @Transactional
  	public void updatePersonalInfo(MemberDTO memberDTO) {
 		String password = memberDTO.getPassword().trim();
 
