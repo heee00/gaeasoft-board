@@ -69,8 +69,8 @@ public class BoardService {
 	int blockLimit = 5;		// 하단에 보여줄 페이지 번호 갯수
 	
 	// 페이징 변수 설정
-	public PageDTO setPagingParam(int page, String keyword, String option) {
-        int boardCount = boardDAOImpl.articleCount(keyword, option);
+	public PageDTO setPagingParam(int page, String startDate, String endDate, String searchKeyword, String searchOption) {
+        int boardCount = boardDAOImpl.articleCount(startDate, endDate, searchKeyword, searchOption);
 		int maxPage = (int) (Math.ceil((double) boardCount / pageLimit));							// 전체 페이지 갯수 계산
 		int startPage = (((int)(Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;	// 시작 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;																  	// 끝 페이지 값 계산
@@ -84,29 +84,31 @@ public class BoardService {
 		pageDTO.setMaxPage(maxPage);
 		pageDTO.setStartPage(startPage);
 		pageDTO.setEndPage(endPage);
-		pageDTO.setKeyword(keyword);
-        pageDTO.setOption(option);
+		pageDTO.setSearchKeyword(searchKeyword);
+        pageDTO.setSearchOption(searchOption);
 		
 		return pageDTO;
 	}
 	
 	// 페이징 포함 목록
     @Transactional(readOnly = true)
-	public List<BoardDTO> noticePagingList(int page, String keyword, String option) {
+	public List<BoardDTO> noticePagingList(int page, String startDate, String endDate, String searchKeyword, String searchOption) {
 		int pageStart = (page - 1) * pageLimit;
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pageStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("keyword", keyword);
-        pagingParams.put("option", option);
+		pagingParams.put("startDate", startDate);
+		pagingParams.put("endDate", endDate);
+		pagingParams.put("searchKeyword", searchKeyword);
+        pagingParams.put("searchOption", searchOption);
 		List<BoardDTO> pagingList = boardDAOImpl.pagingList(pagingParams);
 
 	    return pagingList;
 	}
     
     // 게시글 갯수 세기
-    public int articleCount(String keyword, String option) {
-    	return boardDAOImpl.articleCount(keyword, option);
+    public int articleCount(String startDate, String endDate, String searchKeyword, String searchOption) {
+    	return boardDAOImpl.articleCount(startDate, endDate, searchKeyword, searchOption);
     }
 	
 	// 유효성 검사

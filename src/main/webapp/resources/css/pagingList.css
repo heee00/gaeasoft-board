@@ -10,6 +10,11 @@ body {
 h2 {
     color: #000000;
     text-align: center;
+    cursor: pointer;
+}
+
+h2:hover {
+	color: #4CAF50;
 }
 
 .board-table {
@@ -77,6 +82,14 @@ tfoot td {
 
 #searchForm input[type="text"] {
     width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+#searchForm input[type="date"] {
+	width: 100px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;

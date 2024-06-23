@@ -47,12 +47,13 @@
 		        <tr>
 		            <td colspan="5">
 		                <button class="link-button" id="writeButton">작성✍🏻</button>
-				        
 				        <form id="searchForm">
-				            <input type="text" name="keyword" placeholder="검색어를 입력하세요" value="${param.keyword}">
-				            <select name="option">
-				                <option value="Title" ${param.option == 'Title' ? 'selected' : ''}>제목</option>
-				                <option value="All" ${param.option == 'All' ? 'selected' : ''}>제목+내용</option>
+				        	<input type="date" name ="startDate" value="${param.startDate}">
+				        	<input type="date" name="endDate" value="${param.endDate}">
+				            <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" value="${param.searchKeyword}">
+				            <select name="searchOption">
+				                <option value="Title" ${param.searchOption == 'Title' ? 'selected' : ''}>제목</option>
+				                <option value="All" ${param.searchOption == 'All' ? 'selected' : ''}>제목+내용</option>
 				            </select>
 		            		<input type="submit"  id="searchButton" value="검색🔍">
 				        </form>
@@ -95,6 +96,10 @@
 	
 	<script>
 	    $(document).ready(function() {
+	    	$('h2').on('click', function() {
+                window.location.href = '/board/pagingList?page=1';
+	        });
+	    	
 	    	$('#infoButton').on('click', function(e) {
 	    		var id = '${loginId}';
 	            window.location.href = '/member/viewPersonalInfo?memberId=' + id;
@@ -119,19 +124,23 @@
 	    		e.preventDefault();
 	    		
     			var page = '${paging.page}';
-	            var keyword = $('input[name="keyword"]').val();
-	            var option = $('select[name="option"]').val();
+	            var startDate = $('input[name="startDate"]').val();
+	            var endDate = $('input[name="endDate"]').val();
+	            var searchKeyword = $('input[name="searchKeyword"]').val();
+	            var searchOption = $('select[name="searchOption"]').val();
 
                 $.ajax({
                     url: '/board/pagingList',
                     method: 'get',
                     data: {
                         page: page,
-                        keyword: keyword,
-                        option: option
+                        startDate: startDate,
+                        endDate: endDate,
+                        searchKeyword: searchKeyword,
+                        searchOption: searchOption
                     },
                     success: function(response) {
-                        window.location.href = '/board/pagingList?page=' + page + '&keyword=' + keyword + '&option=' + option;
+                        window.location.href = '/board/pagingList?page=' + page + '&startDate=' + startDate + '&endDate=' + endDate + '&searchKeyword=' + searchKeyword + '&searchOption=' + searchOption;
                     },
                     error: function(xhr) {
                     	if (xhr.status === 400) {

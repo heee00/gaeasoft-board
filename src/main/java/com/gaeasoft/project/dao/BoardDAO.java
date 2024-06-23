@@ -16,7 +16,7 @@ public interface BoardDAO {
 	// 게시글 상세 보기
 	public BoardDTO articleDetail(Long noticeSeq);
 	// 전체 글 갯수 조회
-	public int articleCount(String keyword, String option);
+	public int articleCount(String startDate, String endDate, String keyword, String option);
 	// 페이징 포함 목록
 	public List<BoardDTO> pagingList(Map<String, Object> pagingParams);
 	// 게시글 조회수 증가

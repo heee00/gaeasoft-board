@@ -32,7 +32,7 @@
 	                data: formData,
 	                success: function(response) {
 	                	 if (response.status === 'success') {
-	                         window.location.href = '/board/pagingList?page=1&keyword=&option=';
+	                         window.location.href = '/board/pagingList?page=1';
 	                     } else {
 	                         alert(response.message);
 	                     }

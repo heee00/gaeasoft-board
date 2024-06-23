@@ -24,14 +24,20 @@
     	SELECT COUNT(notice_seq)
     	FROM notice
 		<where>
-	        <if test="keyword != null and keyword != ''">
+			<if test="startDate != null and startDate !=''">
+				writeTime BETWEEN #{startDate} AND #{endDate}
+			</if>
+	        <if test="searchKeyword != null and searchKeyword != ''">
+		        <if test="startDate != null and startDate != ''">
+	                AND
+	            </if>
 	            <choose>
-	                <when test="option == 'Title'">
-	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                <when test="searchOption == 'Title'">
+	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
-	                <when test="option == 'All'">
-	                    title LIKE CONCAT('%', #{keyword}, '%')
-	                    OR content LIKE CONCAT('%', #{keyword}, '%')
+	                <when test="searchOption == 'All'">
+	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	            </choose>
 	        </if>
@@ -44,14 +50,20 @@
     				notice_seq AS noticeSeq, member_id AS memberId, title, content, writeTime, views
     	FROM notice 
     	<where>
-	        <if test="keyword != null and keyword != ''">
+    		<if test="startDate != null and startDate !=''">
+				writeTime BETWEEN #{startDate} AND #{endDate}
+			</if>
+	        <if test="searchKeyword != null and searchKeyword != ''">
+		        <if test="startDate != null and startDate != ''">
+	                AND
+	            </if>
 	            <choose>
-	                <when test="option == 'Title'">
-	                    title LIKE CONCAT('%', #{keyword}, '%')
+	                <when test="searchOption == 'Title'">
+	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
-	                <when test="option == 'All'">
-	                    title LIKE CONCAT('%', #{keyword}, '%')
-	                    OR content LIKE CONCAT('%', #{keyword}, '%')
+	                <when test="searchOption == 'All'">
+	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	            </choose>
 	        </if>

@@ -29,10 +29,12 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	// 전체 글 갯수 조회
-	public int articleCount(String keyword, String option) {
+	public int articleCount(String startDate, String endDate, String searchKeyword, String searchOption) {
 		Map<String, Object> params = new HashMap<>();
-	    params.put("keyword", keyword);
-	    params.put("option", option);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+	    params.put("searchKeyword", searchKeyword);
+	    params.put("searchOption", searchOption);
 		return sql.selectOne("Board.articleCount", params);
 	}
 	

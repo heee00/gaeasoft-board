@@ -1,5 +1,7 @@
 package com.gaeasoft.project.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,12 +62,18 @@ public class BoardController {
 	// 페이징 포함 목록
 	@GetMapping("/pagingList")
 	public String noticePagingList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-												 @RequestParam(value = "keyword", required = false) String keyword,
-									             @RequestParam(value = "option", required = false) String option,
+												@RequestParam(value = "startDate", required = false) 	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+									            @RequestParam(value = "endDate", required = false) 	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+												 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+									             @RequestParam(value = "searchOption", required = false) String searchOption,
 												Model model) throws Exception  {
-	    List<BoardDTO> pagingList = boardService.noticePagingList(page, keyword, option);
-	    PageDTO pageDTO = boardService.setPagingParam(page, keyword, option);
-	    int boardCount = boardService.articleCount(keyword, option);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    String start = (startDate != null) ? startDate.format(formatter) : null;
+	    String end = (endDate != null) ? endDate.format(formatter) : null;
+	
+	    List<BoardDTO> pagingList = boardService.noticePagingList(page, start, end, searchKeyword, searchOption);
+	    PageDTO pageDTO = boardService.setPagingParam(page, start, end, searchKeyword, searchOption);
+	    int boardCount = boardService.articleCount(start, end, searchKeyword, searchOption);
 	    
 	    if (boardCount > 0) {
 	        if (boardCount <= page * 10) {

@@ -1,5 +1,9 @@
 package com.gaeasoft.project.dto;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +21,12 @@ public class PageDTO {
 	public int maxPage;		// 전체 필요한 페이지 갯수
 	public int startPage;		// 현재 페이지 기준 시작 페이지 값
 	public int endPage;		// 현재 페이지 기준 마지막 페이지 값
-	public String keyword;	// 검색 키워드
-	public String option;		// 검색 옵션
+	public String searchKeyword;	// 검색 키워드
+	public String searchOption;		// 검색 옵션
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	public LocalDate startDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    public LocalDate endDate;
 	
 }
