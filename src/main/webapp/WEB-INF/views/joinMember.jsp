@@ -89,7 +89,7 @@
                     $('#joinButton').prop('disabled', false);
 		        } else {
 		        	if (passwordCheck.length == 0) {
-			            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+			            passwordCheckError.html('비밀번호를 확인해 주세요.').css('color', 'red');
 	                    $('#joinButton').prop('disabled', true);
 		        	} else {
 		            	passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');

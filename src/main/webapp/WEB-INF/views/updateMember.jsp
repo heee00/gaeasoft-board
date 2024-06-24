@@ -13,14 +13,14 @@
 <h2>회원 수정</h2>
     <form id="updateMemberForm">
     	<div class="form-group">
+	        <input type="hidden" name="email" id="email"  value="${member.email}">
+    	</div>
+    	<div class="form-group">
+	        <input type="hidden" name="memberId" id="memberId" value="${member.memberId}">
+    	</div>
+    	<div class="form-group">
 	        <input type="text" name="name" id="name" value="${member.name}" required>
 	         <span id="nameError"  class="error"></span>
-    	</div>
-    	<div class="form-group">
-	        <input type="text" name="email" id="email"  value="${member.email}" readonly>
-    	</div>
-    	<div class="form-group">
-	        <input type="text" name="memberId" id="memberId" value="${member.memberId}" readonly>
     	</div>
     	<div class="form-group">
 	        <input type="password" name="password" id="password" placeholder="새로운 비밀번호" required>
@@ -80,7 +80,7 @@
                     $('#updateButton').prop('disabled', false);
 		        } else {
 		        	if (passwordCheck.length == 0) {
-			            passwordCheckError.html('비밀번호를 확인해주세요.').css('color', 'red');
+			            passwordCheckError.html('비밀번호를 확인해 주세요.').css('color', 'red');
 	                    $('#updateButton').prop('disabled', true);
 		        	} else {
 		            	passwordCheckError.html('비밀번호가 일치하지 않습니다.').css('color', 'red');
