@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/resources/css/updateMember.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="/resources/js/validation.js"></script>
+   	<script src="/resources/js/addressSearch.js"></script>
 </head>
 <body>
 <h2>회원 수정</h2>
@@ -29,6 +30,22 @@
 	        <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" required>
        		<span id="passwordCheckError" class="error"></span>
     	</div>
+    	<div class="form-group">
+   	 	    <div class="input-container">
+			    <input type="text" name="address" id="address" placeholder="주소 검색(도로명, 지번명)" required>
+				<input type="button" id="searchAddressButton" value="주소 검색">
+		    </div>
+       		<span id="addressError" class="error"></span>
+		</div>
+    	<div class="form-group">
+    		<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" required>
+       		<span id="detailAddressError" class="error"></span>
+    	</div>
+        <div id="addressList">
+	        <input type="hidden" name="zipNo" id="zipNo">
+			<input type="hidden" name="roadAddr" id="roadAddr">
+			<input type="hidden" name="jibunAddr" id="jibunAddr">
+        </div>
         <input type="submit" id="updateButton" value="수정📝" >
 		<input type="button" id="cancelButton" value="취소❎">
     </form>
@@ -43,6 +60,14 @@
 			
             $('#password').on('blur', function() {
                 validateField('password', $(this).val(), '/member/validateField', displayFieldError, 'updateMemberForm', 'updateButton');
+			});
+            
+            $('#address').on('blur', function() {
+                validateField('address', $(this).val(), '/member/validateField', displayFieldError, 'updateMemberForm', 'updateButton');
+			});
+			
+			$('#detailAddress').on('blur', function() {
+                validateField('detailAddress', $(this).val(), '/member/validateField', displayFieldError, 'updateMemberForm', 'updateButton');
 			});
 
 			$('#passwordCheck').on('blur', function(e) {

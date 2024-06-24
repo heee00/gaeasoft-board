@@ -28,6 +28,10 @@
 		       <th class="member-joinTime">가입일</th>
 		       <td><fmt:formatDate value="${member.joinTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 		   </tr>
+		   <tr>
+		   		<th class="member-address">주소</th>
+		   		<td>${member.address }</td>
+		   </tr>
 		</tbody>
     	<tfoot>
 	        <tr>

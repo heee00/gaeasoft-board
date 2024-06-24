@@ -64,3 +64,96 @@ input[type="button"]:hover {
     text-align: center;
     margin-top: 10px;
 }
+
+/* Input Container */
+.input-container {
+    position: relative;
+    width: 100%;
+    display: flex; /* Use flexbox for better alignment */
+}
+
+.input-container input[type="text"] {
+    flex: 1; /* Take remaining space */
+    padding-right: 40px; /* Adjusted padding to accommodate the button */
+    box-sizing: border-box;
+}
+
+.input-container button {
+    width: 80px; /* Fixed width for the button */
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    padding: 10px; /* Adjust padding as needed */
+}
+
+/* Table */
+.board-table {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    font-size: 13px;
+    text-align: center;
+}
+
+.board-table th, 
+.board-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.board-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.board-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.board-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.board-table a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.board-table a:hover {
+    text-decoration: underline;
+}
+
+/* Pagination */
+.paging-navigation {
+	max-width: 70%;
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 0;
+}
+
+.paging-navigation a,
+.paging-navigation span {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+    margin: 0 5px;
+}
+
+.paging-navigation a:hover,
+.paging-navigation span:hover {
+    background-color: #f1f1f1;
+}
+
+.paging-navigation .currentPage {
+    background-color: #4CAF50;
+    font-weight: bold;
+    color: white;
+}
+
+.paging-navigation .disabled {
+    opacity: 0.5;
+    cursor: default;
+}

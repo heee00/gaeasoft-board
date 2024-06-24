@@ -6,8 +6,8 @@
 
 	<!-- 회원가입 -->
 	 <insert id="joinMember" parameterType="member">
-        INSERT INTO member(name,  member_id, password, email)
-        VALUES (#{name}, #{memberId}, #{password}, #{email})
+        INSERT INTO member(name,  member_id, password, email, address)
+        VALUES (#{name}, #{memberId}, #{password}, #{email}, #{address})
     </insert>
     
     <!-- 로그인 -->
@@ -26,7 +26,7 @@
 	
 	<!-- 회원 로그인 아이디 조회 -->
 	<select id="findById" parameterType="String" resultType="member">
-		SELECT name, member_id AS memberId, password, email, joinTime
+		SELECT name, member_id AS memberId, password, email, joinTime, address
 		FROM member
 		WHERE member_id = #{loginId}
 	</select>
@@ -34,7 +34,7 @@
 	<!-- 회원 수정 -->
     <update id="updateInfo" parameterType="member">
     	UPDATE member 
-    	SET name = #{name}, password = #{password}
+    	SET name = #{name}, password = #{password}, address = #{address}
     	WHERE member_id = #{memberId}
     </update>
 	

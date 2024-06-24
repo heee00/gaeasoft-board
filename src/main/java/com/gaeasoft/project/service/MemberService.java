@@ -34,6 +34,11 @@ public class MemberService {
 	public int joinMember(MemberDTO memberDTO) {
 	    String encodePassword = EncodePassword.encrypt(memberDTO.getPassword().trim());
         memberDTO.setPassword(encodePassword);
+        
+        String address = memberDTO.getAddress();
+        String detailAddress = memberDTO.getDetailAddress();
+        memberDTO.setAddress(address + " " + detailAddress);
+        
 		return memberDAOImpl.joinMember(memberDTO);
 	}
 
@@ -80,6 +85,12 @@ public class MemberService {
             case "email":
             	memberDTO.setEmail(fieldValue);
                 break;
+            case "address":
+            	memberDTO.setAddress(fieldValue);
+                break;
+            case "detailAddress":
+            	memberDTO.setDetailAddress(fieldValue);
+                break;
         }
 
         BindingResult result = new BeanPropertyBindingResult(memberDTO, "memberDTO");
@@ -122,6 +133,11 @@ public class MemberService {
         	String encodePassword = EncodePassword.encrypt(password);
 		    memberDTO.setPassword(encodePassword);
         }
+        
+        String address = memberDTO.getAddress();
+        String detailAddress = memberDTO.getDetailAddress();
+        memberDTO.setAddress(address + " " + detailAddress);
+        
         memberDAOImpl.updateInfo(memberDTO);
  	}
 }

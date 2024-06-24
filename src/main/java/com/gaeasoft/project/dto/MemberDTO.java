@@ -42,6 +42,13 @@ public class MemberDTO {
 	
 	public Timestamp joinTime;
 	
+	@NotBlank(message = "주소를 입력해 주세요.")
+    @Size(max = 200, message = "주소는 200자 이하이어야 합니다.")
+	public String address;
+	
+	@NotBlank(message = "상세주소를 입력해 주세요.")
+	public String detailAddress;
+	
 	@Override
 	public String toString() {
 		String encodePassword = EncodePassword.encrypt(password);
