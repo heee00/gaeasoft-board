@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,11 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/address")
 @RequiredArgsConstructor
 public class AddressApiController {
-	
-    @GetMapping("/search")
-    public String searchApiForm() {
-        return "addressApi";
-    }
 	
     @PostMapping("/api")
     public void getAddressApi(HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {
