@@ -8,7 +8,8 @@
     <select id="articleList" resultType="board">
     	SELECT ROW_NUMBER() OVER (ORDER BY notice_seq) AS rowNum,
     				notice_seq, member_id, password, title, content, writeTime, views
-		FROM notice 
+		FROM notice
+		WHERE isDeleted = 0
 		ORDER BY notice_seq DESC
     </select>
     
@@ -17,6 +18,7 @@
     	SELECT notice_seq AS noticeSeq, member_id AS memberId, password, title, content, writeTime, views
     	FROM notice 
     	WHERE notice_seq=#{noticeSeq}
+    	AND isDeleted = 0
     </select>
     
    	<!-- 전체 글 갯수 조회 -->
@@ -24,19 +26,17 @@
     	SELECT COUNT(notice_seq)
     	FROM notice
 		<where>
+			isDeleted = 0
 			<if test="startDate != null and startDate !=''">
-				writeTime BETWEEN #{startDate} AND #{endDate}
+				AND writeTime BETWEEN #{startDate} AND #{endDate}
 			</if>
 	        <if test="searchKeyword != null and searchKeyword != ''">
-		        <if test="startDate != null and startDate != ''">
-	                AND
-	            </if>
 	            <choose>
 	                <when test="searchOption == 'Title'">
-	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                   AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	                <when test="searchOption == 'All'">
-	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	            </choose>
@@ -50,19 +50,17 @@
     				notice_seq AS noticeSeq, member_id AS memberId, title, content, writeTime, views
     	FROM notice 
     	<where>
+    		isDeleted = 0
     		<if test="startDate != null and startDate !=''">
-				writeTime BETWEEN #{startDate} AND #{endDate}
+				AND writeTime BETWEEN #{startDate} AND #{endDate}
 			</if>
 	        <if test="searchKeyword != null and searchKeyword != ''">
-		        <if test="startDate != null and startDate != ''">
-	                AND
-	            </if>
 	            <choose>
 	                <when test="searchOption == 'Title'">
-	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                   AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	                <when test="searchOption == 'All'">
-	                    title LIKE CONCAT('%', #{searchKeyword}, '%')
+	                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
 	                </when>
 	            </choose>
@@ -77,6 +75,7 @@
     	UPDATE notice 
     	SET views = views + 1 
     	WHERE notice_seq=#{noticeSeq}
+    	AND isDeleted = 0
     </update>
     
     <!-- 게시글 저장 -->
@@ -90,18 +89,21 @@
     	UPDATE notice 
     	SET title=#{title}, content=#{content}
     	WHERE notice_seq=#{noticeSeq}
+    	AND isDeleted = 0
     </update>
     
     <!-- 게시글 삭제 -->
-    <delete id="deleteArticle" parameterType="Long">
-    	DELETE FROM notice 
-    	WHERE notice_seq = #{loginId}
-    </delete>
+    <update id="deleteArticle" parameterType="Long">
+        UPDATE notice 
+        SET isDeleted = 1
+        WHERE notice_seq = #{loginId}
+    </update>
     
     <!-- 게시글 삭제 배치 -->
-    <delete id="deleteBatchedArticle" parameterType="java.time.LocalDateTime">
-		 DELETE FROM notice 
+    <update id="deleteBatchedArticle" parameterType="java.time.LocalDateTime">
+        UPDATE notice 
+        SET isDeleted = 1
        	 WHERE writeTime &lt;= #{deleteDay}
-    </delete>
+    </update>
     
  </mapper>

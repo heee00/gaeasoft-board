@@ -32,16 +32,18 @@
 			        </tr>
 			    </c:if>
 		        <c:forEach items="${pagingList}" var="pagingList">
-		            <tr>
-		                <td>${pagingList.rowNum}</td>
-		                <td>
-	                    	<a href="/board/viewDetail?noticeSeq=${pagingList.noticeSeq}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
-		                </td>
-		                <td>${pagingList.memberId}</td>
-	    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-		                <td>${pagingList.views}</td>
-		            </tr>
-		        </c:forEach>
+   					<c:if test="${!pagingItem.isDeleted}">
+ 			            <tr>
+			                <td>${pagingList.rowNum}</td>
+			                <td>
+		                    	<a href="/board/viewDetail?noticeSeq=${pagingList.noticeSeq}&page=${paging.page}&rowNum=${pagingList.rowNum}">${pagingList.title}</a>
+			                </td>
+			                <td>${pagingList.memberId}</td>
+		    				<td><fmt:formatDate value="${pagingList.writeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+			                <td>${pagingList.views}</td>
+			            </tr>
+	                </c:if>
+ 		        </c:forEach>
 		    </tbody>
 		    <tfoot>
 		        <tr>
@@ -140,14 +142,18 @@
                         searchOption: searchOption
                     },
                     success: function(response) {
-                        window.location.href = '/board/pagingList?page=' + page + '&startDate=' + startDate + '&endDate=' + endDate + '&searchKeyword=' + searchKeyword + '&searchOption=' + searchOption;
+                    	window.location.href = '/board/pagingList?page=' + page 
+								                        + '&startDate=' + encodeURIComponent(startDate) 
+								                        + '&endDate=' + encodeURIComponent(endDate) 
+								                        + '&searchKeyword=' + encodeURIComponent(searchKeyword) 
+								                        + '&searchOption=' + encodeURIComponent(searchOption);                   
                     },
                     error: function(xhr) {
                     	if (xhr.status === 400) {
                             var errors = xhr.responseJSON;
                             displayErrors(errors);
                         } else {
-                            console.error('AJAX Error: ' + status + err);
+                            console.error('AJAX Error: ' + xhr.status + ' ' + xhr.statusText);
                         }
                     }
                 });

@@ -38,5 +38,6 @@ public class BoardDTO {
 	public Timestamp writeTime;
 	public int views;
 	public int rowNum;
+	public boolean isDeleted;
 	
 }

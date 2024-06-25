@@ -65,14 +65,14 @@ public class BoardDAOImpl implements BoardDAO {
 
 	// 게시글 삭제
 	public void deleteArticle(Long noticeSeq) {
-		sql.delete("Board.deleteArticle", noticeSeq);
+		sql.update("Board.deleteArticle", noticeSeq);
 	}
 
 	// 게시글 삭제 배치
     @Override
     @Transactional
 	public void deleteBatchedArticle(LocalDateTime deleteDay) {
-		sql.delete("Board.deleteBatchedArticle", deleteDay);
+		sql.update("Board.deleteBatchedArticle", deleteDay);
 	}
 
 }

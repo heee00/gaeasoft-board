@@ -101,6 +101,7 @@ public class BoardService {
 		pagingParams.put("endDate", endDate);
 		pagingParams.put("searchKeyword", searchKeyword);
         pagingParams.put("searchOption", searchOption);
+        pagingParams.put("isDeleted", false);
 		List<BoardDTO> pagingList = boardDAOImpl.pagingList(pagingParams);
 
 	    return pagingList;
