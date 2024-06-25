@@ -75,4 +75,9 @@ public class BoardDAOImpl implements BoardDAO {
 		sql.update("Board.deleteBatchedArticle", deleteDay);
 	}
 
+    // 회원 탈퇴
+	public void deleteMemberArticle(String memberId) {
+		sql.update("Board.deleteMemberArticle", memberId);
+	}
+
 }

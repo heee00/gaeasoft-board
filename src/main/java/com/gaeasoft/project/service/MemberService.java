@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
+import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dao.MemberDAOImpl;
 import com.gaeasoft.project.dto.MemberDTO;
 import com.gaeasoft.project.util.EncodePassword;
@@ -26,6 +27,8 @@ public class MemberService {
 	
 	@Autowired
 	private MemberDAOImpl memberDAOImpl;
+	@Autowired
+	private BoardDAOImpl boardDAOImpl;
 	@Autowired
 	private Validator validator;
 
@@ -140,4 +143,11 @@ public class MemberService {
         
         memberDAOImpl.updateInfo(memberDTO);
  	}
+    
+    // 회원 탈퇴
+ 	public void deleteMember(String memberId) {
+ 		memberDAOImpl.deleteMember(memberId);
+ 		boardDAOImpl.deleteMemberArticle(memberId);
+ 	}
+ 	
 }

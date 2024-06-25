@@ -48,6 +48,7 @@ public class MemberDTO {
 	
 	@NotBlank(message = "상세주소를 입력해 주세요.")
 	public String detailAddress;
+	public boolean isDeleted;
 	
 	@Override
 	public String toString() {

@@ -17,5 +17,7 @@ public interface MemberDAO {
 	public MemberDTO findById(String loginId);
 	// 회원 수정
 	public void updateInfo(MemberDTO memberDTO);
+	// 회원 탈퇴
+	public void deleteMember(String memberId);
 
 }

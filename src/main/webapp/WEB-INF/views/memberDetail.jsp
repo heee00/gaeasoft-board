@@ -37,6 +37,7 @@
 	        <tr>
 	            <td colspan="5">
                     <button class="link-button" id="updateButton">수정📝</button>
+                    <button class="link-button" id="deleteButton">탈퇴🗑️</button>
                     <button class="link-button" id="cancelButton">취소❎</button>
 				</td>
 	        </tr>
@@ -49,6 +50,17 @@
 	    		 var id = '${loginId}';
 		         window.location.href = '/member/updatePersonalInfoForm?memberId=' + id;
 	          });
+	    	 
+	    	 $('#deleteButton').on('click', function(e) {
+   		 		var id = '${loginId}';
+	            var isConfirmed = confirm("정말로 탈퇴하시겠습니까?");
+              	if (isConfirmed) {
+                    alert("탈퇴되었습니다.");
+		         	window.location.href = '/member/deleteMember?memberId=' + id;
+	            } else {
+		            window.location.href = '/member/viewPersonalInfo?memberId=' + id;
+	            }
+	        });
 	    	
 	    	$('#cancelButton').on('click', function(e) {
 	    		var page = '${page}';

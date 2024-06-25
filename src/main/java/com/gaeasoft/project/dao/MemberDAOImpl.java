@@ -39,5 +39,10 @@ public class MemberDAOImpl implements MemberDAO {
 	public void updateInfo(MemberDTO memberDTO) {
 		sql.update("Member.updateInfo", memberDTO);
 	}
+	
+	// 회원 탈퇴
+	public void deleteMember(String memberId) {
+		sql.delete("Member.deleteMember", memberId);
+	}
 
 }

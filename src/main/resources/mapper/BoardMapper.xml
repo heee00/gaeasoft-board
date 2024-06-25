@@ -96,7 +96,7 @@
     <update id="deleteArticle" parameterType="Long">
         UPDATE notice 
         SET isDeleted = 1
-        WHERE notice_seq = #{loginId}
+        WHERE notice_seq = #{noticeSeq}
     </update>
     
     <!-- 게시글 삭제 배치 -->
@@ -104,6 +104,13 @@
         UPDATE notice 
         SET isDeleted = 1
        	 WHERE writeTime &lt;= #{deleteDay}
+    </update>
+    
+      <!-- 회원 탈퇴 -->
+    <update  id="deleteMemberArticle" parameterType="String">
+    	UPDATE notice 
+        SET isDeleted = 1
+    	WHERE member_id = #{memberId}
     </update>
     
  </mapper>

@@ -153,4 +153,11 @@ public class MemberController {
 		}
 	}
 	
+	// 회원 탈퇴
+	@GetMapping("/deleteMember")
+	public String deleteMember(String memberId) throws Exception {
+		memberService.deleteMember(memberId);
+	    return "redirect:/member/loginForm";
+	}
+	
 }

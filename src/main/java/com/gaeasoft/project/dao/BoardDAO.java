@@ -29,5 +29,7 @@ public interface BoardDAO {
 	public void deleteArticle(Long noticeSeq) ;
 	// 게시글 삭제 배치
 	public void deleteBatchedArticle(LocalDateTime deleteDay);
+	// 회원 탈퇴
+	public void deleteMemberArticle(String memberId);
 	
 }

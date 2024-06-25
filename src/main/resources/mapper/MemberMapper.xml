@@ -14,7 +14,8 @@
     <select id="loginMember" parameterType="String" resultType="member">
     	SELECT member_id, password
     	FROM member
-    	WHERE member_id = #{memberId} 
+    	WHERE member_id = #{memberId}
+    	AND isDeleted = 0
     </select>
 	
 	<!-- 회원 로그인 이메일 조회 -->
@@ -35,6 +36,14 @@
     <update id="updateInfo" parameterType="member">
     	UPDATE member 
     	SET name = #{name}, password = #{password}, address = #{address}
+    	WHERE member_id = #{memberId}
+    	AND isDeleted = 0
+    </update>
+    
+    <!-- 회원 탈퇴 -->
+    <update  id="deleteMember" parameterType="String">
+    	UPDATE member 
+        SET isDeleted = 1
     	WHERE member_id = #{memberId}
     </update>
 	
