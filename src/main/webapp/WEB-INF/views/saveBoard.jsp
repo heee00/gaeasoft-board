@@ -12,7 +12,7 @@
 </head>
 <body>
 <h2>게시글 작성</h2>
-	<form id="saveArticleForm">
+	<form id="saveArticleForm" enctype="multipart/form-data">
 		<div class="form-group">
 			<input type="text" name="writer" placeholder="작성자"   value="${sessionScope.loginId}" readonly>
 		</div>
@@ -27,6 +27,9 @@
 	    <div class="form-group">
 			<textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required></textarea>
         	<span id="contentError"  class="error"></span>
+		</div>
+		<div class="form-group">
+			<input type="file" name="files" id="files" multiple>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
 		<input type="button" id="cancelButton" value="취소❎">
@@ -51,23 +54,36 @@
 			$('#saveArticleForm').on('submit', function(e) {
 		        e.preventDefault();
 	            var page = "${page}";
-	            var formData = $(this).serialize();
+	            var formData = new FormData();
+	            formData.append('password', $('#password').val());
+	            formData.append('title', $('#title').val());
+	            formData.append('content', $('#content').val());
+	            
+	            var files = $('#files')[0].files;
+	            if (files.length > 0) {
+	                for (var i = 0; i < files.length; i++) {
+	                    formData.append('files', files[i]);
+	                }
+	            }
+	            
 	            var isConfirmed = confirm("저장하시겠습니까?");
 
 	            if (isConfirmed) {
 	                $.ajax({
 	                    url: '/board/saveArticle',
 	                    method: 'post',
+	                    processData: false,
+	                    contentType: false,
 	                    data: formData,
 	                    success: function(response) {
 	                        window.location.href = '/board/pagingList?page=' + page;
 	                    },
 	                    error: function(xhr) {
-	                    	if (xhr.status === 400) {
+	                    	if (xhr.responseJSON && Object.keys(xhr.responseJSON).length > 0) {
 	                            var errors = xhr.responseJSON;
 	                            displayErrors(errors);
 	                        } else {
-	                            console.error('AJAX Error: ' + status + err);
+	                            console.error('Unexpected error:', xhr.status);
 	                        }
 	                    }
 	                });

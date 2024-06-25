@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.gaeasoft.project.dto.BoardDTO;
+import com.gaeasoft.project.dto.FileDTO;
 
 @Mapper
 public interface BoardDAO {
@@ -23,6 +24,12 @@ public interface BoardDAO {
 	public void updateViews(Long noticeSeq);
 	// 게시글 저장
 	public int saveArticle(BoardDTO boardDTO);
+	// 파일 저장
+	public int saveFile(FileDTO fileDTO);
+	// 파일 목록
+	public List<FileDTO> fileList(Long noticeSeq);
+	// 원본 파일명 호출
+	public String getOriginalFileName(String storedFileName);
 	// 게시글 수정
 	public void updateArticle(BoardDTO boardDTO);
 	// 게시글 삭제

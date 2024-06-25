@@ -1,5 +1,9 @@
 package com.gaeasoft.project.controller;
 
+import java.io.File;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,7 +13,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
@@ -53,10 +62,37 @@ public class BoardController {
 		BoardDTO boardDTO = boardService.viewNoticeArticleDetail(noticeSeq, session);
 		session.setAttribute("boardPassword", boardDTO.getPassword());
 		model.addAttribute("board", boardDTO);
+		model.addAttribute("fileList", boardDTO.getFileList());
 		model.addAttribute("page", page);
 		model.addAttribute("rowNum", rowNum);
 		
 		return "boardDetail";
+	}
+	
+	// 파일 다운로드
+	@GetMapping("/downloadFile")
+	public ResponseEntity<Resource> downloadFile(@RequestParam("storedFileName") String storedFileName) {
+	    // 저장된 파일 경로
+	    String filePath = "/WEB-INF/files/" + storedFileName;
+	    File file = new File(filePath);
+
+	    if (!file.exists()) {
+	        throw new RuntimeException("File not found");
+	    }
+
+	    try {
+	        Path path = Paths.get(filePath);
+	        Resource resource = new UrlResource(path.toUri());
+	        String originalFileName = boardService.getOriginalFileName(storedFileName);
+
+	        return ResponseEntity.ok()
+	                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(originalFileName, "UTF-8") + "\"")
+	                .body(resource);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException("File download error");
+	    }
 	}
 	
 	// 페이징 포함 목록
@@ -108,6 +144,7 @@ public class BoardController {
 	// 게시글 저장
 	@PostMapping("/saveArticle")
     public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
+            									@RequestParam(value = "files", required = false) List<MultipartFile> files,
                                                @ModelAttribute("loginId") String loginId,
                                                BindingResult result) throws Exception {
         boardDTO.setMemberId(loginId);
@@ -117,7 +154,7 @@ public class BoardController {
             return "saveBoard";
         }
 
-        int saveResult = boardService.saveNoticeArticle(boardDTO);
+        int saveResult = boardService.saveNoticeArticle(boardDTO, files);
 		if (saveResult > 0) {
 			return "redirect:/board/pagingList";
 		} else {

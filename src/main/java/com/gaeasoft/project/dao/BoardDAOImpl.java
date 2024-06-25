@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gaeasoft.project.dto.BoardDTO;
+import com.gaeasoft.project.dto.FileDTO;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
@@ -56,6 +57,21 @@ public class BoardDAOImpl implements BoardDAO {
 	// 게시글 저장
 	public int saveArticle(BoardDTO boardDTO) {
 		return sql.insert("Board.saveArticle", boardDTO);
+	}
+	
+	// 파일 저장
+	public int saveFile(FileDTO fileDTO) {
+		return sql.insert("Board.saveFile", fileDTO);
+	}
+	
+	// 파일 목록
+	public List<FileDTO> fileList(Long noticeSeq) {
+		return sql.selectList("Board.fileList", noticeSeq);
+	}
+	
+	// 원본 파일명 호출
+	public String getOriginalFileName(String storedFileName) {
+	    return sql.selectOne("Board.getOriginalFileName", storedFileName);
 	}
 	
 	// 게시글 수정

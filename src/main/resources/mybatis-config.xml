@@ -5,5 +5,6 @@
     <typeAliases>
         <typeAlias type="com.gaeasoft.project.dto.BoardDTO" alias="board"></typeAlias>
         <typeAlias type="com.gaeasoft.project.dto.MemberDTO" alias="member"></typeAlias>
+        <typeAlias type="com.gaeasoft.project.dto.FileDTO" alias="file"></typeAlias>
     </typeAliases>
 </configuration>

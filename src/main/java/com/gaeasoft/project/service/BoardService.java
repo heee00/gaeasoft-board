@@ -1,5 +1,6 @@
 package com.gaeasoft.project.service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,9 +19,11 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
+import com.gaeasoft.project.dto.FileDTO;
 import com.gaeasoft.project.dto.PageDTO;
 
 @Service
@@ -57,10 +61,15 @@ public class BoardService {
 	        	updateViews(noticeSeq);
 	            viewedArticle.add(noticeSeq);
 	        }
-	        return boardDAOImpl.articleDetail(noticeSeq);
+	            
+	        BoardDTO boardDTO = boardDAOImpl.articleDetail(noticeSeq);
+	        List<FileDTO> fileList = boardDAOImpl.fileList(noticeSeq);
+	        boardDTO.setFileList(fileList);
+
+	        return boardDTO;
 	    
 		} catch (Exception e) {
-	        System.err.println("에러 발생: " + e.getMessage());
+			e.printStackTrace();
 	        return boardDAOImpl.articleDetail(noticeSeq);
 	    }
 	}
@@ -153,10 +162,71 @@ public class BoardService {
 	
 	// 게시글 저장
     @Transactional
-	public int saveNoticeArticle(BoardDTO boardDTO) {
-		return boardDAOImpl.saveArticle(boardDTO);
+	public int saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files) {
+    	int saveResult = boardDAOImpl.saveArticle(boardDTO);
+
+    	String savePath = "/WEB-INF/files/";
+		File uploadDir = new File(savePath);
+	    if (!uploadDir.exists()) {
+	    	uploadDir.mkdirs();
+	    }
+	     
+	    Long noticeSeq = boardDTO.getNoticeSeq();
+
+	    if (files != null && !files.isEmpty()) {
+	        for (MultipartFile multipartFile : files) {
+	            if (!multipartFile.isEmpty()) {
+	                try {
+	                    // 파일 저장
+	                    String storedFileName = saveFile(multipartFile, savePath);
+
+	                    // DB에 저장
+	                    FileDTO fileDTO = new FileDTO();
+	                    fileDTO.setNoticeSeq(noticeSeq);
+	                    fileDTO.setStoredFileName(storedFileName);
+	                    fileDTO.setOriginFileName(multipartFile.getOriginalFilename());
+	                    boardDAOImpl.saveFile(fileDTO);
+
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+	    }
+         return saveResult;
+	}
+    
+    // 파일 저장 이름 설정
+    public String saveFile(MultipartFile multipartFile, String savePath) throws Exception {
+    	// 원본 파일명에서 확장자 추출
+        String originalFileName = multipartFile.getOriginalFilename();
+        String fileExtension = "";
+
+        if (originalFileName != null && originalFileName.contains(".")) {
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
+
+        // 난수 파일명 생성
+        String fileName = UUID.randomUUID().toString();
+        String storedFileName = fileName + fileExtension;
+
+        // 파일 저장
+        File file = new File(savePath + File.separator + storedFileName);
+        multipartFile.transferTo(file);
+
+        return storedFileName;
+    }
+    
+    // 파일 목록
+	public List<FileDTO> fileList(Long noticeSeq) {
+		return boardDAOImpl.fileList(noticeSeq);
 	}
 	
+	// 원본 파일명 호출
+	public String getOriginalFileName(String storedFileName) {
+		return boardDAOImpl.getOriginalFileName(storedFileName);
+	}
+    
 	// 게시글 수정
     @Transactional
 	public void updateNoticeArticle(BoardDTO boardDTO) {

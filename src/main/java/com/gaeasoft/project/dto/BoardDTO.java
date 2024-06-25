@@ -1,10 +1,13 @@
 package com.gaeasoft.project.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,5 +42,6 @@ public class BoardDTO {
 	public int views;
 	public int rowNum;
 	public boolean isDeleted;
-	
+	public List<MultipartFile> files;
+	public List<FileDTO> fileList;
 }

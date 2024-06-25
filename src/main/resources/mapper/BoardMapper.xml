@@ -82,7 +82,30 @@
     <insert id="saveArticle" parameterType="board">
         INSERT INTO notice(member_id, password, title, content)
         VALUES (#{memberId}, #{password}, #{title}, #{content})
+        <selectKey keyProperty="noticeSeq" resultType="Long" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
     </insert>
+    
+    <!-- 파일 저장 -->
+    <insert id="saveFile" parameterType="file">
+    	 INSERT INTO file(originFileName, storedFileName, notice_seq)
+        VALUES (#{originFileName}, #{storedFileName}, #{noticeSeq})
+    </insert>
+    
+    <!-- 파일 목록  -->
+    <select id="fileList" parameterType="Long" resultType="file">
+    	SELECT originFileName, storedFileName 
+    	FROM file
+    	WHERE notice_seq = #{noticeSeq}
+    </select>
+    
+    <!-- 원본 파일명 호출 -->
+    <select id="getOriginalFileName" parameterType="String" resultType="String">
+	    SELECT originFileName 
+	    FROM file 
+	    WHERE storedFileName = #{storedFileName}
+	</select>
     
    	<!-- 게시글 수정 -->
     <update id="updateArticle" parameterType="board">
