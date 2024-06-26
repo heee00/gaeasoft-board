@@ -197,22 +197,20 @@ public class BoardService {
 	}
     
     // 파일 저장 이름 설정
-    public String saveFile(MultipartFile multipartFile, String savePath) throws Exception {
+    public String saveFile(MultipartFile multipartFile, String savePath) {
     	// 원본 파일명에서 확장자 추출
         String originalFileName = multipartFile.getOriginalFilename();
-        String fileExtension = "";
-
-        if (originalFileName != null && originalFileName.contains(".")) {
-            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        }
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
 
         // 난수 파일명 생성
-        String fileName = UUID.randomUUID().toString();
-        String storedFileName = fileName + fileExtension;
-
-        // 파일 저장
-        File file = new File(savePath + File.separator + storedFileName);
-        multipartFile.transferTo(file);
+        String storedFileName = UUID.randomUUID().toString() + fileExtension;
+        File file = new File(savePath + storedFileName);
+        
+        try {
+            multipartFile.transferTo(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return storedFileName;
     }

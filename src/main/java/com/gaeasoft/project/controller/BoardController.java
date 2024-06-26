@@ -31,10 +31,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
 import com.gaeasoft.project.service.BoardService;
+import com.gaeasoft.project.util.FileUpload;
 
 @Controller
 @RequestMapping("/board")
@@ -143,24 +145,37 @@ public class BoardController {
 	
 	// 게시글 저장
 	@PostMapping("/saveArticle")
-    public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
-            									@RequestParam(value = "files", required = false) List<MultipartFile> files,
-                                               @ModelAttribute("loginId") String loginId,
-                                               BindingResult result) throws Exception {
-        boardDTO.setMemberId(loginId);
+	public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
+	                                @RequestParam(value = "files", required = false) List<MultipartFile> files,
+	                                @ModelAttribute("loginId") String loginId,
+	                                BindingResult result,
+	                                RedirectAttributes redirectAttributes) throws Exception {
+	    boardDTO.setMemberId(loginId);
 
-        if (result.hasErrors()) {
-            boardService.getFieldErrors(result);
-            return "saveBoard";
-        }
+	    if (result.hasErrors()) {
+	        boardService.getFieldErrors(result);
+	        redirectAttributes.addFlashAttribute("errorMessage", "유효성 검사에 실패했습니다.");
+	        return "redirect:/board/saveArticleForm";
+	    }
+	    
+	    // 파일이 있는 경우에만 확장자 검사
+	    if (files != null && !files.isEmpty()) {
+	        for (MultipartFile multipartFile : files) {
+	            if (!FileUpload.isAllowedExtension(multipartFile.getOriginalFilename())) {
+	                redirectAttributes.addFlashAttribute("errorMessage", "허용되지 않은 파일 형식입니다: " + multipartFile.getOriginalFilename());
+	                return "redirect:/board/saveArticleForm";
+	            }
+	        }
+	    }
 
-        int saveResult = boardService.saveNoticeArticle(boardDTO, files);
-		if (saveResult > 0) {
-			return "redirect:/board/pagingList";
-		} else {
-			return "saveBoard";
-		}
-    }
+	    int saveResult = boardService.saveNoticeArticle(boardDTO, files);
+	    if (saveResult > 0) {
+	        return "redirect:/board/pagingList";
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMessage", "게시글 저장에 실패했습니다.");
+	        return "redirect:/board/saveArticleForm";
+	    }
+	}
 	
 	// 유효성 검사
 	@PostMapping("/validateField")

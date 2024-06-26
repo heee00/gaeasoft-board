@@ -37,14 +37,16 @@
 		       <th class="board-content">내용</th>
 		       <td><textarea cols="30" rows="10" readonly>${board.content}</textarea></td>
 		    </tr>
-		    <tr>
-		       <th class="board-files">첨부 파일</th>
-		         <td id="fileList">
-				      <c:forEach items="${board.fileList}" var="file">
-				          <a href="/board/downloadFile?storedFileName=${file.storedFileName}">${file.storedFileName}</a><br>
-				      </c:forEach>
-				  </td>
-		   </tr>
+		    <c:if test="${not empty board.fileList}">
+			    <tr>
+			       <th class="board-files">첨부 파일</th>
+			         <td id="fileList">
+					      <c:forEach items="${board.fileList}" var="file">
+					          <a href="/board/downloadFile?storedFileName=${file.storedFileName}">${file.storedFileName}</a><br>
+					      </c:forEach>
+					  </td>
+			   </tr>	
+		   </c:if>
 		</tbody>
 	    <tfoot>
 	        <tr>

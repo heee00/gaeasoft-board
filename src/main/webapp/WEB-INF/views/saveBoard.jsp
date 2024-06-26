@@ -9,9 +9,10 @@
 	<link rel="stylesheet" type="text/css" href="/resources/css/saveBoard.css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="/resources/js/validation.js"></script>
+	<script src="/resources/js/fileUpload.js"></script>
 </head>
 <body>
-<h2>게시글 작성</h2>
+	<h2>게시글 작성</h2>
 	<form id="saveArticleForm" enctype="multipart/form-data">
 		<div class="form-group">
 			<input type="text" name="writer" placeholder="작성자"   value="${sessionScope.loginId}" readonly>
@@ -29,7 +30,10 @@
         	<span id="contentError"  class="error"></span>
 		</div>
 		<div class="form-group">
-			<input type="file" name="files" id="files" multiple>
+	        <div id="fileInputContainer">
+				<input type="file" name="files" id="files" multiple>
+			</div>
+		<button type="button" id="addFileInput">추가 파일 선택</button>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
 		<input type="button" id="cancelButton" value="취소❎">
@@ -51,23 +55,35 @@
                 validateField('content', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
             });
 		    
+			$('#addFileInput').click(function() {
+                $('#fileInputContainer').append('<input type="file" name="files" class="files" multiple>');
+            });
+
 			$('#saveArticleForm').on('submit', function(e) {
 		        e.preventDefault();
 	            var page = "${page}";
+	            
 	            var formData = new FormData();
 	            formData.append('password', $('#password').val());
 	            formData.append('title', $('#title').val());
 	            formData.append('content', $('#content').val());
-	            
+
 	            var files = $('#files')[0].files;
 	            if (files.length > 0) {
 	                for (var i = 0; i < files.length; i++) {
+	                    var file = files[i];
+	                    var fileName = file.name;
+	                    var fileExtension = fileName.split('.').pop().toLowerCase();
+	                    
+	                    if (!FileUpload.isAllowedExtension(fileName)) {
+	                        alert(fileExtension + " 파일은 허용되지 않은 형식입니다.");
+	                        return;
+	                    }
 	                    formData.append('files', files[i]);
 	                }
 	            }
 	            
 	            var isConfirmed = confirm("저장하시겠습니까?");
-
 	            if (isConfirmed) {
 	                $.ajax({
 	                    url: '/board/saveArticle',
@@ -79,7 +95,9 @@
 	                        window.location.href = '/board/pagingList?page=' + page;
 	                    },
 	                    error: function(xhr) {
-	                    	if (xhr.responseJSON && Object.keys(xhr.responseJSON).length > 0) {
+	                        if (xhr.responseJSON && xhr.responseJSON.errorMessage) {
+	                            alert(xhr.responseJSON.errorMessage);
+
 	                            var errors = xhr.responseJSON;
 	                            displayErrors(errors);
 	                        } else {
