@@ -33,7 +33,6 @@
 	        <div id="fileInputContainer">
 				<input type="file" name="files" id="files" multiple>
 			</div>
-		<button type="button" id="addFileInput">추가 파일 선택</button>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
 		<input type="button" id="cancelButton" value="취소❎">
@@ -55,10 +54,6 @@
                 validateField('content', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
             });
 		    
-			$('#addFileInput').click(function() {
-                $('#fileInputContainer').append('<input type="file" name="files" class="files" multiple>');
-            });
-
 			$('#saveArticleForm').on('submit', function(e) {
 		        e.preventDefault();
 	            var page = "${page}";
@@ -79,7 +74,7 @@
 	                        alert(fileExtension + " 파일은 허용되지 않은 형식입니다.");
 	                        return;
 	                    }
-	                    formData.append('files', files[i]);
+	                    formData.append('files', file);
 	                }
 	            }
 	            
