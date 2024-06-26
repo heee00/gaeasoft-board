@@ -19,16 +19,15 @@ public class TransactionLog {
     @Around("@annotation(transactional)")
     public Object logTransaction(ProceedingJoinPoint joinPoint, Transactional transactional) throws Throwable {
         String transactionId = UUID.randomUUID().toString();
-        String className = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
         
-        log.info("트랜잭션 실행: " + className  + "-" + methodName +"[ID: " + transactionId + "]");
+        log.info("트랜잭션 실행: " +methodName +"[ID: " + transactionId + "]");
         try {
             Object result = joinPoint.proceed();
-            log.info("트랜잭션 커밋: " + className  + "-" + methodName +"[ID: " + transactionId + "]");
+            log.info("트랜잭션 커밋: " + methodName +"[ID: " + transactionId + "]");
             return result;
         } catch (Throwable t) {
-        	log.info("트랜잭션 롤백: " + className  + "-" + methodName +"[ID: " + transactionId + "]");
+        	log.info("트랜잭션 롤백: " + methodName +"[ID: " + transactionId + "]");
             throw t;
         }
     }

@@ -37,7 +37,7 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
-    private static final Logger log = LoggerFactory.getLogger(BoardController.class);
+    private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 	
 	// 회원가입 화면 이동
 	@GetMapping("/joinForm")
@@ -49,9 +49,8 @@ public class MemberController {
 	@PostMapping("/join")
 	public String joinMember(@Valid @ModelAttribute MemberDTO memberDTO,
 											BindingResult result) throws Exception {
-	    String className = this.getClass().getSimpleName();
 		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
-		log.info("회원가입: " + className + "-" + methodName + "[" + memberDTO.toString() + "]");
+		log.info("회원가입: " + methodName + "-" + memberDTO.toString());
 		
 		if (result.hasErrors()) {
 			memberService.getFieldErrors(result);
