@@ -14,7 +14,6 @@
 		<h2>게시판</h2>
 		<button class="link-button" id="logoutButton">로그아웃🚪</button>
 		<button class="link-button" id="infoButton">회원 정보🔦</button>
-
 		<table class="board-table">
 	        <thead>
 		        <tr>
@@ -49,16 +48,16 @@
 		        <tr>
 		            <td colspan="5">
 		                <button class="link-button" id="writeButton">작성✍🏻</button>
-				        <form id="searchForm">
-				        	<input type="date" name ="startDate" value="${param.startDate}">
-				        	<input type="date" name="endDate" value="${param.endDate}">
-				            <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" value="${param.searchKeyword}">
-				            <select name="searchOption">
-				                <option value="Title" ${param.searchOption == 'Title' ? 'selected' : ''}>제목</option>
-				                <option value="All" ${param.searchOption == 'All' ? 'selected' : ''}>제목+내용</option>
-				            </select>
-		            		<input type="submit"  id="searchButton" value="검색🔍">
-				        </form>
+				       <form id="searchForm">
+				       	<input type="date" name ="startDate" value="${param.startDate}">
+				       	<input type="date" name="endDate" value="${param.endDate}">
+				           <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" value="${param.searchKeyword}">
+				           <select name="searchOption">
+				               <option value="Title" ${param.searchOption == 'Title' ? 'selected' : ''}>제목</option>
+				               <option value="All" ${param.searchOption == 'All' ? 'selected' : ''}>제목+내용</option>
+				           </select>
+				         		<input type="submit"  id="searchButton" value="검색🔍">
+				       </form>
 		            </td>
 		        </tr>
 		    </tfoot>
@@ -71,7 +70,7 @@
                 <span class="beforePage">[◀️이전]</span>
             </c:when>
             <c:otherwise>
-                <a href="/board/pagingList?page=${paging.page - 1}&keyword=${param.keyword}&option=${param.option}">[◀️이전]</a>
+           	 	<a href="/board/pagingList?page=${paging.page - 1}&startDate=${param.startDate}&endDate=${param.endDate}&searchKeyword=${param.searchKeyword}&searchOption=${param.searchOption}">[◀️이전]</a>
             </c:otherwise>
         </c:choose>
     
@@ -81,7 +80,7 @@
                     <span class="currentPage">${i}</span>
                 </c:when>
                 <c:otherwise>
-                    <a href="/board/pagingList?page=${i}&keyword=${param.keyword}&option=${param.option}">${i}</a>
+                	<a href="/board/pagingList?page=${i}&startDate=${param.startDate}&endDate=${param.endDate}&searchKeyword=${param.searchKeyword}&searchOption=${param.searchOption}">${i}</a>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
@@ -91,7 +90,7 @@
                 <span class="nextPage">[다음▶️]</span>
             </c:when>
             <c:otherwise>
-                <a href="/board/pagingList?page=${paging.page + 1}&keyword=${param.keyword}&option=${param.option}">[다음▶️]</a>
+           		<a href="/board/pagingList?page=${paging.page + 1}&startDate=${param.startDate}&endDate=${param.endDate}&searchKeyword=${param.searchKeyword}&searchOption=${param.searchOption}">[다음▶️]</a>
             </c:otherwise>
         </c:choose>
 	</div>
@@ -99,7 +98,7 @@
 	<script>
 	    $(document).ready(function() {
 	    	$('h2').on('click', function() {
-                window.location.href = '/board/pagingList?page=1';
+                window.location.href = '/board/pagingList?page=1&startDate=&endDate=&searchKeyword=&searchOption=';
 	        });
 	    	
 	    	$('#infoButton').on('click', function(e) {
@@ -131,9 +130,16 @@
 	            var searchKeyword = $('input[name="searchKeyword"]').val();
 	            var searchOption = $('select[name="searchOption"]').val();
 
+            	var newUrl = '/board/pagingList?page=' + page 
+				                        + '&startDate=' + encodeURIComponent(startDate) 
+				                        + '&endDate=' + encodeURIComponent(endDate) 
+				                        + '&searchKeyword=' + encodeURIComponent(searchKeyword) 
+				                        + '&searchOption=' + encodeURIComponent(searchOption);      
+            	
                 $.ajax({
                     url: '/board/pagingList',
                     method: 'get',
+                    cache: false,
                     data: {
                         page: page,
                         startDate: startDate,
@@ -142,11 +148,7 @@
                         searchOption: searchOption
                     },
                     success: function(response) {
-                    	window.location.href = '/board/pagingList?page=' + page 
-								                        + '&startDate=' + encodeURIComponent(startDate) 
-								                        + '&endDate=' + encodeURIComponent(endDate) 
-								                        + '&searchKeyword=' + encodeURIComponent(searchKeyword) 
-								                        + '&searchOption=' + encodeURIComponent(searchOption);                   
+                         window.location.href = newUrl;
                     },
                     error: function(xhr) {
                     	if (xhr.status === 400) {

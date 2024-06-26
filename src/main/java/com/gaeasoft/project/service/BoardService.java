@@ -101,7 +101,7 @@ public class BoardService {
 	
 	// 페이징 포함 목록
     @Transactional(readOnly = true)
-	public List<BoardDTO> noticePagingList(int page, String startDate, String endDate, String searchKeyword, String searchOption) {
+	public List<BoardDTO> noticePagingList(int page, String  startDate, String endDate, String searchKeyword, String searchOption) {
 		int pageStart = (page - 1) * pageLimit;
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pageStart);

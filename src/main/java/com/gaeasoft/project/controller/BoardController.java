@@ -4,8 +4,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +13,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -100,18 +97,14 @@ public class BoardController {
 	// 페이징 포함 목록
 	@GetMapping("/pagingList")
 	public String noticePagingList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-												@RequestParam(value = "startDate", required = false) 	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-									            @RequestParam(value = "endDate", required = false) 	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+												@RequestParam(value = "startDate", required = false) 	String startDate,
+									            @RequestParam(value = "endDate", required = false) 	String endDate,
 												 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
 									             @RequestParam(value = "searchOption", required = false) String searchOption,
 												Model model) throws Exception  {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    String start = (startDate != null) ? startDate.format(formatter) : null;
-	    String end = (endDate != null) ? endDate.format(formatter) : null;
-	
-	    List<BoardDTO> pagingList = boardService.noticePagingList(page, start, end, searchKeyword, searchOption);
-	    PageDTO pageDTO = boardService.setPagingParam(page, start, end, searchKeyword, searchOption);
-	    int boardCount = boardService.articleCount(start, end, searchKeyword, searchOption);
+	    List<BoardDTO> pagingList = boardService.noticePagingList(page, startDate, endDate, searchKeyword, searchOption);
+	    PageDTO pageDTO = boardService.setPagingParam(page, startDate, endDate, searchKeyword, searchOption);
+	    int boardCount = boardService.articleCount(startDate, endDate, searchKeyword, searchOption);
 	    
 	    if (boardCount > 0) {
 	        if (boardCount <= page * 10) {
@@ -125,6 +118,10 @@ public class BoardController {
 
 		model.addAttribute("pagingList", pagingList);
 		model.addAttribute("paging", pageDTO);
+		model.addAttribute("startDate", startDate);
+	    model.addAttribute("endDate", endDate);
+	    model.addAttribute("searchKeyword", searchKeyword);
+	    model.addAttribute("searchOption", searchOption);
 		
 		return "pagingList";
 	}

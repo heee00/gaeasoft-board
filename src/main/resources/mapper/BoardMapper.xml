@@ -27,9 +27,19 @@
     	FROM notice
 		<where>
 			isDeleted = 0
-			<if test="startDate != null and startDate !=''">
-				AND writeTime BETWEEN #{startDate} AND #{endDate}
-			</if>
+			<if test="startDate != null and startDate != ''">
+	            <if test="endDate != null and endDate != ''">
+	                AND writeTime BETWEEN #{startDate} AND #{endDate}
+	            </if>
+	            <if test="endDate == null or endDate == ''">
+	                AND writeTime &gt;= #{startDate}
+	            </if>
+	        </if>
+	        <if test="startDate == null or startDate == ''">
+	            <if test="endDate != null and endDate != ''">
+	                AND writeTime &lt;= #{endDate}
+	            </if>
+	        </if>
 	        <if test="searchKeyword != null and searchKeyword != ''">
 	            <choose>
 	                <when test="searchOption == 'Title'">
@@ -51,9 +61,19 @@
     	FROM notice 
     	<where>
     		isDeleted = 0
-    		<if test="startDate != null and startDate !=''">
-				AND writeTime BETWEEN #{startDate} AND #{endDate}
-			</if>
+    		<if test="startDate != null and startDate != ''">
+	            <if test="endDate != null and endDate != ''">
+	                AND writeTime BETWEEN #{startDate} AND #{endDate}
+	            </if>
+	            <if test="endDate == null or endDate == ''">
+	                AND writeTime &gt;= #{startDate}
+	            </if>
+	        </if>
+	        <if test="startDate == null or startDate == ''">
+	            <if test="endDate != null and endDate != ''">
+	                AND writeTime &lt;= #{endDate}
+	            </if>
+	        </if>
 	        <if test="searchKeyword != null and searchKeyword != ''">
 	            <choose>
 	                <when test="searchOption == 'Title'">
