@@ -46,7 +46,6 @@ public class MemberService {
 	}
 
 	// 로그인
-    @Transactional(readOnly = true)
 	public boolean loginMember(MemberDTO memberDTO) {
 		String password = memberDTO.getPassword().trim();
 	    String encodePassword = EncodePassword.encrypt(password);
@@ -145,6 +144,7 @@ public class MemberService {
  	}
     
     // 회원 탈퇴
+    @Transactional
  	public void deleteMember(String memberId) {
  		memberDAOImpl.deleteMember(memberId);
  		boardDAOImpl.deleteMemberArticle(memberId);

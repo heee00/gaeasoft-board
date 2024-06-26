@@ -51,7 +51,6 @@ public class BoardService {
     }
 
 	// 게시글 상세 보기
-    @Transactional
 	public BoardDTO viewNoticeArticleDetail(Long noticeSeq, HttpSession session) {
 		Set<Long> viewedArticle = (Set<Long>) session.getAttribute("viewedArticle");
 
@@ -100,7 +99,6 @@ public class BoardService {
 	}
 	
 	// 페이징 포함 목록
-    @Transactional(readOnly = true)
 	public List<BoardDTO> noticePagingList(int page, String  startDate, String endDate, String searchKeyword, String searchOption) {
 		int pageStart = (page - 1) * pageLimit;
 		Map<String, Object> pagingParams = new HashMap<>();
@@ -155,13 +153,11 @@ public class BoardService {
     }
     
 	// 게시글 조회수 증가
-    @Transactional
 	public void updateViews(Long noticeSeq) {
 		boardDAOImpl.updateViews(noticeSeq);
 	}
 	
 	// 게시글 저장
-    @Transactional
 	public int saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files) {
     	int saveResult = boardDAOImpl.saveArticle(boardDTO);
 
