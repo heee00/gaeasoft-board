@@ -42,7 +42,7 @@
 			       <th class="board-files">첨부 파일</th>
 			         <td id="fileList">
 					      <c:forEach items="${board.fileList}" var="file">
-					          <a href="/board/downloadFile?storedFileName=${file.storedFileName}">${file.storedFileName}</a><br>
+					          <a href="/board/downloadFile?storedFileName=${file.storedFileName}">${file.originFileName}</a><br>
 					      </c:forEach>
 					  </td>
 			   </tr>	
