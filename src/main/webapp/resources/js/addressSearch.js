@@ -2,6 +2,7 @@ $(document).ready(function() {
     var currentPage = 1;
 
     $('#searchAddressButton').on('click', function() {
+        openModal();
         searchAddresses(1); // Search from the first page
     });
 
@@ -33,14 +34,14 @@ $(document).ready(function() {
     }
 
     function displayAddressList(addresses, totalCount) {
-        var addressList = $('#addressList');
-        addressList.empty();
+        var modalAddressList = $('#modalAddressList');
+        modalAddressList.empty();
         var htmlStr = '<table class="board-table"><tr><th>우편번호</th><th>주소</th></tr>';
         $(addresses).each(function(index, address) {
             htmlStr += '<tr><td>' + address.zipNo + '</td><td><a href="#" class="addressItem" data-zip="' + address.zipNo + '" data-road="' + address.roadAddr + '" data-jibun="' + address.jibunAddr + '">도로명: ' + address.roadAddr + '<br>지번명: ' + address.jibunAddr + '</a></td></tr>';
         });
         htmlStr += '</table>';
-        addressList.html(htmlStr);
+        modalAddressList.html(htmlStr);
 
         // Address list item click event handler
         $('.addressItem').on('click', function(e) {
@@ -53,7 +54,8 @@ $(document).ready(function() {
             $('#roadAddr').val(roadAddr);
             $('#jibunAddr').val(jibunAddr);
 
-            addressList.empty();
+            modalAddressList.empty();
+            closeModal();
         });
 
         // Pagination handling
@@ -61,7 +63,7 @@ $(document).ready(function() {
     }
 
     function displayPagination(totalCount) {
-        var addressList = $('#addressList');
+        var modalAddressList = $('#modalAddressList');
         var pageCount = Math.ceil(totalCount / 10); // Calculate number of pages
         var htmlStr = '<div class="paging-navigation">';
         var startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
@@ -84,7 +86,7 @@ $(document).ready(function() {
         }
 
         htmlStr += '</div>';
-        addressList.append(htmlStr);
+        modalAddressList.append(htmlStr);
 
         // Page link click event handler
         $('.pageLink').on('click', function(e) {
@@ -93,4 +95,22 @@ $(document).ready(function() {
             searchAddresses(page);
         });
     }
+    
+    function openModal() {
+        $('#addressModal').css('display', 'block');
+    }
+
+    function closeModal() {
+        $('#addressModal').css('display', 'none');
+    }
+
+    $('.close').on('click', function() {
+        closeModal();
+    });
+
+    $(window).on('click', function(event) {
+        if ($(event.target).is('#addressModal')) {
+            closeModal();
+        }
+    });
 });

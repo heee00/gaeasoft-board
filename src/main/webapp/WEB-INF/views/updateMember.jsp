@@ -48,6 +48,14 @@
         </div>
         <input type="submit" id="updateButton" value="수정📝" >
 		<input type="button" id="cancelButton" value="취소❎">
+		
+		 <!-- Modal -->
+	    <div id="addressModal">
+	        <div id="modalContent">
+	            <span class="close">&times;</span>
+	            <div id="modalAddressList"></div>
+	        </div>
+	    </div>
     </form>
     
     <script>

@@ -32,23 +32,31 @@
        		<span id="passwordCheckError" class="error"></span>
     	</div>
    	 	<div class="form-group">
-   	 	    <div class="input-container">
-			    <input type="text" name="address" id="address" placeholder="주소 검색(도로명, 지번명)" required>
-				<input type="button" id="searchAddressButton" value="주소 검색">
-		    </div>
-       		<span id="addressError" class="error"></span>
-		</div>
-    	<div class="form-group">
-    		<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" required>
-       		<span id="detailAddressError" class="error"></span>
-    	</div>
+            <div class="input-container">
+                <input type="text" name="address" id="address" placeholder="주소 검색(도로명, 지번명)" required>
+                <input type="button" id="searchAddressButton" value="주소 검색">
+            </div>
+            <span id="addressError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" required>
+            <span id="detailAddressError" class="error"></span>
+        </div>
         <div id="addressList">
-	        <input type="hidden" name="zipNo" id="zipNo">
-			<input type="hidden" name="roadAddr" id="roadAddr">
-			<input type="hidden" name="jibunAddr" id="jibunAddr">
+            <input type="hidden" name="zipNo" id="zipNo">
+            <input type="hidden" name="roadAddr" id="roadAddr">
+            <input type="hidden" name="jibunAddr" id="jibunAddr">
         </div>
         <input type="submit" id="joinButton" value="회원가입">
 	    <input type="button" id="cancelButton" value="취소">
+	    
+	    <!-- Modal -->
+	    <div id="addressModal">
+	        <div id="modalContent">
+	            <span class="close">&times;</span>
+	            <div id="modalAddressList"></div>
+	        </div>
+	    </div>
     </form>
     
     <script>
