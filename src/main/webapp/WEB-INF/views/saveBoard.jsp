@@ -31,7 +31,7 @@
 		</div>
 		<div class="form-group">
 	        <div id="fileInputContainer">
-				<input type="file" name="files" id="files" multiple>
+				<input type="file" name="files" id="files"multiple>
 			</div>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
@@ -53,6 +53,13 @@
             $('#content').on('blur', function() {
                 validateField('content', $(this).val(), '/board/validateField', displayFieldError, 'saveArticleForm', 'saveButton');
             });
+            
+            $('#files').on('change', function() {
+                var files = $(this)[0].files;
+                if (!FileUpload.validateFiles(files)) {
+                    $(this).val('');
+                }
+            });
 		    
 			$('#saveArticleForm').on('submit', function(e) {
 		        e.preventDefault();
@@ -64,18 +71,8 @@
 	            formData.append('content', $('#content').val());
 
 	            var files = $('#files')[0].files;
-	            if (files.length > 0) {
-	                for (var i = 0; i < files.length; i++) {
-	                    var file = files[i];
-	                    var fileName = file.name;
-	                    var fileExtension = fileName.split('.').pop().toLowerCase();
-	                    
-	                    if (!FileUpload.isAllowedExtension(fileName)) {
-	                        alert(fileExtension + " 파일은 허용되지 않은 형식입니다.");
-	                        return;
-	                    }
-	                    formData.append('files', file);
-	                }
+	            for (var i = 0; i < files.length; i++) {
+	                formData.append('files', files[i]);
 	            }
 	            
 	            var isConfirmed = confirm("저장하시겠습니까?");
