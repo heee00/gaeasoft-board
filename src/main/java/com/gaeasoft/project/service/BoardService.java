@@ -121,6 +121,8 @@ public class BoardService {
 	
 	// 유효성 검사
 	public Map<String, List<String>> validateField(BoardDTO boardDTO, String fieldName, String fieldValue) {
+	    boolean validField = true;
+
         switch (fieldName) {
             case "password":
                 boardDTO.setPassword(fieldValue);
@@ -131,8 +133,17 @@ public class BoardService {
             case "content":
                 boardDTO.setContent(fieldValue);
                 break;
+            default:
+                validField = false;
+                break;
         }
 
+        if (!validField) {
+            Map<String, List<String>> errors = new HashMap<>();
+            errors.put(fieldName, Collections.singletonList("Invalid field name: " + fieldName));
+            return errors;
+        }
+        
         BindingResult result = new BeanPropertyBindingResult(boardDTO, "boardDTO");
         validator.validate(boardDTO, result);
 

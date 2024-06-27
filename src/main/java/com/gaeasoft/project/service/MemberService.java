@@ -74,7 +74,9 @@ public class MemberService {
 
 	// 유효성 검사
 	public Map<String, List<String>> validateField(MemberDTO memberDTO, String fieldName, String fieldValue) {
-        switch (fieldName) {
+	    boolean validField = true;
+
+		switch (fieldName) {
 	        case "name":
 	        	memberDTO.setName(fieldValue);
                 break;
@@ -93,6 +95,15 @@ public class MemberService {
             case "detailAddress":
             	memberDTO.setDetailAddress(fieldValue);
                 break;
+            default:
+                validField = false;
+                break;
+		}
+		
+		if (!validField) {
+            Map<String, List<String>> errors = new HashMap<>();
+            errors.put(fieldName, Collections.singletonList("Invalid field name: " + fieldName));
+            return errors;
         }
 
         BindingResult result = new BeanPropertyBindingResult(memberDTO, "memberDTO");
