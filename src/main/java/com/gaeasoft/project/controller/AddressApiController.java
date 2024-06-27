@@ -1,55 +1,78 @@
 package com.gaeasoft.project.controller;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequestMapping("/address")
 @RequiredArgsConstructor
 public class AddressApiController {
 	
     @PostMapping("/api")
-    public void getAddressApi(HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {
-    	String currentPage = req.getParameter("currentPage");
-        String countPerPage = req.getParameter("countPerPage");
-        String resultType = req.getParameter("resultType");
-        String confmKey = req.getParameter("confmKey");
-        String keyword = req.getParameter("keyword");
-        
-		// OPEN API 호출 URL 정보 설정
-		String apiUrl = "https://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage="+currentPage
-				+"&countPerPage="+countPerPage
-				+"&keyword="+URLEncoder.encode(keyword,"UTF-8")
-				+"&confmKey="+confmKey
-				+"&resultType="+resultType;
-		
-		URL url = new URL(apiUrl);
-    	BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8"));
-    	StringBuffer sb = new StringBuffer();
-    	String tempStr = null;
+    public ResponseEntity<String> getAddressApi(HttpServletRequest req, ModelMap model) {
+             String currentPage = req.getParameter("currentPage");
+             String countPerPage = req.getParameter("countPerPage");
+             String resultType = req.getParameter("resultType");
+             String confmKey = req.getParameter("confmKey");
+             String keyword = req.getParameter("keyword");
+             String apiUrl = null;
+             
+             // OPEN API 호출 URL 정보 설정
+             try {
+            	 apiUrl = "https://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage="+currentPage
+		                     +"&countPerPage="+countPerPage
+		                     +"&keyword="+URLEncoder.encode(keyword,"UTF-8")
+		                     +"&confmKey="+confmKey
+		                     +"&resultType="+resultType;
+             
+             } catch (Exception e) {
+                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                         .body("{\"error\": \"Failed to encode URL: " + e.getMessage() + "\"}");
+             }
+             
+             try {
+            	 URL url = new URL(apiUrl);
+            	 
+            	 try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+                     StringBuilder sb = new StringBuilder();
+            		 String tempStr;
+            		 
+            		 while((tempStr = br.readLine()) != null) {
+            			 sb.append(tempStr); // 응답결과 JSON 저장
+            		 }
+            		 
+            		 return ResponseEntity.ok()
+                             .header("Content-Type", "application/json")
+                             .body(sb.toString()); // 응답결과 반환
+            	 
+            	 } catch (IOException e) {
+                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body("{\"error\": \"Failed to read response: " + e.getMessage() + "\"}");
+                 }
 
-    	while(true){
-    		tempStr = br.readLine();
-    		if(tempStr == null) break;
-    		sb.append(tempStr);								// 응답결과 JSON 저장
-    	}
-    	br.close();
-    	
-    	response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/xml");
-		response.getWriter().write(sb.toString());			// 응답결과 반환
-    }
+             } catch (MalformedURLException e) {
+                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                         .body("{\"error\": \"Invalid URL: " + e.getMessage() + "\"}");
+         
+             } catch (Exception e) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body("{\"error\": \"Failed to open URL: " + e.getMessage() + "\"}");
+         }
+     }
     
 }
