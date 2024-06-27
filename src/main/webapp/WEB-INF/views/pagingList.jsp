@@ -124,6 +124,10 @@
 	    	$('#searchForm').on('submit', function(e) {
 	    		e.preventDefault();
 	    		
+	    		 if (!dateCheck()) {
+                    return;
+                }
+	    		
     			var page = '${paging.page}';
 	            var startDate = $('input[name="startDate"]').val();
 	            var endDate = $('input[name="endDate"]').val();
@@ -160,6 +164,17 @@
                     }
                 });
 	        });
+	    	
+	    	function dateCheck() {
+                var startDate = $('input[name="startDate"]').val();
+                var endDate = $('input[name="endDate"]').val();
+                
+                if (startDate > endDate) {
+                    alert("잘못된 날짜 형식입니다.");
+                    return false;
+                }
+                return true;
+            }
 	    });
 	</script>
 </body>
