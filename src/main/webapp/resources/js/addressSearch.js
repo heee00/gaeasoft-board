@@ -12,7 +12,7 @@ $(document).ready(function() {
             $.ajax({
                 url: '/address/api',
                 type: 'post',
-                dataType: 'json',
+                dataType: 'jsonp',
                 data: {
                     resultType: 'json',
                     confmKey: 'devU01TX0FVVEgyMDI0MDYxMjE3MDc0ODExNDgzODI=',
@@ -26,10 +26,12 @@ $(document).ready(function() {
                 },
                 error: function(xhr, status, error) {
                     alert('주소 검색 실패: ' + error);
+                    closeModal();
                 }
             });
         } else {
-            alert('주소 검색어를 입력해주세요.');
+            alert('주소를 입력해주세요.');
+            closeModal();
         }
     }
 
@@ -95,7 +97,7 @@ $(document).ready(function() {
             searchAddresses(page);
         });
     }
-    
+
     function openModal() {
         $('#addressModal').css('display', 'block');
     }

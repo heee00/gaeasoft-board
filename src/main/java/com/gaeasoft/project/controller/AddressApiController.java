@@ -23,13 +23,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddressApiController {
 	
-    @PostMapping("/api")
+	@PostMapping("/api")
     public ResponseEntity<String> getAddressApi(HttpServletRequest req, ModelMap model) {
              String currentPage = req.getParameter("currentPage");
              String countPerPage = req.getParameter("countPerPage");
              String resultType = req.getParameter("resultType");
              String confmKey = req.getParameter("confmKey");
              String keyword = req.getParameter("keyword");
+             String callback = req.getParameter("callback");
              String apiUrl = null;
              
              // OPEN API 호출 URL 정보 설정
@@ -42,7 +43,7 @@ public class AddressApiController {
              
              } catch (Exception e) {
                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                         .body("{\"error\": \"Failed to encode URL: " + e.getMessage() + "\"}");
+                         .body(callback  + "{\"error\": \"Failed to encode URL: " + e.getMessage() + "\"}");
              }
              
              try {
@@ -58,20 +59,20 @@ public class AddressApiController {
             		 
             		 return ResponseEntity.ok()
                              .header("Content-Type", "application/json")
-                             .body(sb.toString()); // 응답결과 반환
+                             .body(callback + "(" + sb.toString() + ");"); // 응답결과 반환
             	 
             	 } catch (IOException e) {
                      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("{\"error\": \"Failed to read response: " + e.getMessage() + "\"}");
+                             .body(callback +"{\"error\": \"Failed to read response: " + e.getMessage() + "\"}");
                  }
 
              } catch (MalformedURLException e) {
                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                         .body("{\"error\": \"Invalid URL: " + e.getMessage() + "\"}");
+                         .body(callback +"{\"error\": \"Invalid URL: " + e.getMessage() + "\"}");
          
              } catch (Exception e) {
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                     .body("{\"error\": \"Failed to open URL: " + e.getMessage() + "\"}");
+                     .body(callback +"{\"error\": \"Failed to open URL: " + e.getMessage() + "\"}");
          }
      }
     
