@@ -4,34 +4,61 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}] - %m%n" />
         </Console>
-         <RollingFile name="File" fileName="D:/workspace/sts3-workspace/Board/logs/application.log" filePattern="D:/workspace/sts3-workspace/Board/logs/application-%d{yyyyMMdd}.log">
+         <RollingFile name="joinFile" fileName="D:/workspace/sts3-workspace/Board/logs/joinMember/joinMember.log" filePattern="D:/workspace/sts3-workspace/Board/logs/joinMember/joinMember-%d{yyyyMMdd}.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}] - %m%n" charset="UTF-8"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
              <DefaultRolloverStrategy>
-                <Delete basePath="D:/workspace/sts3-workspace/Board/logs" maxDepth="1">
-                    <IfFileName glob="application-*.log">
+                <Delete basePath="D:/workspace/sts3-workspace/Board/logs/joinMember" maxDepth="1">
+                    <IfFileName glob="joinMember-*.log">
                         <IfLastModified age="7d"/>
                     </IfFileName>
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
+        <RollingFile name="transactionFile" fileName="D:/workspace/sts3-workspace/Board/logs/transaction/transaction.log" filePattern="D:/workspace/sts3-workspace/Board/logs/transaction/transaction-%d{yyyyMMdd}.log">
+           <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}] - %m%n" charset="UTF-8"/>
+           <Policies>
+               <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+           </Policies>
+            <DefaultRolloverStrategy>
+               <Delete basePath="D:/workspace/sts3-workspace/Board/logs/transaction" maxDepth="1">
+                   <IfFileName glob="transaction-*.log">
+                       <IfLastModified age="7d"/>
+                   </IfFileName>
+               </Delete>
+           </DefaultRolloverStrategy>
+       </RollingFile>
+       <RollingFile name="batchFile" fileName="D:/workspace/sts3-workspace/Board/logs/batch/batch.log" filePattern="D:/workspace/sts3-workspace/Board/logs/batch/batch-%d{yyyyMMdd}.log">
+          <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}] - %m%n" charset="UTF-8"/>
+          <Policies>
+              <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+          </Policies>
+           <DefaultRolloverStrategy>
+              <Delete basePath="D:/workspace/sts3-workspace/Board/logs/batch" maxDepth="1">
+                  <IfFileName glob="batch-*.log">
+                      <IfLastModified age="7d"/>
+                  </IfFileName>
+              </Delete>
+          </DefaultRolloverStrategy>
+      </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.gaeasoft.project" level="info" additivity="false">
+        <Logger name="com.gaeasoft.project.controller" level="info" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
+            <AppenderRef ref="joinFile"/>
         </Logger>
         <Logger name="com.gaeasoft.project.batch" level="error" additivity="false">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="batchFile"/>
         </Logger>
         <Logger name="org.quartz" level="info">
             <AppenderRef ref="Console" />
         </Logger>
         <Logger name="com.gaeasoft.project.util" level="info"  additivity="false">
 	        <AppenderRef ref="Console" />
-	       	<AppenderRef ref="File"/>
+	       	<AppenderRef ref="transactionFile"/>
         </Logger>
         <Root level="warn">
             <AppenderRef ref="Console"/>
