@@ -5,7 +5,8 @@ import java.util.List;
 
 public class FileUpload {
 
-	private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "pdf", "doc", "docx", "xls", "xlsx", "txt");
+	private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "pdf", "hwp", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "csv", "txt");
+    private static final int MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
     public static boolean isAllowedExtension(String fileName) {
         if (fileName == null) {
@@ -13,6 +14,10 @@ public class FileUpload {
         }
         String fileExtension = getFileExtension(fileName);
         return ALLOWED_EXTENSIONS.contains(fileExtension);
+    }
+    
+    public static boolean isAllowedFileSize(long fileSize) {
+        return fileSize <= MAX_FILE_SIZE;
     }
 
     private static String getFileExtension(String fileName) {

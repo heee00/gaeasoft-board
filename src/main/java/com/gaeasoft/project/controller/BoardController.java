@@ -162,6 +162,10 @@ public class BoardController {
 	                redirectAttributes.addFlashAttribute("errorMessage", "허용되지 않은 파일 형식입니다: " + multipartFile.getOriginalFilename());
 	                return "redirect:/board/saveArticleForm";
 	            }
+	            if (!FileUpload.isAllowedFileSize(multipartFile.getSize())) {
+	            	redirectAttributes.addFlashAttribute("errorMessage", "파일의 크기가 허용된 최대 크기 10MB를 초과했습니다: " +multipartFile.getSize());
+	                return "redirect:/board/saveArticleForm";
+	            }
 	        }
 	    }
 
