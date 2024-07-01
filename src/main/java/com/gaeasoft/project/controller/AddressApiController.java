@@ -3,7 +3,6 @@ package com.gaeasoft.project.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -25,7 +24,6 @@ public class AddressApiController {
 	
 	@PostMapping("/api")
     public ResponseEntity<String> getAddressApi(HttpServletRequest req, ModelMap model) {
-<<<<<<< HEAD
          String currentPage = req.getParameter("currentPage");
          String countPerPage = req.getParameter("countPerPage");
          String resultType = req.getParameter("resultType");
@@ -72,57 +70,5 @@ public class AddressApiController {
                      .body(callback +"{URL 호출 실패: " + e.getMessage() + "}");
          }
  	}
-=======
-             String currentPage = req.getParameter("currentPage");
-             String countPerPage = req.getParameter("countPerPage");
-             String resultType = req.getParameter("resultType");
-             String confmKey = req.getParameter("confmKey");
-             String keyword = req.getParameter("keyword");
-             String callback = req.getParameter("callback");
-             String apiUrl = null;
-             
-             // OPEN API 호출 URL 정보 설정
-             try {
-            	 apiUrl = "https://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage="+currentPage
-		                     +"&countPerPage="+countPerPage
-		                     +"&keyword="+URLEncoder.encode(keyword,"UTF-8")
-		                     +"&confmKey="+confmKey
-		                     +"&resultType="+resultType;
-             
-             } catch (Exception e) {
-                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                         .body(callback  + "{\"error\": \"Failed to encode URL: " + e.getMessage() + "\"}");
-             }
-             
-             try {
-            	 URL url = new URL(apiUrl);
-            	 
-            	 try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
-                     StringBuilder sb = new StringBuilder();
-            		 String tempStr;
-            		 
-            		 while((tempStr = br.readLine()) != null) {
-            			 sb.append(tempStr); // 응답결과 JSON 저장
-            		 }
-            		 
-            		 return ResponseEntity.ok()
-                             .header("Content-Type", "application/json")
-                             .body(callback + "(" + sb.toString() + ");"); // 응답결과 반환
-            	 
-            	 } catch (IOException e) {
-                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body(callback +"{\"error\": \"Failed to read response: " + e.getMessage() + "\"}");
-                 }
-
-             } catch (MalformedURLException e) {
-                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                         .body(callback +"{\"error\": \"Invalid URL: " + e.getMessage() + "\"}");
-         
-             } catch (Exception e) {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                     .body(callback +"{\"error\": \"Failed to open URL: " + e.getMessage() + "\"}");
-         }
-     }
->>>>>>> parent of 8e84daf (api 메소드를 void 타입으로 변경한다)
-    
+	
 }
