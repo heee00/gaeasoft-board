@@ -97,7 +97,6 @@ public class MemberService {
                 break;
             default:
                 validField = false;
-                break;
 		}
 		
 		if (!validField) {

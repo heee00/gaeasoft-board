@@ -135,7 +135,6 @@ public class BoardService {
                 break;
             default:
                 validField = false;
-                break;
         }
 
         if (!validField) {
