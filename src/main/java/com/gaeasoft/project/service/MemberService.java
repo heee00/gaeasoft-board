@@ -156,8 +156,8 @@ public class MemberService {
     // 회원 탈퇴
     @Transactional
  	public void deleteMember(String memberId) {
+    	boardDAOImpl.deleteMemberArticle(memberId);
  		memberDAOImpl.deleteMember(memberId);
- 		boardDAOImpl.deleteMemberArticle(memberId);
  	}
  	
 }
