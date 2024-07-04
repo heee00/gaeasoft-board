@@ -123,7 +123,7 @@
 	        
 	     	// 종료 날짜 max 오늘 날짜로 설정
             var today = new Date().toISOString().split('T')[0];
-            $('#endDate').attr('max', today);
+            $('#startDate, #endDate').attr('max', today);
             
 	        $('#startDate, #endDate').on('change', function() {
                 dateCheck();
