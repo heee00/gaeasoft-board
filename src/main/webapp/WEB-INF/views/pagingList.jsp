@@ -49,8 +49,8 @@
 		            <td colspan="5">
 		                <button class="link-button" id="writeButton">작성✍🏻</button>
 				       <form id="searchForm">
-				       	<input type="date" name ="startDate" value="${param.startDate}">
-				       	<input type="date" name="endDate" value="${param.endDate}">
+				       	<input type="date" name ="startDate" id="startDate" value="${param.startDate}">
+				       	<input type="date" name="endDate" id="endDate" value="${param.endDate}">
 				           <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" value="${param.searchKeyword}">
 				           <select name="searchOption">
 				               <option value="Title" ${param.searchOption == 'Title' ? 'selected' : ''}>제목</option>
@@ -121,6 +121,14 @@
 	            window.location.href = '/board/saveArticleForm';
 	        });
 	        
+	     	// 종료 날짜 max 오늘 날짜로 설정
+            var today = new Date().toISOString().split('T')[0];
+            $('#endDate').attr('max', today);
+            
+	        $('#startDate, #endDate').on('change', function() {
+                dateCheck();
+            });
+	        
 	    	$('#searchForm').on('submit', function(e) {
 	    		e.preventDefault();
 	    		
@@ -166,11 +174,12 @@
 	        });
 	    	
 	    	function dateCheck() {
-                var startDate = $('input[name="startDate"]').val();
-                var endDate = $('input[name="endDate"]').val();
-                
-                if (startDate > endDate) {
-                    alert("잘못된 날짜 형식입니다.");
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+
+                if (endDate && startDate >= endDate) {
+                    alert("종료 날짜는 시작 날짜 이후여야 합니다.");
+                    $('#endDate').val('');
                     return false;
                 }
                 return true;
