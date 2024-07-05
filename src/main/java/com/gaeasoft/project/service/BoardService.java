@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.FileDTO;
 import com.gaeasoft.project.dto.PageDTO;
+import com.gaeasoft.project.util.FileUpload;
 
 @Service
 public class BoardService {
@@ -68,7 +70,6 @@ public class BoardService {
 	        return boardDTO;
 	    
 		} catch (Exception e) {
-			e.printStackTrace();
 	        return boardDAOImpl.articleDetail(noticeSeq);
 	    }
 	}
@@ -194,7 +195,7 @@ public class BoardService {
 	                    boardDAOImpl.saveFile(fileDTO);
 
 	                } catch (Exception e) {
-	                    e.printStackTrace();
+	                    return 0;
 	                }
 	            }
 	        }
@@ -203,19 +204,32 @@ public class BoardService {
 	}
     
     // 파일 저장 이름 설정
-    public String saveFile(MultipartFile multipartFile, String savePath) {
-    	// 원본 파일명에서 확장자 추출
-        String originalFileName = multipartFile.getOriginalFilename();
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
+    public String saveFile(MultipartFile multipartFile, String savePath) throws FileUploadException {
+        String storedFileName = null;
 
-        // 난수 파일명 생성
-        String storedFileName = UUID.randomUUID().toString() + fileExtension;
-        File file = new File(savePath + storedFileName);
+    	// 원본 파일명에서 확장자 추출
+    	try {
+    		String originalFileName = multipartFile.getOriginalFilename();
+	        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
+	        
+	        // 확장자 검사
+	        if (!FileUpload.isAllowedExtension(originalFileName)) {
+	            return "허용되지 않는 파일 형식입니다.";
+	        }
+	
+	        // 파일 크기 검사
+	        long fileSize = multipartFile.getSize();
+	        if (!FileUpload.isAllowedFileSize(fileSize)) {
+	            return "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
+	        }
+	
+	        // 난수 파일명 생성
+	        storedFileName = UUID.randomUUID().toString() + fileExtension;
+	        File file = new File(savePath + storedFileName);
         
-        try {
             multipartFile.transferTo(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            return "파일 저장 중 오류가 발생하였습니다.";
         }
 
         return storedFileName;
