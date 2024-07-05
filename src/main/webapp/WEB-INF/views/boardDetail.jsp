@@ -39,12 +39,12 @@
 		    </tr>
 		    <c:if test="${not empty board.fileList}">
 			    <tr>
-			       <th class="board-files">첨부 파일</th>
-			         <td id="fileList">
-					      <c:forEach items="${board.fileList}" var="file">
-					          <a href="/board/downloadFile?storedFileName=${file.storedFileName}">${file.originFileName}</a><br>
-					      </c:forEach>
-					  </td>
+			    	<th class="board-files">첨부 파일</th>
+		        	<td id="fileList">
+				 		<c:forEach items="${board.fileList}" var="file">
+               				<a href="#" onclick="downloadFile('${file.storedFileName}', '${file.originFileName}')">${file.originFileName}</a><br>
+				    	</c:forEach>
+					</td>
 			   </tr>	
 		   </c:if>
 		</tbody>
@@ -62,32 +62,36 @@
 	</table>
 	
 	<script>
-	  $(document).ready(function() {
-          $('#listButton').on('click', function(e) {
-              var page = '${page}';
-              window.location.href = '/board/pagingList?page=' + page;
-          });
+		function downloadFile(storedFileName, originFileName) {
+			 window.location.href = '/board/downloadFile?storedFileName=' + storedFileName
+		}
+		
+	 	$(document).ready(function() {
+        	$('#listButton').on('click', function(e) {
+            	var page = '${page}';
+              	window.location.href = '/board/pagingList?page=' + page;
+          	});
 
-          $('#updateButton').on('click', function(e) {
-              var noticeSeq = '${board.noticeSeq}';
-              var page = '${page}';
-	      	  var rowNum = '${rowNum}';
-              window.location.href = '/board/updateArticleForm?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
-          });
+          	$('#updateButton').on('click', function(e) {
+           		var noticeSeq = '${board.noticeSeq}';
+              	var page = '${page}';
+	      	  	var rowNum = '${rowNum}';
+              	window.location.href = '/board/updateArticleForm?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
+          	});
 
-          $('#deleteButton').on('click', function(e) {
-              var noticeSeq = '${board.noticeSeq}';
-              var page = '${page}';
-	      	  var rowNum = '${rowNum}';
-              var isConfirmed = confirm("정말로 삭제하시겠습니까?");
+          	$('#deleteButton').on('click', function(e) {
+              	var noticeSeq = '${board.noticeSeq}';
+              	var page = '${page}';
+	      	  	var rowNum = '${rowNum}';
+              	var isConfirmed = confirm("정말로 삭제하시겠습니까?");
               
-              if (isConfirmed) {
-                  window.location.href = '/board/deleteArticle?noticeSeq=' + noticeSeq;
-              } else {
-                  window.location.href = '/board/viewDetail?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
-              }
-          });
-      });
+              	if (isConfirmed) {
+                	window.location.href = '/board/deleteArticle?noticeSeq=' + noticeSeq;
+              	} else {
+                  	window.location.href = '/board/viewDetail?noticeSeq=' + noticeSeq + '&page=' + page + '&rowNum=' + rowNum;
+              	}
+          	});
+      	});
 	</script>
 </body>
 </html>
