@@ -15,7 +15,6 @@ $(document).ready(function() {
                 dataType: 'jsonp',
                 data: {
                     resultType: 'json',
-                    confmKey: 'devU01TX0FVVEgyMDI0MDYxMjE3MDc0ODExNDgzODI=',
                     keyword: keyword,
                     currentPage: page,
                     countPerPage: 10
