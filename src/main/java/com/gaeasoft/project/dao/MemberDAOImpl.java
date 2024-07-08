@@ -1,5 +1,7 @@
 package com.gaeasoft.project.dao;
 
+import java.time.LocalDateTime;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -42,7 +44,17 @@ public class MemberDAOImpl implements MemberDAO {
 	
 	// 회원 탈퇴
 	public void deleteMember(String memberId) {
-		sql.delete("Member.deleteMember", memberId);
+		sql.update("Member.deleteMember", memberId);
+	}
+	
+	// 회원이 작성한 게시글 삭제
+	public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay) {
+		sql.delete("Member.deleteBatchedMemberArticles", withdrawalDay);
+	}
+	
+	// 회원 탈퇴 배치
+	public void deleteBatchedMember(LocalDateTime withdrawalDay) {
+		sql.delete("Member.deleteBatchedMember", withdrawalDay);
 	}
 
 }

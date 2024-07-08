@@ -1,5 +1,6 @@
 package com.gaeasoft.project.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -158,6 +159,16 @@ public class MemberService {
  	public void deleteMember(String memberId) {
     	boardDAOImpl.deleteMemberArticle(memberId);
  		memberDAOImpl.deleteMember(memberId);
+ 	}
+    
+    // 회원이 작성한 게시글 삭제
+    public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay) {
+    	memberDAOImpl.deleteBatchedMemberArticles(withdrawalDay);
+    }
+    
+    // 회원 탈퇴 배치
+ 	public void deleteBatchedMember(LocalDateTime withdrawalDay) {
+ 		memberDAOImpl.deleteBatchedMember(withdrawalDay);
  	}
  	
 }

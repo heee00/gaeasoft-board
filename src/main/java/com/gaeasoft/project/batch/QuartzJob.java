@@ -23,6 +23,7 @@ public class QuartzJob implements Job {
             log.error("BatchJobLauncher 주입 실패: " + methodName);
             return;
         }
+    	
     	try {
             log.info("배치 작업 실행 시작: " + methodName);
             batchJobLauncher.runBatchJob();

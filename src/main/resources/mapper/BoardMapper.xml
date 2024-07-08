@@ -149,7 +149,7 @@
        	 WHERE writeTime &lt;= #{deleteDay}
     </update>
     
-      <!-- 회원 탈퇴 -->
+    <!-- 회원 탈퇴 -->
     <update  id="deleteMemberArticle" parameterType="String">
     	UPDATE notice 
         SET isDeleted = 1

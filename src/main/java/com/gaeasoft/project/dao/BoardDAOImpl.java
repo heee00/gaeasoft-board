@@ -8,7 +8,6 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.FileDTO;
@@ -85,8 +84,6 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	// 게시글 삭제 배치
-    @Override
-    @Transactional
 	public void deleteBatchedArticle(LocalDateTime deleteDay) {
 		sql.update("Board.deleteBatchedArticle", deleteDay);
 	}

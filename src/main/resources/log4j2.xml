@@ -49,12 +49,13 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="joinFile"/>
         </Logger>
-        <Logger name="com.gaeasoft.project.batch" level="error" additivity="false">
-            <AppenderRef ref="Console"/>
+         <Logger name="com.gaeasoft.project.batch.QuartzJob" level="info" additivity="false">
+            <AppenderRef ref="Console" />
             <AppenderRef ref="batchFile"/>
         </Logger>
-        <Logger name="org.quartz" level="info">
-            <AppenderRef ref="Console" />
+        <Logger name="com.gaeasoft.project.batch.BatchJobLauncher" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="batchFile"/>
         </Logger>
         <Logger name="com.gaeasoft.project.util" level="info"  additivity="false">
 	        <AppenderRef ref="Console" />

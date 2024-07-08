@@ -43,8 +43,27 @@
     <!-- 회원 탈퇴 -->
     <update  id="deleteMember" parameterType="String">
     	UPDATE member 
-        SET isDeleted = 1
+        SET isDeleted = 1, deleteTime = NOW()
     	WHERE member_id = #{memberId}
     </update>
+    
+    <!-- 회원이 작성한 게시글 삭제 -->
+	<delete id="deleteBatchedMemberArticles" parameterType="java.time.LocalDateTime">
+	    DELETE FROM notice 
+	    WHERE isDeleted = 1
+	    AND member_id IN (
+	        SELECT member_id 
+	        FROM member 
+	        WHERE isDeleted = 1 
+	        AND deleteTime &lt;= #{withdrawalDay}
+	    );
+	</delete>
+    
+    <!-- 회원 탈퇴 배치 -->
+    <delete id="deleteBatchedMember" parameterType="java.time.LocalDateTime">
+        DELETE FROM member 
+       	WHERE isDeleted = 1 
+       	AND deleteTime &lt;= #{withdrawalDay}
+    </delete>
 	
 </mapper>
