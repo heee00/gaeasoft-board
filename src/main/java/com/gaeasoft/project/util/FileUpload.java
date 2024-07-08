@@ -7,6 +7,11 @@ public class FileUpload {
 
 	private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "pdf", "hwp", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "csv", "txt");
     private static final int MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "application/pdf", "application/x-hwp",
+																													            "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+																													            "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+																													            "text/csv", "text/plain");
+
 
     public static boolean isAllowedExtension(String fileName) {
         if (fileName == null) {
@@ -18,6 +23,13 @@ public class FileUpload {
     
     public static boolean isAllowedFileSize(long fileSize) {
         return fileSize <= MAX_FILE_SIZE;
+    }
+    
+    public static boolean isAllowedMimeType(String fileType) {
+        if (fileType == null) {
+            return false;
+        }
+        return ALLOWED_MIME_TYPES.contains(fileType);
     }
 
     private static String getFileExtension(String fileName) {

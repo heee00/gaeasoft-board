@@ -56,9 +56,11 @@
             
             $('#files').on('change', function() {
                 var files = $(this)[0].files;
-                if (!FileUpload.validateFiles(files)) {
-                    $(this).val('');
-                }
+                FileUpload.validateFiles(files, function(isValid) {
+                    if (!isValid) {
+                        $('#files').val('');
+                    }
+                });
             });
 		    
 			$('#saveArticleForm').on('submit', function(e) {
