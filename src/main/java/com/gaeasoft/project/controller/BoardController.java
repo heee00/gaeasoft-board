@@ -218,7 +218,10 @@ public class BoardController {
         }
 	}
 	
-	// 게시글 삭제
+	/*
+     *  게시글 삭제
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     */
 	@GetMapping("/deleteArticle")
 	public String deleteNoticeArticle(@RequestParam("noticeSeq") Long noticeSeq, 
 													@RequestParam(value = "page", required = false, defaultValue = "1") int page, 

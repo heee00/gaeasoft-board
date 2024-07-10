@@ -251,15 +251,29 @@ public class BoardService {
 		boardDAOImpl.updateArticle(boardDTO);
 	}
 	
-	// 게시글 삭제
+    /*
+     *  게시글 삭제
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     */
     @Transactional
 	public void deleteNoticeArticle(Long noticeSeq) {
 		boardDAOImpl.deleteArticle(noticeSeq);
 	}
 	
-	// 게시글 삭제 배치
+    /*
+	 * 	게시글 삭제 배치
+	 * 작성 시간이 7일 지난 게시글 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+	 */
 	public void deleteBatchedNoticeArticle(LocalDateTime deleteDay) {
 		boardDAOImpl.deleteBatchedArticle(deleteDay);
 	}
+    
+    /*
+   	 * 회원이 작성한 게시글 삭제
+   	 * 회원 탈퇴일이 30일 지난 회원의 게시글 완전 삭제
+   	 */
+    public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay) {
+    	boardDAOImpl.deleteBatchedMemberArticles(withdrawalDay);
+    }
 
 }

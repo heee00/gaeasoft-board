@@ -153,20 +153,22 @@ public class MemberService {
         
         memberDAOImpl.updateInfo(memberDTO);
  	}
-    
-    // 회원 탈퇴
+
+    /*
+     *  회원 탈퇴
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     */
     @Transactional
  	public void deleteMember(String memberId) {
+    	// 회원이 작성한 게시글 바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
     	boardDAOImpl.deleteMemberArticle(memberId);
  		memberDAOImpl.deleteMember(memberId);
  	}
-    
-    // 회원이 작성한 게시글 삭제
-    public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay) {
-    	memberDAOImpl.deleteBatchedMemberArticles(withdrawalDay);
-    }
-    
-    // 회원 탈퇴 배치
+
+    /*
+	 * 회원 탈퇴 배치
+	 * 회원 탈퇴일이 30일 지난 회원 완전 삭제
+	 */
  	public void deleteBatchedMember(LocalDateTime withdrawalDay) {
  		memberDAOImpl.deleteBatchedMember(withdrawalDay);
  	}
