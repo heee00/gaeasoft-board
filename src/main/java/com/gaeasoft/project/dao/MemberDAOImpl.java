@@ -47,11 +47,6 @@ public class MemberDAOImpl implements MemberDAO {
 		sql.update("Member.deleteMember", memberId);
 	}
 	
-	// 회원이 작성한 게시글 삭제
-	public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay) {
-		sql.delete("Member.deleteBatchedMemberArticles", withdrawalDay);
-	}
-	
 	// 회원 탈퇴 배치
 	public void deleteBatchedMember(LocalDateTime withdrawalDay) {
 		sql.delete("Member.deleteBatchedMember", withdrawalDay);

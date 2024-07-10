@@ -154,7 +154,7 @@ public class MemberController {
 	
 	 /*
      *  회원 탈퇴
-     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 (0 -> 1)
      */
 	@GetMapping("/deleteMember")
 	public String deleteMember(String memberId) throws Exception {

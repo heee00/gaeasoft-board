@@ -38,5 +38,7 @@ public interface BoardDAO {
 	public void deleteBatchedArticle(LocalDateTime deleteDay);
 	// 회원 탈퇴
 	public void deleteMemberArticle(String memberId);
+	// 회원이 작성한 게시글 삭제
+	public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay);
 	
 }

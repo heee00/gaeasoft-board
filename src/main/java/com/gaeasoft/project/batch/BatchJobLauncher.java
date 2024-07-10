@@ -36,7 +36,7 @@ public class BatchJobLauncher {
         
         try {
         	boardService.deleteBatchedNoticeArticle(deleteDay);
-       		memberService.deleteBatchedMemberArticles(withdrawalDay);
+        	boardService.deleteBatchedMemberArticles(withdrawalDay);
             memberService.deleteBatchedMember(withdrawalDay);
             log.info("배치 작업 완료: " + methodName);
         

@@ -21,8 +21,6 @@ public interface MemberDAO {
 	public void updateInfo(MemberDTO memberDTO);
 	// 회원 탈퇴
 	public void deleteMember(String memberId);
-	// 회원이 작성한 게시글 삭제
-	public void deleteBatchedMemberArticles(LocalDateTime withdrawalDay);
 	// 회원 탈퇴 배치
 	public void deleteBatchedMember(LocalDateTime withdrawalDay);
 	

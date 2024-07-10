@@ -156,11 +156,11 @@ public class MemberService {
 
     /*
      *  회원 탈퇴
-     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 (0 -> 1)
      */
     @Transactional
  	public void deleteMember(String memberId) {
-    	// 회원이 작성한 게시글 바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+    	// 회원이 작성한 게시글 바로 삭제가 아닌 삭제 여부 플래그 상태 변경 (0 -> 1)
     	boardDAOImpl.deleteMemberArticle(memberId);
  		memberDAOImpl.deleteMember(memberId);
  	}

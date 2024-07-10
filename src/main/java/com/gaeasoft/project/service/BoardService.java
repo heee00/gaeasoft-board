@@ -253,7 +253,7 @@ public class BoardService {
 	
     /*
      *  게시글 삭제
-     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+     *  바로 삭제가 아닌 삭제 여부 플래그 상태 변경 (0 -> 1)
      */
     @Transactional
 	public void deleteNoticeArticle(Long noticeSeq) {
@@ -262,7 +262,7 @@ public class BoardService {
 	
     /*
 	 * 	게시글 삭제 배치
-	 * 작성 시간이 7일 지난 게시글 삭제 여부 플래그 상태 변경 ( 0 -> 1)
+	 * 작성 시간이 7일 지난 게시글 삭제 여부 플래그 상태 변경 (0 -> 1)
 	 */
 	public void deleteBatchedNoticeArticle(LocalDateTime deleteDay) {
 		boardDAOImpl.deleteBatchedArticle(deleteDay);
