@@ -24,68 +24,94 @@
    	<!-- 전체 글 갯수 조회 -->
     <select id="articleCount" resultType="Integer">
     	SELECT COUNT(notice_seq)
-    	FROM notice
-		<where>
-			isDeleted = 0
-			<if test="startDate != null and startDate != ''">
-	            <if test="endDate != null and endDate != ''">
-	                AND writeTime BETWEEN #{startDate} AND #{endDate}
-	            </if>
-	            <if test="endDate == null or endDate == ''">
-	                AND writeTime &gt;= #{startDate}
-	            </if>
-	        </if>
-	        <if test="startDate == null or startDate == ''">
-	            <if test="endDate != null and endDate != ''">
-	                AND writeTime &lt;= #{endDate}
-	            </if>
-	        </if>
-	        <if test="searchKeyword != null and searchKeyword != ''">
-	            <choose>
-	                <when test="searchOption == 'Title'">
-	                   AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-	                </when>
-	                <when test="searchOption == 'All'">
-	                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
-	                </when>
-	            </choose>
-	        </if>
-	    </where>
+    	FROM (
+			SELECT notice_seq
+			    FROM notice
+			    WHERE isDeleted = 0
+    			<if test="startDate != null and startDate != ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime BETWEEN #{startDate} AND #{endDate}
+		            </if>
+		            <if test="endDate == null or endDate == ''">
+		                AND writeTime &gt;= #{startDate}
+		            </if>
+		        </if>
+		        <if test="startDate == null or startDate == ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime &lt;= #{endDate}
+		            </if>
+		        </if>
+		         <if test="searchKeyword != null and searchKeyword != ''">
+		            AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+		        </if>
+	         	UNION
+			    SELECT notice_seq
+			    FROM notice
+			    WHERE isDeleted = 0
+		        <if test="startDate != null and startDate != ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime BETWEEN #{startDate} AND #{endDate}
+		            </if>
+		            <if test="endDate == null or endDate == ''">
+		                AND writeTime &gt;= #{startDate}
+		            </if>
+		        </if>
+		        <if test="startDate == null or startDate == ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime &lt;= #{endDate}
+		            </if>
+		        </if>
+		         <if test="searchKeyword != null and searchKeyword != ''">
+		            AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+		        </if>
+	    	) AS combined_results
     </select>
     
     <!-- 페이징 포함 목록 -->
     <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
     	SELECT ROW_NUMBER() OVER (ORDER BY notice_seq) AS rowNum,
     				notice_seq AS noticeSeq, member_id AS memberId, title, content, writeTime, views
-    	FROM notice 
-    	<where>
-    		isDeleted = 0
-    		<if test="startDate != null and startDate != ''">
-	            <if test="endDate != null and endDate != ''">
-	                AND writeTime BETWEEN #{startDate} AND #{endDate}
-	            </if>
-	            <if test="endDate == null or endDate == ''">
-	                AND writeTime &gt;= #{startDate}
-	            </if>
-	        </if>
-	        <if test="startDate == null or startDate == ''">
-	            <if test="endDate != null and endDate != ''">
-	                AND writeTime &lt;= #{endDate}
-	            </if>
-	        </if>
-	        <if test="searchKeyword != null and searchKeyword != ''">
-	            <choose>
-	                <when test="searchOption == 'Title'">
-	                   AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-	                </when>
-	                <when test="searchOption == 'All'">
-	                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-	                    OR content LIKE CONCAT('%', #{searchKeyword}, '%')
-	                </when>
-	            </choose>
-	        </if>
-	    </where>
+    	FROM (
+			SELECT notice_seq, member_id, title, content, writeTime, views
+			    FROM notice
+			    WHERE isDeleted = 0
+    			<if test="startDate != null and startDate != ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime BETWEEN #{startDate} AND #{endDate}
+		            </if>
+		            <if test="endDate == null or endDate == ''">
+		                AND writeTime &gt;= #{startDate}
+		            </if>
+		        </if>
+		        <if test="startDate == null or startDate == ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime &lt;= #{endDate}
+		            </if>
+		        </if>
+	         	<if test="searchKeyword != null and searchKeyword != ''">
+		            AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+		        </if>
+	         	UNION
+       			SELECT notice_seq, member_id, title, content, writeTime, views
+			    FROM notice
+			    WHERE isDeleted = 0
+		        <if test="startDate != null and startDate != ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime BETWEEN #{startDate} AND #{endDate}
+		            </if>
+		            <if test="endDate == null or endDate == ''">
+		                AND writeTime &gt;= #{startDate}
+		            </if>
+		        </if>
+		        <if test="startDate == null or startDate == ''">
+		            <if test="endDate != null and endDate != ''">
+		                AND writeTime &lt;= #{endDate}
+		            </if>
+		        </if>
+		         <if test="searchKeyword != null and searchKeyword != ''">
+		            AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+		        </if>
+	   		 ) AS combined_results
     	ORDER BY notice_seq DESC 
     	LIMIT #{start}, #{limit}
     </select>
