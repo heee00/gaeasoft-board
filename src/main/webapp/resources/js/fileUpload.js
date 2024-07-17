@@ -34,10 +34,10 @@ var FileUpload = {
 	        for (var i = 0; i < arr.length; i++) {
 	            header += arr[i].toString(16);
 	        }
-	
+
 	        var fileExtension = file.name.split('.').pop().toLowerCase();
 	        var isValidHeader = false;
-	
+
 	        switch (fileExtension) {
 	            case "jpg":
 	            case "jpeg":
@@ -69,12 +69,12 @@ var FileUpload = {
 	            default:
 	                isValidHeader = false;
 	        }
-	
+
 	        callback(isValidHeader);
        	 };
         fileReader.readAsArrayBuffer(file.slice(0, 4));
 	},
-	
+    
 	 validateFiles: function(files, callback) {
         var isValid = true;
         var totalFiles = files.length;
@@ -96,13 +96,13 @@ var FileUpload = {
                 callback(isValid);
                 return;
             }
-            if(!FileUpload.isAllowedMimeType(file.type)) {
+             if(!FileUpload.isAllowedMimeType(file.type)) {
             	alert(file.type + "파일의 형식이 올바르지 않습니다.");
             	isValid = false;
                 callback(isValid);
                 return;
             }
-	        
+
 	        FileUpload.checkFileHeader(file, function(isValidHeader) {
                 if (!isValidHeader) {
                     alert(file.name + " 파일의 형식이 올바르지 않습니다.");
@@ -117,6 +117,6 @@ var FileUpload = {
 
         if (totalFiles === 0) {
             callback(isValid);
-        }
+	     }
     }
 };

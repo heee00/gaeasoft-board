@@ -38,6 +38,10 @@
 		<input type="button" id="cancelButton" value="취소❎">
 	</form>
 	
+	<c:if test="${not empty errorMessage}">
+        <div class="error-message">${errorMessage}</div>
+    </c:if>
+	
 	<script>
 		$(document).ready(function() {
             $('#saveButton').prop('disabled', true);
@@ -60,7 +64,7 @@
                     if (!isValid) {
                         $('#files').val('');
                     }
-                });
+                 }); 
             });
 		    
 			$('#saveArticleForm').on('submit', function(e) {
