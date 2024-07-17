@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
@@ -142,39 +143,46 @@ public class BoardController {
 	
 	// 게시글 저장
 	@PostMapping("/saveArticle")
-	public String saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
-	                                @RequestParam(value = "files", required = false) List<MultipartFile> files,
-	                                @ModelAttribute("loginId") String loginId,
-	                                BindingResult result,
-	                                RedirectAttributes redirectAttributes) throws Exception {
+	public ResponseEntity<?> saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
+	                                           @RequestParam(value = "files", required = false) List<MultipartFile> files,
+	                                           @ModelAttribute("loginId") String loginId,
+	                                           BindingResult result) throws Exception {
 	    boardDTO.setMemberId(loginId);
 
 	    if (result.hasErrors()) {
 	        boardService.getFieldErrors(result);
-	        redirectAttributes.addFlashAttribute("errorMessage", "유효성 검사에 실패했습니다.");
-	        return "redirect:/board/saveArticleForm";
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Collections.singletonMap("errorMessage", "유효성 검사에 실패했습니다."));
 	    }
-	    
+
 	    // 파일이 있는 경우에만 확장자 검사
 	    if (files != null && !files.isEmpty()) {
 	        for (MultipartFile multipartFile : files) {
+	        	
+	            // 확장자 검사
 	            if (!FileUpload.isAllowedExtension(multipartFile.getOriginalFilename())) {
-	                redirectAttributes.addFlashAttribute("errorMessage", "허용되지 않은 파일 형식입니다: " + multipartFile.getOriginalFilename());
-	                return "redirect:/board/saveArticleForm";
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                        .body(Collections.singletonMap("errorMessage", "허용되지 않은 파일 형식입니다: " + multipartFile.getOriginalFilename()));
 	            }
+	            // 파일 크기 검사
 	            if (!FileUpload.isAllowedFileSize(multipartFile.getSize())) {
-	            	redirectAttributes.addFlashAttribute("errorMessage", "파일의 크기가 허용된 최대 크기 10MB를 초과했습니다: " +multipartFile.getSize());
-	                return "redirect:/board/saveArticleForm";
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                        .body(Collections.singletonMap("errorMessage", "파일의 크기가 허용된 최대 크기 10MB를 초과했습니다: " + multipartFile.getSize()));
+	            }
+	            // MIME 타입 검사
+	            if (!FileUpload.isAllowedMimeType(multipartFile)) {
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                        .body(Collections.singletonMap("errorMessage", "허용되지 않은 MIME 타입입니다: " + multipartFile.getContentType()));
 	            }
 	        }
 	    }
 
 	    int saveResult = boardService.saveNoticeArticle(boardDTO, files);
 	    if (saveResult > 0) {
-	        return "redirect:/board/pagingList";
+	        return ResponseEntity.ok().build();
 	    } else {
-	        redirectAttributes.addFlashAttribute("errorMessage", "게시글 저장에 실패했습니다.");
-	        return "redirect:/board/saveArticleForm";
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Collections.singletonMap("errorMessage", "게시글 저장에 실패했습니다."));
 	    }
 	}
 	
