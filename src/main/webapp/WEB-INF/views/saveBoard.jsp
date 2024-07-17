@@ -64,7 +64,7 @@
                     if (!isValid) {
                         $('#files').val('');
                     }
-                 }); 
+                }); 
             });
 		    
 			$('#saveArticleForm').on('submit', function(e) {

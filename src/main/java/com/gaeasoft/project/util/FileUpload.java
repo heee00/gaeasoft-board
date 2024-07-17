@@ -51,7 +51,6 @@ public class FileUpload {
     	 try {
              String mimeType = tika.detect(file.getInputStream());
              String fileExtension = getFileExtension(file.getOriginalFilename());
-             System.out.println("Detected MIME type: " + mimeType); // 디버깅을 위해 MIME 타입을 출력합니다.
              return isAllowedMimeType(mimeType) && isExtensionMatchingMimeType(fileExtension, mimeType);
          } catch (IOException e) {
              e.printStackTrace();
