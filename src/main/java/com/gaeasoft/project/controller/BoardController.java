@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.PageDTO;
 import com.gaeasoft.project.service.BoardService;
-import com.gaeasoft.project.util.FileUpload;
 
 @Controller
 @RequestMapping("/board")
@@ -154,27 +154,21 @@ public class BoardController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                .body(Collections.singletonMap("errorMessage", "유효성 검사에 실패했습니다."));
 	    }
+	    
+	    List<String> errorMessages = new ArrayList<>();
 
 	    // 파일이 있는 경우에만 확장자 검사
 	    if (files != null && !files.isEmpty()) {
 	        for (MultipartFile multipartFile : files) {
-	        	
-	            // 확장자 검사
-	            if (!FileUpload.isAllowedExtension(multipartFile.getOriginalFilename())) {
-	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                        .body(Collections.singletonMap("errorMessage", "허용되지 않은 파일 형식입니다: " + multipartFile.getOriginalFilename()));
-	            }
-	            // 파일 크기 검사
-	            if (!FileUpload.isAllowedFileSize(multipartFile.getSize())) {
-	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                        .body(Collections.singletonMap("errorMessage", "파일의 크기가 허용된 최대 크기 10MB를 초과했습니다: " + multipartFile.getSize()));
-	            }
-	            // MIME 타입 검사
-	            if (!FileUpload.isAllowedMimeType(multipartFile)) {
-	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                        .body(Collections.singletonMap("errorMessage", "허용되지 않은 MIME 타입입니다: " + multipartFile.getContentType()));
-	            }
+	        	String errorMessage = boardService.validateFile(multipartFile);
+	        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		                .body(Collections.singletonMap("errorMessage", errorMessage));
 	        }
+	    }
+	    
+	    if (!errorMessages.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Collections.singletonMap("errorMessages", errorMessages));
 	    }
 
 	    int saveResult = boardService.saveNoticeArticle(boardDTO, files);

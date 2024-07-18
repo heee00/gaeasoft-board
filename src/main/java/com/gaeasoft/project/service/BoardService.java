@@ -35,6 +35,8 @@ public class BoardService {
 	private BoardDAOImpl boardDAOImpl;
 	@Autowired
 	private Validator validator;
+	@Autowired
+	private FileUpload fileUpload;
 
 	// 전체 글 목록
 	public List<BoardDTO> noticeArticleList() {
@@ -202,6 +204,24 @@ public class BoardService {
 	    }
          return saveResult;
 	}
+	
+	// 파일 유효성 검사
+	public String validateFile(MultipartFile multipartFile) {
+		String errorMessage = null;
+	    long fileSize = multipartFile.getSize();
+
+	    // 확장자 검사
+	    if (!fileUpload.isAllowedExtension(multipartFile.getOriginalFilename())) {
+	        errorMessage = "허용되지 않는 파일 형식입니다.";
+	    } else if (!fileUpload.isAllowedFileSize(fileSize)) {
+	        errorMessage = "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
+	    } else if (!fileUpload.isAllowedMimeType(multipartFile)) {
+	        errorMessage = "확장자를 변환하여 사용할 수 없습니다.";
+	    }
+
+	    return errorMessage;
+	}
+	
     
     // 파일 저장 이름 설정
     public String saveFile(MultipartFile multipartFile, String savePath) throws FileUploadException {
@@ -212,17 +232,6 @@ public class BoardService {
     		String originalFileName = multipartFile.getOriginalFilename();
 	        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
 	        
-	        // 확장자 검사
-	        if (!FileUpload.isAllowedExtension(originalFileName)) {
-	            return "허용되지 않는 파일 형식입니다.";
-	        }
-	
-	        // 파일 크기 검사
-	        long fileSize = multipartFile.getSize();
-	        if (!FileUpload.isAllowedFileSize(fileSize)) {
-	            return "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
-	        }
-	
 	        // 난수 파일명 생성
 	        storedFileName = UUID.randomUUID().toString() + fileExtension;
 	        File file = new File(savePath + storedFileName);
