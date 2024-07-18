@@ -2,11 +2,11 @@ package com.gaeasoft.project.dao;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.ui.ModelMap;
+import org.springframework.http.ResponseEntity;
 
 public interface AddressApiDAO {
 	
 	// 주소 검색
-	public String getAddressApi(HttpServletRequest req, ModelMap model) throws Exception;
+	public ResponseEntity<String> searchAddress(HttpServletRequest req);
 
 }
