@@ -7,15 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.tika.Tika;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+@Component
 public class FileUpload {
 
 	private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "pdf", "hwp", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "csv", "txt");
     private static final int MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final Tika tika = new Tika();
     
-    private static final Map<String, String> EXTENSION_TO_MIME_TYPE;
+    private static Map<String, String> EXTENSION_TO_MIME_TYPE;
     
     static {
         EXTENSION_TO_MIME_TYPE = new HashMap<>();
@@ -35,7 +37,7 @@ public class FileUpload {
         EXTENSION_TO_MIME_TYPE.put("txt", "text/plain");
     }
     
-    public static boolean isAllowedExtension(String fileName) {
+    public boolean isAllowedExtension(String fileName) {
         if (fileName == null) {
             return false;
         }
@@ -43,11 +45,11 @@ public class FileUpload {
         return ALLOWED_EXTENSIONS.contains(fileExtension);
     }
     
-    public static boolean isAllowedFileSize(long fileSize) {
+    public boolean isAllowedFileSize(long fileSize) {
         return fileSize <= MAX_FILE_SIZE;
     }
     
-    public static boolean isAllowedMimeType(MultipartFile file) {
+    public boolean isAllowedMimeType(MultipartFile file) {
     	 try {
              String mimeType = tika.detect(file.getInputStream());
              String fileExtension = getFileExtension(file.getOriginalFilename());
@@ -58,7 +60,7 @@ public class FileUpload {
          }
     }
     
-    private static boolean isAllowedMimeType(String mimeType) {
+    private boolean isAllowedMimeType(String mimeType) {
         List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "application/pdf", "application/x-hwp",
                                                         "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                                                         "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -66,11 +68,11 @@ public class FileUpload {
         return ALLOWED_MIME_TYPES.contains(mimeType);
     }
     
-    private static boolean isExtensionMatchingMimeType(String fileExtension, String mimeType) {
+    private boolean isExtensionMatchingMimeType(String fileExtension, String mimeType) {
         return EXTENSION_TO_MIME_TYPE.getOrDefault(fileExtension, "").equals(mimeType);
     }
 
-    private static String getFileExtension(String fileName) {
+    private String getFileExtension(String fileName) {
     	int dotIndex = fileName.lastIndexOf(".");
         if (dotIndex == -1 || dotIndex == fileName.length() - 1) {
             return ""; // No valid extension found
