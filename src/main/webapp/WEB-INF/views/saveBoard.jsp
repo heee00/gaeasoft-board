@@ -10,7 +10,7 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="/resources/js/validation.js"></script>
 	<script src="/resources/js/fileUpload.js"></script>
-</head>
+ </head>
 <body>
 	<h2>게시글 작성</h2>
 	<form id="saveArticleForm" enctype="multipart/form-data">
@@ -29,16 +29,19 @@
 			<textarea name="content" id="content" cols="30" rows="10" placeholder="내용" required></textarea>
         	<span id="contentError"  class="error"></span>
 		</div>
+		 <div class="form-group">
+	        <input type="text" id="allowedExtensions" name="allowedExtensions" placeholder="허용 확장자 (예: jpg,png,pdf)">
+	    </div>
 		<div class="form-group">
 	        <div id="fileInputContainer">
-				<input type="file" name="files" id="files"multiple>
+				<input type="file" name="files" id="files" multiple>
 			</div>
 		</div>
 		<input type="submit"  id="saveButton" value="저장💾">
 		<input type="button" id="cancelButton" value="취소❎">
 	</form>
 	
-	 <c:if test="${not empty errorMessage}">
+	 <c:if test="${not empty errorMessages}">
         <div class="error-message">${errorMessage}</div>
     </c:if>
     
@@ -80,6 +83,7 @@
 	            for (var i = 0; i < files.length; i++) {
 	                formData.append('files', files[i]);
 	            }
+	            formData.append('allowedExtensions', $('#allowedExtensions').val());
 	            
 	            var isConfirmed = confirm("저장하시겠습니까?");
 	            if (isConfirmed) {
@@ -93,11 +97,13 @@
 	                        window.location.href = '/board/pagingList?page=' + page;
 	                    },
 	                    error: function(xhr) {
-	                        if (xhr.responseJSON && xhr.responseJSON.errorMessage) {
-	                            alert(xhr.responseJSON.errorMessage);
-
-	                            var errors = xhr.responseJSON;
-	                            displayErrors(errors);
+	                    	if (xhr.responseJSON) {
+	                            var errorMessages = xhr.responseJSON.errorMessages;
+	                            if (errorMessages && errorMessages.length > 0) {
+	                                alert(errorMessages.join('\n')); // 배열의 모든 메시지를 줄바꿈으로 연결하여 alert
+	                            } else if (xhr.responseJSON.errorMessage) {
+	                                alert(xhr.responseJSON.errorMessage);
+	                            }
 	                        } else {
 	                            console.error('Unexpected error:', xhr.status);
 	                        }

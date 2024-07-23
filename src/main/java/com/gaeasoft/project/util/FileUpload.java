@@ -17,32 +17,31 @@ public class FileUpload {
     private static final int MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final Tika tika = new Tika();
     
-    private static Map<String, String> EXTENSION_TO_MIME_TYPE;
+    private static final Map<String, String> EXTENSION_TO_MIME_TYPE = new HashMap<>();
     
     static {
-        EXTENSION_TO_MIME_TYPE = new HashMap<>();
-        EXTENSION_TO_MIME_TYPE.put("jpg", "image/jpeg");
-        EXTENSION_TO_MIME_TYPE.put("jpeg", "image/jpeg");
-        EXTENSION_TO_MIME_TYPE.put("png", "image/png");
-        EXTENSION_TO_MIME_TYPE.put("gif", "image/gif");
-        EXTENSION_TO_MIME_TYPE.put("pdf", "application/pdf");
-        EXTENSION_TO_MIME_TYPE.put("hwp", "application/x-hwp");
-        EXTENSION_TO_MIME_TYPE.put("doc", "application/msword");
-        EXTENSION_TO_MIME_TYPE.put("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        EXTENSION_TO_MIME_TYPE.put("ppt", "application/vnd.ms-powerpoint");
-        EXTENSION_TO_MIME_TYPE.put("pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-        EXTENSION_TO_MIME_TYPE.put("xls", "application/vnd.ms-excel");
-        EXTENSION_TO_MIME_TYPE.put("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        EXTENSION_TO_MIME_TYPE.put("csv", "text/csv");
-        EXTENSION_TO_MIME_TYPE.put("txt", "text/plain");
+    	 EXTENSION_TO_MIME_TYPE.put("jpg", "image/jpeg");
+         EXTENSION_TO_MIME_TYPE.put("jpeg", "image/jpeg");
+         EXTENSION_TO_MIME_TYPE.put("png", "image/png");
+         EXTENSION_TO_MIME_TYPE.put("gif", "image/gif");
+         EXTENSION_TO_MIME_TYPE.put("pdf", "application/pdf");
+         EXTENSION_TO_MIME_TYPE.put("hwp", "application/x-hwp");
+         EXTENSION_TO_MIME_TYPE.put("doc", "application/msword");
+         EXTENSION_TO_MIME_TYPE.put("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+         EXTENSION_TO_MIME_TYPE.put("ppt", "application/vnd.ms-powerpoint");
+         EXTENSION_TO_MIME_TYPE.put("pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+         EXTENSION_TO_MIME_TYPE.put("xls", "application/vnd.ms-excel");
+         EXTENSION_TO_MIME_TYPE.put("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+         EXTENSION_TO_MIME_TYPE.put("csv", "text/csv");
+         EXTENSION_TO_MIME_TYPE.put("txt", "text/plain");
     }
     
-    public boolean isAllowedExtension(String fileName) {
+    public boolean isAllowedExtension(String fileName, List<String> allowedExtensions) {
         if (fileName == null) {
             return false;
         }
         String fileExtension = getFileExtension(fileName);
-        return ALLOWED_EXTENSIONS.contains(fileExtension);
+        return (allowedExtensions != null ? allowedExtensions : ALLOWED_EXTENSIONS).contains(fileExtension);
     }
     
     public boolean isAllowedFileSize(long fileSize) {

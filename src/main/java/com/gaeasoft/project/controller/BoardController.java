@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -145,6 +146,7 @@ public class BoardController {
 	@PostMapping("/saveArticle")
 	public ResponseEntity<?> saveNoticeArticle(@Valid @ModelAttribute BoardDTO boardDTO,
 	                                           @RequestParam(value = "files", required = false) List<MultipartFile> files,
+	                                           @RequestParam(value = "allowedExtensions", required = false) String allowedExtension,
 	                                           @ModelAttribute("loginId") String loginId,
 	                                           BindingResult result) throws Exception {
 	    boardDTO.setMemberId(loginId);
@@ -155,14 +157,16 @@ public class BoardController {
 	                .body(Collections.singletonMap("errorMessage", "유효성 검사에 실패했습니다."));
 	    }
 	    
+	    List<String> allowedExtensions = (allowedExtension != null) ?Arrays.asList(allowedExtension.split(",")) : null;
 	    List<String> errorMessages = new ArrayList<>();
 
 	    // 파일이 있는 경우에만 확장자 검사
 	    if (files != null && !files.isEmpty()) {
 	        for (MultipartFile multipartFile : files) {
-	        	String errorMessage = boardService.validateFile(multipartFile);
-	        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-		                .body(Collections.singletonMap("errorMessage", errorMessage));
+	            String errorMessage = boardService.validateFile(multipartFile, allowedExtensions);
+	            if (errorMessage != null) {
+	                errorMessages.add(errorMessage);
+	            }
 	        }
 	    }
 	    

@@ -206,12 +206,12 @@ public class BoardService {
 	}
 	
 	// 파일 유효성 검사
-	public String validateFile(MultipartFile multipartFile) {
+	public String validateFile(MultipartFile multipartFile, List<String> allowedExtensions) {
 		String errorMessage = null;
 	    long fileSize = multipartFile.getSize();
 
 	    // 확장자 검사
-	    if (!fileUpload.isAllowedExtension(multipartFile.getOriginalFilename())) {
+        if (!fileUpload.isAllowedExtension(multipartFile.getOriginalFilename(), allowedExtensions)) {
 	        errorMessage = "허용되지 않는 파일 형식입니다.";
 	    } else if (!fileUpload.isAllowedFileSize(fileSize)) {
 	        errorMessage = "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
