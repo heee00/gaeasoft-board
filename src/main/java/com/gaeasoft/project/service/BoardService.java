@@ -1,18 +1,18 @@
 package com.gaeasoft.project.service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.FileDTO;
 import com.gaeasoft.project.dto.PageDTO;
-import com.gaeasoft.project.util.FileUpload;
+import com.gaeasoft.project.util.FileValidator;
 
 @Service
 public class BoardService {
@@ -35,8 +35,6 @@ public class BoardService {
 	private BoardDAOImpl boardDAOImpl;
 	@Autowired
 	private Validator validator;
-	@Autowired
-	private FileUpload fileUpload;
 
 	// 전체 글 목록
 	public List<BoardDTO> noticeArticleList() {
@@ -171,78 +169,52 @@ public class BoardService {
 	}
 	
 	// 게시글 저장
-	public int saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files) {
-    	int saveResult = boardDAOImpl.saveArticle(boardDTO);
-
+	public List<String> saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files, String allowedExtension) {
+    	@SuppressWarnings("unused")
+		int saveResult = boardDAOImpl.saveArticle(boardDTO);
     	String savePath = "/WEB-INF/files/";
 		File uploadDir = new File(savePath);
+		
 	    if (!uploadDir.exists()) {
 	    	uploadDir.mkdirs();
 	    }
 	     
 	    Long noticeSeq = boardDTO.getNoticeSeq();
+	    FileValidator fileValidator = new FileValidator();
+	    List<String> allowedExtensions = (allowedExtension != null && !allowedExtension.isEmpty()) ? 
+                Arrays.asList(allowedExtension.split(",")) : null;
+	    List<String> errorMessages = new ArrayList<>();
 
 	    if (files != null && !files.isEmpty()) {
 	        for (MultipartFile multipartFile : files) {
 	            if (!multipartFile.isEmpty()) {
-	                try {
+                    try (InputStream fileStream = multipartFile.getInputStream()) {
+                    	String fileName = multipartFile.getOriginalFilename();
+                        long fileSize = multipartFile.getSize();
+                        
+                        String errorMessage = fileValidator.validateFile(fileName, fileSize, fileStream, allowedExtensions);
+                        if (errorMessage != null) {
+                        	errorMessages.add(errorMessage); // 에러 메시지를 리스트에 추가
+                        	continue;
+                        }
+                        // 파일 이름 설정
+                        String storedFileName = fileValidator.setFileName(fileName, savePath);
+	
 	                    // 파일 저장
-	                    String storedFileName = saveFile(multipartFile, savePath);
-
-	                    // DB에 저장
 	                    FileDTO fileDTO = new FileDTO();
 	                    fileDTO.setNoticeSeq(noticeSeq);
 	                    fileDTO.setStoredFileName(storedFileName);
-	                    fileDTO.setOriginFileName(multipartFile.getOriginalFilename());
+                        fileDTO.setOriginFileName(fileName);
 	                    boardDAOImpl.saveFile(fileDTO);
-
+	
 	                } catch (Exception e) {
-	                    return 0;
-	                }
-	            }
-	        }
-	    }
-         return saveResult;
-	}
-	
-	// 파일 유효성 검사
-	public String validateFile(MultipartFile multipartFile, List<String> allowedExtensions) {
-		String errorMessage = null;
-	    long fileSize = multipartFile.getSize();
-
-	    // 확장자 검사
-        if (!fileUpload.isAllowedExtension(multipartFile.getOriginalFilename(), allowedExtensions)) {
-	        errorMessage = "허용되지 않는 파일 형식입니다.";
-	    } else if (!fileUpload.isAllowedFileSize(fileSize)) {
-	        errorMessage = "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
-	    } else if (!fileUpload.isAllowedMimeType(multipartFile)) {
-	        errorMessage = "확장자를 변환하여 사용할 수 없습니다.";
-	    }
-
-	    return errorMessage;
-	}
-	
-    
-    // 파일 저장 이름 설정
-    public String saveFile(MultipartFile multipartFile, String savePath) throws FileUploadException {
-        String storedFileName = null;
-
-    	// 원본 파일명에서 확장자 추출
-    	try {
-    		String originalFileName = multipartFile.getOriginalFilename();
-	        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
-	        
-	        // 난수 파일명 생성
-	        storedFileName = UUID.randomUUID().toString() + fileExtension;
-	        File file = new File(savePath + storedFileName);
-        
-            multipartFile.transferTo(file);
-        } catch (Exception e) {
-            return "파일 저장 중 오류가 발생하였습니다.";
+	                	errorMessages.add("파일 저장 중 오류가 발생했습니다.");
+	               }
+                }
+            }
         }
-
-        return storedFileName;
-    }
+    	return errorMessages;
+	}
     
     // 파일 목록
 	public List<FileDTO> fileList(Long noticeSeq) {

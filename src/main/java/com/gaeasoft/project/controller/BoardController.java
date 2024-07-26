@@ -4,8 +4,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -149,39 +147,26 @@ public class BoardController {
 	                                           @RequestParam(value = "allowedExtensions", required = false) String allowedExtension,
 	                                           @ModelAttribute("loginId") String loginId,
 	                                           BindingResult result) throws Exception {
-	    boardDTO.setMemberId(loginId);
 
 	    if (result.hasErrors()) {
 	        boardService.getFieldErrors(result);
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                .body(Collections.singletonMap("errorMessage", "유효성 검사에 실패했습니다."));
 	    }
-	    
-	    List<String> allowedExtensions = (allowedExtension != null) ?Arrays.asList(allowedExtension.split(",")) : null;
-	    List<String> errorMessages = new ArrayList<>();
 
-	    // 파일이 있는 경우에만 확장자 검사
-	    if (files != null && !files.isEmpty()) {
-	        for (MultipartFile multipartFile : files) {
-	            String errorMessage = boardService.validateFile(multipartFile, allowedExtensions);
-	            if (errorMessage != null) {
-	                errorMessages.add(errorMessage);
-	            }
-	        }
-	    }
-	    
-	    if (!errorMessages.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body(Collections.singletonMap("errorMessages", errorMessages));
-	    }
-
-	    int saveResult = boardService.saveNoticeArticle(boardDTO, files);
-	    if (saveResult > 0) {
-	        return ResponseEntity.ok().build();
+	    if (loginId == null) {
+	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Collections.singletonMap("errorMessage", "로그인이 되어 있지 않습니다."));
 	    } else {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Collections.singletonMap("errorMessage", "게시글 저장에 실패했습니다."));
+	    	boardDTO.setMemberId(loginId);
 	    }
+	    
+	    List<String> errorMessages = boardService.saveNoticeArticle(boardDTO, files, allowedExtension);
+	    if (!errorMessages.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Collections.singletonMap("errorMessage", errorMessages));
+	    }
+	    return ResponseEntity.ok().build();
 	}
 	
 	// 유효성 검사
