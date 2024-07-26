@@ -22,7 +22,18 @@ public class AddressApiController {
 	
 	@PostMapping("/api")
     public ResponseEntity<String> getAddressApi(HttpServletRequest req) {
-			return apiService.getAddressApi(req);
+		String currentPage = req.getParameter("currentPage");
+		String countPerPage = req.getParameter("countPerPage");
+		String resultType = req.getParameter("resultType");
+		String keyword = req.getParameter("keyword");
+		String callback = req.getParameter("callback");
+		
+		String address = apiService.getAddressApi(currentPage, countPerPage, resultType, keyword);
+		String response = callback + "(" + address + ");";
+		
+		return ResponseEntity.ok()
+				.header("Content-Type","application/json")
+				.body(response);
  	}
 	
 }

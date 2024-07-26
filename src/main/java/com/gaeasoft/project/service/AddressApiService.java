@@ -1,9 +1,6 @@
 package com.gaeasoft.project.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.gaeasoft.project.dao.AddressApiDAOImpl;
@@ -14,8 +11,8 @@ public class AddressApiService {
 	@Autowired
 	private AddressApiDAOImpl addressDAOImpl;
 	
-	public ResponseEntity<String> getAddressApi(HttpServletRequest req) {
-		return addressDAOImpl.searchAddress(req);
+	public String getAddressApi(String currentPage, String countPerPage, String resultType, String keyword)  {
+		return addressDAOImpl.getAddressApi(currentPage, countPerPage, resultType, keyword);
 	}
 	
 }

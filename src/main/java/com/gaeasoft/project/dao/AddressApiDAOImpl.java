@@ -5,10 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,12 +16,7 @@ public class AddressApiDAOImpl implements AddressApiDAO {
 	private static final String confmKey = "devU01TX0FVVEgyMDI0MDYxMjE3MDc0ODExNDgzODI=";
 	
 	// 주소 검색
-	public ResponseEntity<String> searchAddress(HttpServletRequest req) {
-		String currentPage = req.getParameter("currentPage");
-		String countPerPage = req.getParameter("countPerPage");
-		String resultType = req.getParameter("resultType");
-		String keyword = req.getParameter("keyword");
-		String callback = req.getParameter("callback");
+	public String getAddressApi(String currentPage, String countPerPage, String resultType, String keyword) {
 		String apiUrl = null;
 		BufferedReader br = null;
         
@@ -45,14 +36,10 @@ public class AddressApiDAOImpl implements AddressApiDAO {
             while ((tempStr = br.readLine()) != null) {
             	sb.append(tempStr); // 응답결과 JSON 저장
             }
-            
-     		return ResponseEntity.ok()
-     						.header("Content-Type", "application/json")
-     						.body(callback + "(" + sb.toString() + ");"); // 응답결과 반환
+            return sb.toString();
      		
 		} catch (Exception e) {
-        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        					.body(callback + "{response 데이터 읽기 실패: " + e.getMessage() + "}");
+    		return ("{response 데이터 읽기 실패: " + e.getMessage() + "}");
           
         } finally {
         	if (br != null) {
@@ -60,8 +47,7 @@ public class AddressApiDAOImpl implements AddressApiDAO {
         			br.close();
                   
                 } catch (Exception e) {
-                	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                					.body(callback +"{BufferedReader 닫기 실패: " + e.getMessage() + "}");
+                	return ("{BufferedReader 닫기 실패: " + e.getMessage() + "}");
                 }
          	}
         }
