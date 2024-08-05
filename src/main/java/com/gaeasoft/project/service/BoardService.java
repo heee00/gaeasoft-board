@@ -177,9 +177,9 @@ public class BoardService {
 	    }
 	    
 	    FileValidator fileValidator = new FileValidator();
+	    List<String> errorMessages = new ArrayList<>();
 	    List<String> allowedExtensions = (allowedExtension != null && !allowedExtension.isEmpty()) ? 
 	            Arrays.asList(allowedExtension.split(",")) : null;
-	    List<String> errorMessages = new ArrayList<>();
 
 	    // 파일 유효성 검사
 	    if (files != null && !files.isEmpty()) {
@@ -194,7 +194,7 @@ public class BoardService {
 	                        errorMessages.add(errorMessage); // 에러 메시지를 리스트에 추가
 	                    }
 	                } catch (Exception e) {
-	                    errorMessages.add("파일 검사 중 오류가 발생했습니다: " + e.getMessage());
+	                    errorMessages.add("파일 검사 중 오류가 발생했습니다.");
 	                }
 	            }
 	        }
@@ -222,7 +222,7 @@ public class BoardService {
 	                    boardDAOImpl.saveFile(fileDTO);
 	
 	                } catch (Exception e) {
-	                    errorMessages.add("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
+	                    errorMessages.add("파일 저장 중 오류가 발생했습니다.");
 	               }
 	            }
 	        }
