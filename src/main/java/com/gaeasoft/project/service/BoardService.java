@@ -170,49 +170,63 @@ public class BoardService {
 	
 	// 게시글 저장
 	public List<String> saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files, String allowedExtension) {
-    	@SuppressWarnings("unused")
-		int saveResult = boardDAOImpl.saveArticle(boardDTO);
     	String savePath = "/WEB-INF/files/";
 		File uploadDir = new File(savePath);
-		
 	    if (!uploadDir.exists()) {
 	    	uploadDir.mkdirs();
 	    }
-	     
-	    Long noticeSeq = boardDTO.getNoticeSeq();
+	    
 	    FileValidator fileValidator = new FileValidator();
 	    List<String> allowedExtensions = (allowedExtension != null && !allowedExtension.isEmpty()) ? 
-                Arrays.asList(allowedExtension.split(",")) : null;
+	            Arrays.asList(allowedExtension.split(",")) : null;
 	    List<String> errorMessages = new ArrayList<>();
 
+	    // 파일 유효성 검사
 	    if (files != null && !files.isEmpty()) {
 	        for (MultipartFile multipartFile : files) {
 	            if (!multipartFile.isEmpty()) {
-                    try (InputStream fileStream = multipartFile.getInputStream()) {
-                    	String fileName = multipartFile.getOriginalFilename();
-                        long fileSize = multipartFile.getSize();
-                        
-                        String errorMessage = fileValidator.validateFile(fileName, fileSize, fileStream, allowedExtensions);
-                        if (errorMessage != null) {
-                        	errorMessages.add(errorMessage); // 에러 메시지를 리스트에 추가
-                        	continue;
-                        }
-                        // 파일 이름 설정
-                        String storedFileName = fileValidator.setFileName(fileName, savePath);
+	                try (InputStream fileStream = multipartFile.getInputStream()) {
+	                    String fileName = multipartFile.getOriginalFilename();
+	                    long fileSize = multipartFile.getSize();
+
+	                    String errorMessage = fileValidator.validateFile(fileName, fileSize, fileStream, allowedExtensions);
+	                    if (errorMessage != null) {
+	                        errorMessages.add(errorMessage); // 에러 메시지를 리스트에 추가
+	                    }
+	                } catch (Exception e) {
+	                    errorMessages.add("파일 검사 중 오류가 발생했습니다: " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+
+	    if (!errorMessages.isEmpty()) {
+	        return errorMessages;
+	    }
+	    
+	    boardDAOImpl.saveArticle(boardDTO);
+	    Long noticeSeq = boardDTO.getNoticeSeq();
+	   
+	    // 파일 저장
+	    if (files != null && !files.isEmpty()) {
+	        for (MultipartFile multipartFile : files) {
+	            if (!multipartFile.isEmpty()) {
+	                try (InputStream fileStream = multipartFile.getInputStream()) {
+	                	String fileName = multipartFile.getOriginalFilename();
+	                    String storedFileName = fileValidator.setFileName(fileName, savePath);
 	
-	                    // 파일 저장
 	                    FileDTO fileDTO = new FileDTO();
 	                    fileDTO.setNoticeSeq(noticeSeq);
 	                    fileDTO.setStoredFileName(storedFileName);
-                        fileDTO.setOriginFileName(fileName);
+	                    fileDTO.setOriginFileName(fileName);
 	                    boardDAOImpl.saveFile(fileDTO);
 	
 	                } catch (Exception e) {
-	                	errorMessages.add("파일 저장 중 오류가 발생했습니다.");
+	                    errorMessages.add("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
 	               }
-                }
-            }
-        }
+	            }
+	        }
+	    }
     	return errorMessages;
 	}
     

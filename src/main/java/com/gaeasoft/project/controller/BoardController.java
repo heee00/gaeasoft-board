@@ -157,9 +157,8 @@ public class BoardController {
 	    if (loginId == null) {
 	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                .body(Collections.singletonMap("errorMessage", "로그인이 되어 있지 않습니다."));
-	    } else {
-	    	boardDTO.setMemberId(loginId);
 	    }
+	    boardDTO.setMemberId(loginId);
 	    
 	    List<String> errorMessages = boardService.saveNoticeArticle(boardDTO, files, allowedExtension);
 	    if (!errorMessages.isEmpty()) {
