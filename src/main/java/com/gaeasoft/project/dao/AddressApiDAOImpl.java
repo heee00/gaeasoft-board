@@ -16,16 +16,16 @@ public class AddressApiDAOImpl implements AddressApiDAO {
 	private static final String confmKey = "devU01TX0FVVEgyMDI0MDYxMjE3MDc0ODExNDgzODI=";
 	
 	// 주소 검색
-	public String getAddressApi(String currentPage, String countPerPage, String resultType, String keyword) {
+	public String getAddressApi(String currentPage, String keyword) {
 		String apiUrl = null;
 		BufferedReader br = null;
         
 		try {
 			apiUrl = "https://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage="+currentPage
-			         +"&countPerPage="+countPerPage
+			         +"&countPerPage=10"
 			         +"&keyword="+URLEncoder.encode(keyword,"UTF-8")
 			         +"&confmKey="+ confmKey
-			         +"&resultType="+resultType;
+			         +"&resultType=json";
 			
 			URL url = new URL(apiUrl);
 			

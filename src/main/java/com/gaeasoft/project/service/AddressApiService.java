@@ -11,8 +11,8 @@ public class AddressApiService {
 	@Autowired
 	private AddressApiDAOImpl addressDAOImpl;
 	
-	public String getAddressApi(String currentPage, String countPerPage, String resultType, String keyword)  {
-		return addressDAOImpl.getAddressApi(currentPage, countPerPage, resultType, keyword);
+	public String getAddressApi(String currentPage, String keyword)  {
+		return addressDAOImpl.getAddressApi(currentPage, keyword);
 	}
 	
 }

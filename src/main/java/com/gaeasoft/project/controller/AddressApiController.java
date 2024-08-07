@@ -18,17 +18,15 @@ import lombok.RequiredArgsConstructor;
 public class AddressApiController {
 	
 	@Autowired
-	private AddressApiService apiService;
+	private AddressApiService addressApiService;
 	
 	@PostMapping("/api")
     public ResponseEntity<String> getAddressApi(HttpServletRequest req) {
 		String currentPage = req.getParameter("currentPage");
-		String countPerPage = req.getParameter("countPerPage");
-		String resultType = req.getParameter("resultType");
 		String keyword = req.getParameter("keyword");
 		String callback = req.getParameter("callback");
 		
-		String address = apiService.getAddressApi(currentPage, countPerPage, resultType, keyword);
+		String address = addressApiService.getAddressApi(currentPage, keyword);
 		String response = callback + "(" + address + ");";
 		
 		return ResponseEntity.ok()
