@@ -41,10 +41,6 @@
 		<input type="button" id="cancelButton" value="취소❎">
 	</form>
 	
-	 <c:if test="${not empty errorMessages}">
-        <div class="error-message">${errorMessage}</div>
-    </c:if>
-    
 	<script>
 		$(document).ready(function() {
             $('#saveButton').prop('disabled', true);
@@ -100,7 +96,7 @@
 	                    	if (xhr.responseJSON) {
 	                            var errorMessages = xhr.responseJSON.errorMessages;
 	                            if (errorMessages && errorMessages.length > 0) {
-	                                alert(errorMessages.join('\n')); // 배열의 모든 메시지를 줄바꿈으로 연결하여 alert
+	                                alert(errorMessages.join('\n'));
 	                            } else if (xhr.responseJSON.errorMessage) {
 	                                alert(xhr.responseJSON.errorMessage);
 	                            }

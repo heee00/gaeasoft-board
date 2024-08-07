@@ -87,20 +87,16 @@ public class FileValidator  {
     }
     
     // 파일 유효성 검사
-    public String validateFile(String fileName, long fileSize, InputStream fileStream, List<String> allowedExtensions) {
-        String errorMessage = null;
-
-        if (allowedExtensions == null || allowedExtensions.isEmpty()) {
-        	errorMessage = "확장자를 입력해주세요.";
+    public void  validateFile(String fileName, long fileSize, InputStream fileStream, List<String> allowedExtensions) throws FileValidationException {
+    	if (allowedExtensions == null || allowedExtensions.isEmpty()) {
+            throw new FileValidationException("확장자를 입력해주세요.");
         } else if (!isAllowedExtension(fileName, allowedExtensions)) {
-            errorMessage = "허용되지 않는 파일 형식입니다.";
+        	throw new FileValidationException("허용되지 않는 파일 형식입니다.");
         } else if (!isAllowedFileSize(fileSize)) {
-            errorMessage = "파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.";
+        	throw new FileValidationException("파일 크기가 너무 큽니다. 최대 파일 크기는 10MB입니다.");
         } else if (!isAllowedExtensions(fileStream, fileName, allowedExtensions)) {
-            errorMessage = "확장자와 MIME 타입이 일치하지 않습니다.";
+        	throw new FileValidationException("확장자와 MIME 타입이 일치하지 않습니다.");
         }
-
- 	    return errorMessage;
  	}
  	
  	// 파일 저장 이름 설정

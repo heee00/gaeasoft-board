@@ -146,7 +146,7 @@ public class BoardController {
 	                                           @RequestParam(value = "files", required = false) List<MultipartFile> files,
 	                                           @RequestParam(value = "allowedExtensions", required = false) String allowedExtension,
 	                                           @ModelAttribute("loginId") String loginId,
-	                                           BindingResult result) throws Exception {
+	                                           BindingResult result) {
 
 	    if (result.hasErrors()) {
 	        boardService.getFieldErrors(result);
@@ -160,12 +160,16 @@ public class BoardController {
 	    }
 	    boardDTO.setMemberId(loginId);
 	    
-	    List<String> errorMessages = boardService.saveNoticeArticle(boardDTO, files, allowedExtension);
-	    if (!errorMessages.isEmpty()) {
+	    try {
+            boardService.saveNoticeArticle(boardDTO, files, allowedExtension);
+            return ResponseEntity.ok().build();
+	    } catch (RuntimeException exception) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Collections.singletonMap("errorMessage", errorMessages));
+	                .body(Collections.singletonMap("errorMessage",  exception.getMessage()));
+	    } catch (Exception exception) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Collections.singletonMap("errorMessage", "게시글 저장 중 오류가 발생했습니다."));
 	    }
-	    return ResponseEntity.ok().build();
 	}
 	
 	// 유효성 검사

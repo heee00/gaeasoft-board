@@ -26,6 +26,7 @@ import com.gaeasoft.project.dao.BoardDAOImpl;
 import com.gaeasoft.project.dto.BoardDTO;
 import com.gaeasoft.project.dto.FileDTO;
 import com.gaeasoft.project.dto.PageDTO;
+import com.gaeasoft.project.util.FileValidationException;
 import com.gaeasoft.project.util.FileValidator;
 
 @Service
@@ -169,7 +170,8 @@ public class BoardService {
 	}
 	
 	// 게시글 저장
-	public List<String> saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files, String allowedExtension) {
+    @Transactional
+	public void  saveNoticeArticle(BoardDTO boardDTO, List<MultipartFile> files, String allowedExtension) {
     	String savePath = "/WEB-INF/files/";
 		File uploadDir = new File(savePath);
 	    if (!uploadDir.exists()) {
@@ -177,57 +179,39 @@ public class BoardService {
 	    }
 	    
 	    FileValidator fileValidator = new FileValidator();
-	    List<String> errorMessages = new ArrayList<>();
 	    List<String> allowedExtensions = (allowedExtension != null && !allowedExtension.isEmpty()) ? 
 	            Arrays.asList(allowedExtension.split(",")) : null;
-
-	    // 파일 유효성 검사
-	    if (files != null && !files.isEmpty()) {
-	        for (MultipartFile multipartFile : files) {
-	            if (!multipartFile.isEmpty()) {
-	                try (InputStream fileStream = multipartFile.getInputStream()) {
-	                    String fileName = multipartFile.getOriginalFilename();
-	                    long fileSize = multipartFile.getSize();
-
-	                    String errorMessage = fileValidator.validateFile(fileName, fileSize, fileStream, allowedExtensions);
-	                    if (errorMessage != null) {
-	                        errorMessages.add(errorMessage); // 에러 메시지를 리스트에 추가
-	                    }
-	                } catch (Exception e) {
-	                    errorMessages.add("파일 검사 중 오류가 발생했습니다.");
-	                }
-	            }
-	        }
-	    }
-
-	    if (!errorMessages.isEmpty()) {
-	        return errorMessages;
-	    }
-	    
-	    boardDAOImpl.saveArticle(boardDTO);
-	    Long noticeSeq = boardDTO.getNoticeSeq();
 	   
-	    // 파일 저장
-	    if (files != null && !files.isEmpty()) {
-	        for (MultipartFile multipartFile : files) {
-	            if (!multipartFile.isEmpty()) {
-	                try (InputStream fileStream = multipartFile.getInputStream()) {
-	                	String fileName = multipartFile.getOriginalFilename();
-	                    String storedFileName = fileValidator.setFileName(fileName, savePath);
+	    try {
+	    	boardDAOImpl.saveArticle(boardDTO);
+	    	Long noticeSeq = boardDTO.getNoticeSeq();
+
+		    if (files != null && !files.isEmpty()) {
+		        for (MultipartFile multipartFile : files) {
+		            if (!multipartFile.isEmpty()) {
+		                try (InputStream fileStream = multipartFile.getInputStream()) {
+		                	long fileSize = multipartFile.getSize();
+		                    String fileName = multipartFile.getOriginalFilename();
 	
-	                    FileDTO fileDTO = new FileDTO();
-	                    fileDTO.setNoticeSeq(noticeSeq);
-	                    fileDTO.setStoredFileName(storedFileName);
-	                    fileDTO.setOriginFileName(fileName);
-	                    boardDAOImpl.saveFile(fileDTO);
-	
-	                } catch (Exception e) {
-	                    errorMessages.add("파일 저장 중 오류가 발생했습니다.");
-	               }
-	            }
-	        }
+		                    fileValidator.validateFile(fileName, fileSize, fileStream, allowedExtensions);
+		                    String storedFileName = fileValidator.setFileName(fileName, savePath);
+		                    
+		                    FileDTO fileDTO = new FileDTO();
+		                    fileDTO.setNoticeSeq(noticeSeq);
+		                    fileDTO.setStoredFileName(storedFileName);
+		                    fileDTO.setOriginFileName(fileName);
+		                    boardDAOImpl.saveFile(fileDTO);
+		                } catch (FileValidationException exception) {
+	                        throw new RuntimeException(exception.getMessage(), exception);
+	                    } catch (Exception exception) {
+	                        throw new RuntimeException("파일 저장 중 오류가 발생했습니다.");
+		                }
+		            }
+		        }
+		    }
+	    } catch (RuntimeException exception) {
+	    	throw exception;	    
 	    }
-    	return errorMessages;
 	}
     
     // 파일 목록
